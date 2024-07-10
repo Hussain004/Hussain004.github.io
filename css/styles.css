@@ -1,9 +1,4 @@
 /* =================================================================== 
- * Flare Main Stylesheet
- * Template Ver. 1.0.0
- * 03-19-2020
- * ------------------------------------------------------------------
- *
  * TOC:
  * # settings and variables
  *      ## fonts
@@ -4904,6 +4899,9 @@ html.no-csstransitions .s-hero__content {
     transform: scale(1);
 }
 
+.icon-red {
+    color: #ff0000;
+}
 
 /* ------------------------------------------------------------------- 
  * responsive:
