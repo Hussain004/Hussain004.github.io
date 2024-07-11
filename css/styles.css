@@ -4160,20 +4160,20 @@ html.no-csstransitions .s-hero__content {
 
 
 /* ===================================================================
- * # services
+ * # interests
  *
  * ------------------------------------------------------------------- */
-.s-services {
+.s-interests {
     background-color: var(--color-bg);
     padding-top: calc(6 * var(--space));
     padding-bottom: var(--vspace-2);
 }
 
-.s-services .lead {
+.s-interests .lead {
     margin-top: var(--vspace-0_25);
 }
 
-.s-services .item-service {
+.s-interests .item-interests {
     margin-bottom: 0;
 }
 
@@ -4207,13 +4207,13 @@ html.no-csstransitions .s-hero__content {
  * services
  * ------------------------------------------------------------------- */
 @media screen and (max-width: 1200px) {
-    .s-services {
+    .s-interets {
         padding-top: calc(5 * var(--space));
     }
 }
 
 @media screen and (max-width: 400px) {
-    .s-services {
+    .s-interests {
         padding-top: var(--vspace-4);
     }
 }
