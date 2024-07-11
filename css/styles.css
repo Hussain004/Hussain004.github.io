@@ -58,8 +58,8 @@
  *      ## about photo
  *      ## about process
  * # services
- * # portfolio
- *      ## portfolio list
+ * # projects
+ *      ## projects list
  * # clients
  *      ## clients slider
  *      ## testimonials
@@ -4221,10 +4221,10 @@ html.no-csstransitions .s-hero__content {
 
 
 /* ===================================================================
- * # portfolio
+ * # projects
  *
  * ------------------------------------------------------------------- */
-.s-portfolio {
+.s-projects {
     background-color: var(--color-bg);
     padding-top: calc(7 * var(--space));
     padding-bottom: 0;
@@ -4232,9 +4232,9 @@ html.no-csstransitions .s-hero__content {
 
 
 /* ------------------------------------------------------------------- 
- * ## portfolio list
+ * ## projects list
  * ------------------------------------------------------------------- */
-.s-portfolio__list {
+.s-projects__list {
     max-width: calc(var(--width-max) + 40px);
     padding-top: var(--vspace-1_5);
 }
@@ -4300,7 +4300,7 @@ html.no-csstransitions .s-hero__content {
     margin-bottom: 0;
 }
 
-/* portfolio info
+/* projects info
  *---------------------------------------------- */
 .folio-item__info {
     z-index: 2;
@@ -4404,10 +4404,10 @@ html.no-csstransitions .s-hero__content {
 
 /* ------------------------------------------------------------------- 
  * responsive:
- * portfolio
+ * projects
  * ------------------------------------------------------------------- */
 @media screen and (max-width: 1200px) {
-    .s-portfolio {
+    .s-projects {
         padding-top: calc(5 * var(--space));
     }
     .folio-item__thumb a::after {
@@ -4446,7 +4446,7 @@ html.no-csstransitions .s-hero__content {
 }
 
 @media screen and (max-width: 400px) {
-    .s-portfolio {
+    .s-projects {
         padding-top: var(--vspace-4);
     }
 }
