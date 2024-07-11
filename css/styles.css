@@ -4177,7 +4177,7 @@ html.no-csstransitions .s-hero__content {
     margin-bottom: 0;
 }
 
-.service-icon {
+.interests-icon {
     display: block;
     width: calc(2.25 * var(--space));
     height: calc(2.25 * var(--space));
@@ -4186,30 +4186,21 @@ html.no-csstransitions .s-hero__content {
     background-size: contain;
 }
 
-.service-icon--product-design {
-    background-image: url(../images/icons/services/icon-product-design.svg);
+.interests-icon--control-systems {
+    background-image: url(../images/icons/interests/icon-control-systems.svg);
 }
 
-.service-icon--branding {
-    background-image: url(../images/icons/services/icon-branding.svg);
+.interests-icon--AI {
+    background-image: url(../images/icons/interests/icon-AI.svg);
 }
 
-.service-icon--frontend {
-    background-image: url(../images/icons/services/icon-frontend.svg);
+.interests-icon--frontend {
+    background-image: url(../images/icons/interests/icon-frontend.svg);
 }
 
-.service-icon--research {
-    background-image: url(../images/icons/services/icon-research.svg);
+.interests-icon--simulations {
+    background-image: url(../images/icons/interests/icon-simulations.svg);
 }
-
-.service-icon--illustration {
-    background-image: url(../images/icons/services/icon-illustration.svg);
-}
-
-.service-icon--ecommerce {
-    background-image: url(../images/icons/services/icon-ecommerce.svg);
-}
-
 
 /* ------------------------------------------------------------------- 
  * responsive:
