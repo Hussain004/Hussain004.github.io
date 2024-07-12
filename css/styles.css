@@ -67,7 +67,7 @@
  * # footer
  *      ## footer block
  *      ## footer list
- *      ## copyright
+ *      ## smile
  *      ## go top
  *
  * ------------------------------------------------------------------ */
@@ -4817,37 +4817,37 @@ html.no-csstransitions .s-hero__content {
 
 
 /* ------------------------------------------------------------------- 
- * ## copyright
+ * ## smile
  * ------------------------------------------------------------------- */
-.ss-copyright {
+.ss-smile {
     z-index: 2;
     font-size: 1.5rem;
     font-weight: 300;
     position: relative;
 }
 
-.ss-copyright a {
+.ss-smile a {
     display: inline-block;
     color: white;
     border-bottom: 1px dotted rgba(255, 255, 255, 0.2);
 }
 
-.ss-copyright a:hover, .ss-copyright a:focus {
+.ss-smile a:hover, .ss-smile a:focus {
     border-bottom: 1px solid white;
 }
 
-.ss-copyright span {
+.ss-smile span {
     display: inline-block;
 }
 
-.ss-copyright span::after {
+.ss-smile span::after {
     content: "|";
     display: inline-block;
     padding: 0 .8rem 0 1rem;
     color: rgba(255, 255, 255, 0.25);
 }
 
-.ss-copyright span:last-child::after {
+.ss-smile span:last-child::after {
     display: none;
 }
 
@@ -4933,10 +4933,10 @@ html.no-csstransitions .s-hero__content {
         right: 2.4rem;
         bottom: 2.4rem;
     }
-    .ss-copyright span {
+    .ss-smile span {
         display: block;
     }
-    .ss-copyright span::after {
+    .ss-smile span::after {
         display: none;
     }
 }
@@ -4952,7 +4952,7 @@ html.no-csstransitions .s-hero__content {
         width: 4.8rem;
         line-height: 4.8rem;
     }
-    .ss-copyright {
+    .ss-smile {
         font-size: 1.4rem;
     }
 }
