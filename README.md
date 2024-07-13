@@ -27,7 +27,7 @@ The website features a "Let's Talk" section, encouraging visitors to reach out a
 The Binary Bots website is still a work in progress, and the student plans to continue adding more projects, features, and content to the platform. Visitors are encouraged to check back regularly for updates and new additions.
 
 <h2> Credits </h2>
-The Binary Bots website was created using a template provided by [style shout](styleshout.com). Additionally, many of the images used on the website were generated using the AI tools [Caricature IMG ST](poe.com/Caricature-IMG-ST), [StableDiffusion XL](poe.com/StableDiffusionXL), and [Playground v2.5](poe.com/Playground-v2.5) from poe.com.
+The Binary Bots website was created using a template provided by [styleshout](styleshout.com) . Additionally, many of the images used on the website were generated using the AI tools [Caricature IMG ST](poe.com/Caricature-IMG-ST) , [StableDiffusion XL](poe.com/StableDiffusionXL) , and [Playground v2.5](poe.com/Playground-v2.5) from poe.com.
 
 <h2> Contribution </h2>
 If you have any suggestions, feedback, or would like to collaborate on a project, please feel free to reach out to the student through the provided communication channels. Contributions and collaborations are welcome to help enhance the Binary Bots website and the student's ongoing learning and development.
