@@ -29,9 +29,104 @@
     <link rel="icon" href="favicon.jpg">
     <link rel="manifest" href="site.webmanifest">
 
+    <!-- google font
+    ================================================== -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        #dashboard { max-width: 800px; margin: 0 auto; }
+        .chart-container { margin-bottom: 20px; }
+    </style>
+
 </head>
 
 <body>
-</body>
+    <div id="dashboard">
+        <h1>F1 Driver Stats Dashboard</h1>
+        <div>
+            <label for="driver-select">Select Driver:</label>
+            <select id="driver-select">
+                <option value="hamilton">Lewis Hamilton</option>
+                <option value="verstappen">Max Verstappen</option>
+                <!-- Add more drivers -->
+            </select>
+        </div>
+        <div class="chart-container">
+            <canvas id="winsChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="pointsChart"></canvas>
+        </div>
+    </div>
 
+    <script>
+        // Sample data - replace with actual data
+        const driverData = {
+            hamilton: {
+                name: "Lewis Hamilton",
+                wins: [0, 1, 4, 5, 7, 11, 10, 11, 11, 9, 11, 11, 8, 0],
+                points: [0, 30, 98, 98, 161, 384, 380, 413, 408, 363, 413, 347, 240, 0]
+            },
+            verstappen: {
+                name: "Max Verstappen",
+                wins: [0, 0, 1, 2, 3, 2, 3, 10, 15, 0],
+                points: [0, 49, 168, 249, 258, 214, 278, 395, 454, 0]
+            }
+        };
+
+        function updateCharts(driverId) {
+            const driver = driverData[driverId];
+            
+            new Chart(document.getElementById('winsChart'), {
+                type: 'bar',
+                data: {
+                    labels: Array.from({length: driver.wins.length}, (_, i) => 2010 + i),
+                    datasets: [{
+                        label: 'Wins per Season',
+                        data: driver.wins,
+                        backgroundColor: 'rgba(255, 99, 132, 0.5)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `${driver.name} - Wins per Season`
+                        }
+                    }
+                }
+            });
+
+            new Chart(document.getElementById('pointsChart'), {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: driver.points.length}, (_, i) => 2010 + i),
+                    datasets: [{
+                        label: 'Championship Points',
+                        data: driver.points,
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `${driver.name} - Championship Points per Season`
+                        }
+                    }
+                }
+            });
+        }
+
+        document.getElementById('driver-select').addEventListener('change', (e) => {
+            updateCharts(e.target.value);
+        });
+
+        // Initialize with first driver
+        updateCharts('hamilton');
+    </script>
+</body>
 </html>
