@@ -1,49 +1,79 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en">
+<html lang="en">
 <head>
-
-    <!--- basic page needs
-    ================================================== -->
-    <meta charset="utf-8">
-    <title>F1 Hub</title>
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <!-- mobile specific metas
-    ================================================== -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- CSS
-    ================================================== -->
-    <!-- <link rel="stylesheet" href="css/styles.css"> -->
-    <!-- <link rel="stylesheet" href="css/vendor.css"> -->
-
-    <!-- script
-    ================================================== -->
-    <script src="js/modernizr.js"></script>
-    <script defer src="js/fontawesome/all.min.js"></script>
-
-    <!-- favicons
-    ================================================== -->
-    <link rel="apple-touch-icon" sizes="180x180" href="favicon.jpg">
-    <link rel="icon" href="favicon.jpg">
-    <link rel="manifest" href="site.webmanifest">
-
-    <!-- google font
-    ================================================== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F1 Driver Stats Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
-        #dashboard { max-width: 800px; margin: 0 auto; }
-        .chart-container { margin-bottom: 20px; }
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        #dashboard {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+        h1 {
+            text-align: center;
+            color: #e10600;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .control-panel {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        select {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #e10600;
+            border-radius: 5px;
+            background-color: #fff;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        select:hover, select:focus {
+            border-color: #b30500;
+            outline: none;
+        }
+        .chart-container {
+            margin-bottom: 40px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+        @media (max-width: 768px) {
+            #dashboard {
+                padding: 10px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+        }
     </style>
-
 </head>
-
 <body>
     <div id="dashboard">
         <h1>F1 Driver Stats Dashboard</h1>
-        <div>
+        <div class="control-panel">
             <label for="driver-select">Select Driver:</label>
             <select id="driver-select">
                 <option value="hamilton">Lewis Hamilton</option>
@@ -84,7 +114,9 @@
                     datasets: [{
                         label: 'Wins per Season',
                         data: driver.wins,
-                        backgroundColor: 'rgba(255, 99, 132, 0.5)'
+                        backgroundColor: 'rgba(225, 6, 0, 0.7)',
+                        borderColor: 'rgba(225, 6, 0, 1)',
+                        borderWidth: 1
                     }]
                 },
                 options: {
@@ -92,7 +124,22 @@
                     plugins: {
                         title: {
                             display: true,
-                            text: `${driver.name} - Wins per Season`
+                            text: `${driver.name} - Wins per Season`,
+                            font: {
+                                size: 18,
+                                weight: 'bold'
+                            }
+                        },
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
                         }
                     }
                 }
@@ -105,8 +152,10 @@
                     datasets: [{
                         label: 'Championship Points',
                         data: driver.points,
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        tension: 0.1
+                        borderColor: 'rgba(0, 87, 156, 1)',
+                        backgroundColor: 'rgba(0, 87, 156, 0.1)',
+                        tension: 0.1,
+                        fill: true
                     }]
                 },
                 options: {
@@ -114,7 +163,19 @@
                     plugins: {
                         title: {
                             display: true,
-                            text: `${driver.name} - Championship Points per Season`
+                            text: `${driver.name} - Championship Points per Season`,
+                            font: {
+                                size: 18,
+                                weight: 'bold'
+                            }
+                        },
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
                         }
                     }
                 }
