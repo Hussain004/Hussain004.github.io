@@ -70,19 +70,15 @@ h2 {
     padding: var(--vspace-1);
 }
 
-#driverList, #carData, #lapTimes, #pastDriverList, #pastCarData, #pastLapTimes {
+#driverList, #carData, #lapTimes {
     list-style-type: none;
     padding: 0;
     margin: 0;
 }
 
-#driverList li, #carData li, #lapTimes li, #pastDriverList li, #pastCarData li, #pastLapTimes li {
+#driverList li, #carData li, #lapTimes li {
     margin-bottom: var(--vspace-0_5);
     font-size: var(--text-sm);
-}
-
-.historical-data {
-    margin-top: var(--vspace-2);
 }
 
 @media screen and (max-width: 600px) {
