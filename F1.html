@@ -3,134 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>F1 Strategy Simulator</title>
+    <title>F1 Dashboard</title>
     <style>
-        :root {
-            --font-1: "Nunito Sans", sans-serif;
-            --font-2: "Montserrat", sans-serif;
-            --color-1: hsla(345, 93%, 44%, 1);
-            --color-2: hsla(4, 79%, 63%, 1);
-            --color-3: hsla(34, 75%, 80%, 1);
-            --color-bg: #14171B;
-            --color-text: var(--color-gray-10);
-            --color-text-dark: var(--color-white);
-        }
-
         body {
-            font-family: var(--font-1);
-            background-color: var(--color-bg);
-            color: var(--color-text-dark);
-            font-size: 1.8rem;
-            line-height: 1.6;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
+            background-color: #f0f0f0;
         }
-
-        h1, h2 {
-            font-family: var(--font-2);
-            color: var(--color-1);
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
         }
-
-        button {
-            background-color: var(--color-1);
-            color: var(--color-text-dark);
-            border: none;
-            padding: 10px 20px;
-            font-size: 1.6rem;
-            cursor: pointer;
-            margin: 10px 0;
-        }
-
-        button:hover {
-            background-color: var(--color-2);
-        }
-
-        #race-info, #strategy-options, #race-result {
-            background-color: rgba(255, 255, 255, 0.1);
+        .card {
+            background-color: white;
+            border-radius: 8px;
             padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            margin-top: 0;
+        }
+        #driverList, #carData, #lapTimes {
+            list-style-type: none;
+            padding: 0;
+        }
+        #driverList li, #carData li, #lapTimes li {
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
-    <h1>F1 Strategy Simulator</h1>
-    
-    <div id="race-info">
-        <h2>Race Information</h2>
-        <p>Laps: <span id="total-laps">50</span></p>
-        <p>Current Lap: <span id="current-lap">0</span></p>
-        <p>Tire Condition: <span id="tire-condition">100%</span></p>
-        <p>Position: <span id="position">5</span></p>
-    </div>
-
-    <div id="strategy-options">
-        <h2>Strategy Options</h2>
-        <button onclick="pit()">Pit Stop</button>
-        <button onclick="conserveTires()">Conserve Tires</button>
-        <button onclick="push()">Push</button>
-    </div>
-
-    <div id="race-result">
-        <h2>Race Result</h2>
-        <p id="result-text"></p>
+    <h1>F1 Dashboard</h1>
+    <div class="dashboard">
+        <div class="card">
+            <h2>Drivers</h2>
+            <ul id="driverList"></ul>
+        </div>
+        <div class="card">
+            <h2>Car Telemetry</h2>
+            <ul id="carData"></ul>
+        </div>
+        <div class="card">
+            <h2>Latest Lap Times</h2>
+            <ul id="lapTimes"></ul>
+        </div>
     </div>
 
     <script>
-        let currentLap = 0;
-        const totalLaps = 50;
-        let tireCondition = 100;
-        let position = 5;
-
-        function updateDisplay() {
-            document.getElementById('current-lap').textContent = currentLap;
-            document.getElementById('tire-condition').textContent = tireCondition + '%';
-            document.getElementById('position').textContent = position;
+        const API_BASE_URL = 'https://api.openf1.org/v1';
+    
+        async function fetchData(endpoint, params = {}) {
+            const url = new URL(`${API_BASE_URL}/${endpoint}`);
+            Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+            const response = await fetch(url);
+            return response.json();
         }
-
-        function pit() {
-            tireCondition = 100;
-            position += 3;
-            currentLap++;
-            updateDisplay();
-            checkRaceEnd();
+    
+        async function updateDrivers() {
+            const drivers = await fetchData('drivers', { session_key: 'latest' });
+            const driverList = document.getElementById('driverList');
+            driverList.innerHTML = '';
+            drivers.forEach(driver => {
+                const li = document.createElement('li');
+                li.textContent = `${driver.driver_number}. ${driver.full_name} (${driver.team_name})`;
+                li.style.color = `#${driver.team_colour}`;
+                driverList.appendChild(li);
+            });
         }
-
-        function conserveTires() {
-            tireCondition -= 1;
-            position += 1;
-            currentLap++;
-            updateDisplay();
-            checkRaceEnd();
+    
+        async function updateCarData() {
+            const carData = await fetchData('car_data', { session_key: 'latest', limit: 5 });
+            const carDataList = document.getElementById('carData');
+            carDataList.innerHTML = '';
+            carData.forEach(data => {
+                const li = document.createElement('li');
+                li.textContent = `Car ${data.driver_number}: Speed ${data.speed} km/h, RPM ${data.rpm}`;
+                carDataList.appendChild(li);
+            });
         }
-
-        function push() {
-            tireCondition -= 5;
-            position -= 1;
-            currentLap++;
-            updateDisplay();
-            checkRaceEnd();
+    
+        async function updateLapTimes() {
+            const laps = await fetchData('laps', { session_key: 'latest', limit: 5 });
+            const lapTimesList = document.getElementById('lapTimes');
+            lapTimesList.innerHTML = '';
+            laps.forEach(lap => {
+                const li = document.createElement('li');
+                li.textContent = `Driver ${lap.driver_number}: Lap ${lap.lap_number} - ${lap.lap_duration.toFixed(3)}s`;
+                lapTimesList.appendChild(li);
+            });
         }
-
-        function checkRaceEnd() {
-            if (currentLap >= totalLaps || tireCondition <= 0) {
-                let resultText = '';
-                if (tireCondition <= 0) {
-                    resultText = "Your tires gave up! Race over.";
-                } else {
-                    resultText = `Race finished! Your final position: ${position}`;
-                }
-                document.getElementById('result-text').textContent = resultText;
-                disableButtons();
-            }
+    
+        function updateDashboard() {
+            updateDrivers();
+            updateCarData();
+            updateLapTimes();
         }
-
-        function disableButtons() {
-            const buttons = document.querySelectorAll('button');
-            buttons.forEach(button => button.disabled = true);
-        }
-
-        updateDisplay();
+    
+        // Update dashboard every 5 seconds
+        updateDashboard();
+        setInterval(updateDashboard, 5000);
     </script>
 </body>
 </html>
