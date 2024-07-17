@@ -3,31 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>F1 Driver Stats Dashboard</title>
-    <link rel="stylesheet" href="css/f1-styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>F1 Strategy Simulator</title>
+    <style>
+        :root {
+            --font-1: "Nunito Sans", sans-serif;
+            --font-2: "Montserrat", sans-serif;
+            --color-1: hsla(345, 93%, 44%, 1);
+            --color-2: hsla(4, 79%, 63%, 1);
+            --color-3: hsla(34, 75%, 80%, 1);
+            --color-bg: #14171B;
+            --color-text: var(--color-gray-10);
+            --color-text-dark: var(--color-white);
+        }
+
+        body {
+            font-family: var(--font-1);
+            background-color: var(--color-bg);
+            color: var(--color-text-dark);
+            font-size: 1.8rem;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            font-family: var(--font-2);
+            color: var(--color-1);
+        }
+
+        button {
+            background-color: var(--color-1);
+            color: var(--color-text-dark);
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.6rem;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+
+        button:hover {
+            background-color: var(--color-2);
+        }
+
+        #race-info, #strategy-options, #race-result {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
-    <div id="dashboard">
-        <h1>F1 Driver Stats Dashboard</h1>
-        <div class="control-panel">
-            <label for="driver-select">Select Driver:</label>
-            <select id="driver-select">
-                <option value="hamilton">Lewis Hamilton</option>
-                <option value="verstappen">Max Verstappen</option>
-                <!-- Add more drivers -->
-            </select>
-        </div>
-        <div class="chart-container">
-            <canvas id="winsChart"></canvas>
-        </div>
-        <div class="chart-container">
-            <canvas id="pointsChart"></canvas>
-        </div>
+    <h1>F1 Strategy Simulator</h1>
+    
+    <div id="race-info">
+        <h2>Race Information</h2>
+        <p>Laps: <span id="total-laps">50</span></p>
+        <p>Current Lap: <span id="current-lap">0</span></p>
+        <p>Tire Condition: <span id="tire-condition">100%</span></p>
     </div>
 
-    
-    <script src="js/f1-script.js"></script>
+    <div id="strategy-options">
+        <h2>Strategy Options</h2>
+        <button onclick="pit()">Pit Stop</button>
+        <button onclick="conserveTires()">Conserve Tires</button>
+        <button onclick="push()">Push</button>
+    </div>
 
+    <div id="race-result">
+        <h2>Race Result</h2>
+        <p id="result-text"></p>
+    </div>
+
+    <script>
+        let currentLap = 0;
+        const totalLaps = 50;
+        let tireCondition = 100;
+        let position = 5;
+
+        function updateDisplay() {
+            document.getElementById('current-lap').textContent = currentLap;
+            document.getElementById('tire-condition').textContent = tireCondition + '%';
+        }
+
+        function pit() {
+            tireCondition = 100;
+            position += 3;
+            currentLap++;
+            updateDisplay();
+            checkRaceEnd();
+        }
+
+        function conserveTires() {
+            tireCondition -= 1;
+            position += 1;
+            currentLap++;
+            updateDisplay();
+            checkRaceEnd();
+        }
+
+        function push() {
+            tireCondition -= 5;
+            position -= 1;
+            currentLap++;
+            updateDisplay();
+            checkRaceEnd();
+        }
+
+        function checkRaceEnd() {
+            if (currentLap >= totalLaps || tireCondition <= 0) {
+                let resultText = '';
+                if (tireCondition <= 0) {
+                    resultText = "Your tires gave up! Race over.";
+                } else {
+                    resultText = `Race finished! Your final position: ${position}`;
+                }
+                document.getElementById('result-text').textContent = resultText;
+                disableButtons();
+            }
+        }
+
+        function disableButtons() {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => button.disabled = true);
+        }
+
+        updateDisplay();
+    </script>
 </body>
 </html>
