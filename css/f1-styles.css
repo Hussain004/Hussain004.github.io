@@ -1,0 +1,100 @@
+:root {
+    --font-1: "Nunito Sans", sans-serif;
+    --font-2: "Montserrat", sans-serif;
+    --color-1: hsla(345, 93%, 44%, 1);
+    --color-2: hsla(4, 79%, 63%, 1);
+    --color-3: hsla(34, 75%, 80%, 1);
+    --color-bg: #14171B;
+    --color-text: var(--color-gray-10);
+    --color-border: var(--color-gray-17);
+    --base-font-size: 1.8rem;
+    --text-scale-ratio: 1.2;
+    --text-xs: calc((var(--base-font-size) / var(--text-scale-ratio)) / var(--text-scale-ratio));
+    --text-sm: calc(var(--text-xs) * var(--text-scale-ratio));
+    --text-md: calc(var(--text-sm) * var(--text-scale-ratio) * var(--text-scale-ratio));
+    --text-lg: calc(var(--text-md) * var(--text-scale-ratio));
+    --text-xl: calc(var(--text-lg) * var(--text-scale-ratio));
+    --text-xxl: calc(var(--text-xl) * var(--text-scale-ratio));
+    --vspace-0_5: calc(0.5 * 3.2rem);
+    --vspace-1: calc(3.2rem);
+    --vspace-2: calc(2 * 3.2rem);
+}
+
+html {
+    font-size: 62.5%;
+    box-sizing: border-box;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+body {
+    font-family: var(--font-1);
+    font-size: var(--base-font-size);
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    margin: 0;
+    padding: var(--vspace-2);
+}
+
+h1, h2 {
+    font-family: var(--font-2);
+    font-weight: 700;
+    color: var(--color-1);
+    margin-top: 0;
+}
+
+h1 {
+    font-size: var(--text-xxl);
+    margin-bottom: var(--vspace-1);
+}
+
+h2 {
+    font-size: var(--text-xl);
+    margin-bottom: var(--vspace-0_5);
+}
+
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--vspace-1);
+}
+
+.card {
+    background-color: var(--color-gray-18);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: var(--vspace-1);
+}
+
+#driverList, #carData, #lapTimes, #pastDriverList, #pastCarData, #pastLapTimes {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#driverList li, #carData li, #lapTimes li, #pastDriverList li, #pastCarData li, #pastLapTimes li {
+    margin-bottom: var(--vspace-0_5);
+    font-size: var(--text-sm);
+}
+
+.historical-data {
+    margin-top: var(--vspace-2);
+}
+
+@media screen and (max-width: 600px) {
+    body {
+        padding: var(--vspace-1);
+    }
+
+    h1 {
+        font-size: var(--text-xl);
+    }
+
+    h2 {
+        font-size: var(--text-lg);
+    }
+}

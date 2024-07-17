@@ -5,114 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>F1 Dashboard</title>
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i,600,600i,700,700i|Nunito+Sans:300,300i,400,400i,600,600i,700,700i&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --font-1: "Nunito Sans", sans-serif;
-            --font-2: "Montserrat", sans-serif;
-            --color-1: hsla(345, 93%, 44%, 1);
-            --color-2: hsla(4, 79%, 63%, 1);
-            --color-3: hsla(34, 75%, 80%, 1);
-            --color-bg: #14171B;
-            --color-text: var(--color-gray-10);
-            --color-border: var(--color-gray-17);
-            --base-font-size: 1.8rem;
-            --text-scale-ratio: 1.2;
-            --text-xs: calc((var(--base-font-size) / var(--text-scale-ratio)) / var(--text-scale-ratio));
-            --text-sm: calc(var(--text-xs) * var(--text-scale-ratio));
-            --text-md: calc(var(--text-sm) * var(--text-scale-ratio) * var(--text-scale-ratio));
-            --text-lg: calc(var(--text-md) * var(--text-scale-ratio));
-            --text-xl: calc(var(--text-lg) * var(--text-scale-ratio));
-            --text-xxl: calc(var(--text-xl) * var(--text-scale-ratio));
-            --vspace-0_5: calc(0.5 * 3.2rem);
-            --vspace-1: calc(3.2rem);
-            --vspace-2: calc(2 * 3.2rem);
-        }
-
-        html {
-            font-size: 62.5%;
-            box-sizing: border-box;
-        }
-
-        *, *::before, *::after {
-            box-sizing: inherit;
-        }
-
-        body {
-            font-family: var(--font-1);
-            font-size: var(--base-font-size);
-            font-weight: 400;
-            line-height: 1.6;
-            color: var(--color-text);
-            background-color: var(--color-bg);
-            margin: 0;
-            padding: var(--vspace-2);
-        }
-
-        h1, h2 {
-            font-family: var(--font-2);
-            font-weight: 700;
-            color: var(--color-1);
-            margin-top: 0;
-        }
-
-        h1 {
-            font-size: var(--text-xxl);
-            margin-bottom: var(--vspace-1);
-        }
-
-        h2 {
-            font-size: var(--text-xl);
-            margin-bottom: var(--vspace-0_5);
-        }
-
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: var(--vspace-1);
-        }
-
-        .card {
-            background-color: var(--color-gray-18);
-            border: 1px solid var(--color-border);
-            border-radius: 8px;
-            padding: var(--vspace-1);
-        }
-
-        #driverList, #carData, #lapTimes {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        #driverList li, #carData li, #lapTimes li {
-            margin-bottom: var(--vspace-0_5);
-            font-size: var(--text-sm);
-        }
-
-        @media screen and (max-width: 600px) {
-            body {
-                padding: var(--vspace-1);
-            }
-
-            h1 {
-                font-size: var(--text-xl);
-            }
-
-            h2 {
-                font-size: var(--text-lg);
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="css/f1-styles.css">
 </head>
 <body>
     <h1>F1 Dashboard</h1>
     <div class="dashboard">
         <div class="card">
-            <h2>Drivers</h2>
+            <h2>Current Drivers</h2>
             <ul id="driverList"></ul>
         </div>
         <div class="card">
-            <h2>Car Telemetry</h2>
+            <h2>Current Car Telemetry</h2>
             <ul id="carData"></ul>
         </div>
         <div class="card">
@@ -121,59 +24,22 @@
         </div>
     </div>
 
-    <script>
-        const API_BASE_URL = 'https://api.openf1.org/v1';
-    
-        async function fetchData(endpoint, params = {}) {
-            const url = new URL(`${API_BASE_URL}/${endpoint}`);
-            Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-            const response = await fetch(url);
-            return response.json();
-        }
-    
-        async function updateDrivers() {
-            const drivers = await fetchData('drivers', { session_key: 'latest' });
-            const driverList = document.getElementById('driverList');
-            driverList.innerHTML = '';
-            drivers.forEach(driver => {
-                const li = document.createElement('li');
-                li.textContent = `${driver.driver_number}. ${driver.full_name} (${driver.team_name})`;
-                li.style.color = `#${driver.team_colour}`;
-                driverList.appendChild(li);
-            });
-        }
-    
-        async function updateCarData() {
-            const carData = await fetchData('car_data', { session_key: 'latest', limit: 5 });
-            const carDataList = document.getElementById('carData');
-            carDataList.innerHTML = '';
-            carData.forEach(data => {
-                const li = document.createElement('li');
-                li.textContent = `Car ${data.driver_number}: Speed ${data.speed} km/h, RPM ${data.rpm}`;
-                carDataList.appendChild(li);
-            });
-        }
-    
-        async function updateLapTimes() {
-            const laps = await fetchData('laps', { session_key: 'latest', limit: 5 });
-            const lapTimesList = document.getElementById('lapTimes');
-            lapTimesList.innerHTML = '';
-            laps.forEach(lap => {
-                const li = document.createElement('li');
-                li.textContent = `Driver ${lap.driver_number}: Lap ${lap.lap_number} - ${lap.lap_duration.toFixed(3)}s`;
-                lapTimesList.appendChild(li);
-            });
-        }
-    
-        function updateDashboard() {
-            updateDrivers();
-            updateCarData();
-            updateLapTimes();
-        }
-    
-        // Update dashboard every 5 seconds
-        updateDashboard();
-        setInterval(updateDashboard, 5000);
-    </script>
+    <h1 class="historical-data">Historical Data</h1>
+    <div class="dashboard">
+        <div class="card">
+            <h2>Past Drivers</h2>
+            <ul id="pastDriverList"></ul>
+        </div>
+        <div class="card">
+            <h2>Past Car Telemetry</h2>
+            <ul id="pastCarData"></ul>
+        </div>
+        <div class="card">
+            <h2>Past Lap Times</h2>
+            <ul id="pastLapTimes"></ul>
+        </div>
+    </div>
+
+    <script src="js/f1-script.js"></script>
 </body>
 </html>
