@@ -26,7 +26,7 @@ class MainScene extends Phaser.scene
 
     // load assets
     preload() {
-        this.load.image('background', 'assets/background.png');
+        this.load.image('background', 'assets/background.jpg');
     }
 
     // create game objects
