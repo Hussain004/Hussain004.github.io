@@ -74,9 +74,9 @@ class Circuit
         var projectedW = point.scale * this.roadWidth;
         
         // scaling projected coordinates to the screen coordinates 
-        point.screen.x = Math.round((1 + projectedX) * SCREEN_CX);
-        point.screen.y = Math.round((1 - projectedY) * SCREEN_CY); 
-        point.screen.w = Math.round(projectedW * SCREEN_CX);
+        point.screen.x = Math.round((1 + projectedX) * SCREEN_CENTER_X);
+        point.screen.y = Math.round((1 - projectedY) * SCREEN_CENTER_Y); 
+        point.screen.w = Math.round(projectedW * SCREEN_CENTER_X);
     }
 
     // render 3D
