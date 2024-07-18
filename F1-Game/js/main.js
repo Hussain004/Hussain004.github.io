@@ -35,16 +35,19 @@ class MainScene extends Phaser.scene
         // background image
         this.add.sprite(SCREEN_CENTER_X, SCREEN_CENTER_Y, 'background');
 
+        // instances
+        this.settings = new Settings(this);
+
         // listen for pause event
         this.input.keyboard.on('keydown_P', function() {
-            console.log("Game is paused. Press [P] to resume.");
+            this.settings.txtPause.text = '[P] to resume';
             this.scene.pause();
             this.scene.launch('ScenePause');
         }, this);
 
         // listen for resume event
         this.events.on('resume', function() {
-            console.log("Game is resumed.");
+            this.settings.show();
         }, this);
     }
 
