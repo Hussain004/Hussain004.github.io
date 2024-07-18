@@ -92,9 +92,9 @@ class Player
 
         // Handle player input
         if (this.scene.input.keyboard.addKey('UP').isDown) {
-            this.speed += 10 * dt;
+            this.speed += 40 * dt;
         } else if (this.scene.input.keyboard.addKey('DOWN').isDown) {
-            this.speed -= 10 * dt;
+            this.speed -= 40 * dt;
         } else {
             this.speed *= 0.9;  // Deceleration
         }
