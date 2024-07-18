@@ -39,6 +39,13 @@ class Circuit
         // create a road
         this.createRoad();
 
+        // colorize first segments in a starting color and last segments in a finishing color
+        for (var n = 0; n < this.rumble_segments; n++) {
+            this.segments[n].color.road = '0xFFFFFF';                                    // start
+            this.segments[this.total_segments - 1 - n].color.road = '0x222222';          // finish
+        }
+
+
         // store the total number of segments
         this.total_segments = this.segments.length;
 
