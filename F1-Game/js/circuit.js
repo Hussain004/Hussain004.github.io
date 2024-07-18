@@ -54,24 +54,24 @@ class Circuit
         })
     }
 
-    // project2D(point) {
-    //     point.screen.x = SCREEN_CENTER_X;
-    //     point.screen.y = SCREEN_HEIGHT - point.screen.z;
-    //     point.screen.w = this.roadWidth;
-    // }
+    project2D(point) {
+        point.screen.x = SCREEN_CENTER_X;
+        point.screen.y = SCREEN_HEIGHT - point.screen.z;
+        point.screen.w = this.roadWidth;
+    }
 
-    // render2D() {
-    //     // get the current and previous segments
-    //     var currSegment = this.segments[1];
-    //     var prevSegment = this.segments[0];
+    render2D() {
+        // get the current and previous segments
+        var currSegment = this.segments[1];
+        var prevSegment = this.segments[0];
 
-    //     this.project2D(currSegment.point);
-    //     this.project2D(prevSegment.point);
+        this.project2D(currSegment.point);
+        this.project2D(prevSegment.point);
 
-    //     var p1 = prevSegment.point.screen;
-    //     var p2 = currSegment.point.screen;
+        var p1 = prevSegment.point.screen;
+        var p2 = currSegment.point.screen;
 
-    //     console.log("Previous segment screen point: ", p1);
-    //     console.log("Current segment screen point: ", p2);
-    // }
+        console.log("Previous segment screen point: ", p1);
+        console.log("Current segment screen point: ", p2);
+    }
 }
