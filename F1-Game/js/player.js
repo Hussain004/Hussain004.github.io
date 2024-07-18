@@ -10,7 +10,7 @@ class Player
         // Create animations
         scene.anims.create({
             key: 'straight',
-            frames: [{ key: 'car', frame: 1 }],
+            frames: [{ key: 'car', frame: 2 }],
             frameRate: 1,
             repeat: 0
         });
@@ -28,9 +28,8 @@ class Player
         scene.anims.create({
             key: 'right',
             frames: [
-                { key: 'car', frame: 1 },
-                { key: 'car', frame: 2 },
-                { key: 'car', frame: 3 }
+                { key: 'car', frame: 3 },
+                { key: 'car', frame: 4 },
             ],
             frameRate: 10,
             repeat: 0
@@ -92,9 +91,9 @@ class Player
 
         // Handle player input
         if (this.scene.input.keyboard.addKey('UP').isDown) {
-            this.speed += 40 * dt;
+            this.speed += 100 * dt;
         } else if (this.scene.input.keyboard.addKey('DOWN').isDown) {
-            this.speed -= 40 * dt;
+            this.speed -= 100 * dt;
         } else {
             this.speed *= 0.9;  // Deceleration
         }
