@@ -143,8 +143,11 @@ class Circuit
             var currIndex = (baseIndex + n) % this.total_segments;
             var currSegment = this.segments[currIndex];
 
+            // get the camera offset-Z to loop back the road
+            var offsetZ = (currIndex < baseIndex) ? this.roadLength : 0;
+
             // project the segment to the screen space
-            this.project3D(currSegment.point, camera.x, camera.y, camera.z, camera.distToPlane);
+            this.project3D(currSegment.point, camera.x, camera.y, camera.z-offsetZ, camera.distToPlane);
 
             // draw this segment only if it is visible
             var currBottomLine = currSegment.point.screen.y;

@@ -47,7 +47,11 @@ class Player
 
     // update player position
     update(dt) {
+        // references to the scene objects
+        var circuit = this.scene.circuit;
+
         // moving in z direction
         this.z += this.speed * dt;
+        if (this.z >= circuit.roadLength) this.z -= circuit.roadLength;
     }
 }
