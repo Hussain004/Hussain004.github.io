@@ -10,7 +10,7 @@ class Camera
 		this.z = 0;
         
         // Z-distance between camera and player
-        this.distToPlayer = 100;
+        this.distToPlayer = 500;
 
 		// Z-distance between camera and normalized projection plane
         this.distToPlane = null;

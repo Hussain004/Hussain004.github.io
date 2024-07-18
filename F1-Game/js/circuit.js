@@ -54,6 +54,12 @@ class Circuit
 
     // create road segment
     createSegment() {
+        // defining colors
+        const COLORS = {
+            LIGHT: {road: '0x888888'},
+            DARK: {road: '0x666666'}
+        };
+
         // get the current number of segments
         var n = this.segments.length;
 
@@ -67,7 +73,8 @@ class Circuit
                 scale: -1
             },
 
-            color: {road: '0x8888888'}
+            // alternating colors
+            color: Math.floor(n/5)%2 ? COLORS.DARK : COLORS.LIGHT
         })
     }
 
