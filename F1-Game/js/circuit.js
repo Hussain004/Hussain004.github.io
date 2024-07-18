@@ -57,21 +57,41 @@ class Circuit
         })
     }
 
-    project2D(point) {
-        point.screen.x = SCREEN_CENTER_X;
-        point.screen.y = SCREEN_HEIGHT - point.screen.z;
-        point.screen.w = this.roadWidth;
+    // project a point from 3D to 2D
+    project3D(point, cameraX, cameraY, cameraZ, cameraDepth) {
+
+        // translating world coordinates to camera coordinates
+        var transX = point.world.x - cameraX;
+        var transY = point.world.y - cameraY;
+        var transZ = point.world.z - cameraZ;
+        
+        // scaling factor based on the law of similar triangles
+        point.scale = cameraDepth/transZ;
+        
+        // projecting camera coordinates onto a normalized projection plane
+        var projectedX = point.scale * transX;
+        var projectedY = point.scale * transY;
+        var projectedW = point.scale * this.roadWidth;
+        
+        // scaling projected coordinates to the screen coordinates 
+        point.screen.x = Math.round((1 + projectedX) * SCREEN_CX);
+        point.screen.y = Math.round((1 - projectedY) * SCREEN_CY); 
+        point.screen.w = Math.round(projectedW * SCREEN_CX);
     }
 
-    render2D() {
+    // render 3D
+    render3D() {
         this.graphics.clear();
+
+        // get the camera position
+        var camera = this.scene.camera;
 
         // get the current and previous segments
         var currSegment = this.segments[1];
         var prevSegment = this.segments[0];
 
-        this.project2D(currSegment.point);
-        this.project2D(prevSegment.point);
+        this.project3D(currSegment.point, camera.x, camera.y, camera.z, camera.distToPlane);
+        this.project3D(prevSegment.point, camera.x, camera.y, camera.z, camera.distToPlane);
 
         var p1 = prevSegment.point.screen;
         var p2 = currSegment.point.screen;
