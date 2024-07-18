@@ -1,6 +1,6 @@
 //  screen size
-const SCREEN_WIDTH = 800;
-const SCREEN_HEIGHT = 600;
+const SCREEN_WIDTH = 1920;
+const SCREEN_HEIGHT = 1080;
 
 // coordinates of screen center
 const SCREEN_CENTER_X = SCREEN_WIDTH / 2;
@@ -18,7 +18,8 @@ var state = STATE_INIT;
 
 
 // main scene
-class MainScene extends Phaser.scene {
+class MainScene extends Phaser.scene 
+{
     constructor() {
         super({key: 'SceneMain'});
     }
@@ -30,8 +31,21 @@ class MainScene extends Phaser.scene {
 
     // create game objects
     create() {
+
         // background image
         this.add.sprite(SCREEN_CENTER_X, SCREEN_CENTER_Y, 'background');
+
+        // listen for pause event
+        this.input.keyboard.on('keydown_P', function() {
+            console.log("Game is paused. Press [P] to resume.");
+            this.scene.pause();
+            this.scene.launch('ScenePause');
+        }, this);
+
+        // listen for resume event
+        this.events.on('resume', function() {
+            console.log("Game is resumed.");
+        }, this);
     }
 
     // main game loop
@@ -64,6 +78,14 @@ class MainScene extends Phaser.scene {
 class PauseScene extends Phaser.scene {
     constructor() {
         super({key: 'ScenePause'});
+    }
+
+    create() {
+        // listen for resume event
+        this.input.keyboard.on('keydown_P', function() {
+            this.scene.resume('SceneMain');
+            this.scene.stop();
+        }, this);
     }
 }
 
