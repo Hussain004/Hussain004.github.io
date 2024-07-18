@@ -56,8 +56,8 @@ class Circuit
     createSegment() {
         // defining colors
         const COLORS = {
-            LIGHT: {road: '0x888888'},
-            DARK: {road: '0x666666'}
+            LIGHT: {road: '0x888888', grass: '0x429352'},
+            DARK: {road: '0x666666', grass: '0x397d46'}
         };
 
         // get the current number of segments
