@@ -174,9 +174,12 @@ class Circuit
         // draw all the visible objects on the rendering texture
         this.texture.clear()
 
-        // draw player
+        // Draw player
         var player = this.scene.player;
         this.texture.draw(player.sprite, player.screen.x, player.screen.y);
+
+        // Make sure the texture is visible
+        this.texture.setVisible(true);
 
     }
 

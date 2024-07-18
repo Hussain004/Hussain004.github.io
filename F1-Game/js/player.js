@@ -4,8 +4,8 @@ class Player
         this.scene = scene;
 
         // Create the player sprite using the new spritesheet
-        this.sprite = scene.add.sprite(0, 0, 'car');
-        this.sprite.setOrigin(0.5, 0.5);
+        this.sprite = scene.add.sprite(SCREEN_CENTER_X, SCREEN_HEIGHT - 100, 'car');
+        this.sprite.setOrigin(0.5, 1);
 
         // Create animations
         scene.anims.create({
@@ -68,6 +68,9 @@ class Player
     update(dt) {
         // Update player position based on speed
         this.z += this.speed * dt;
+
+        // ensure the sprite is visible
+        this.sprite.setVisible(true);
 
         // Loop the track
         if (this.z >= this.scene.circuit.roadLength) this.z -= this.scene.circuit.roadLength;

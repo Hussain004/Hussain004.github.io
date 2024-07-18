@@ -37,10 +37,8 @@ class MainScene extends Phaser.Scene
         // background image
         this.add.sprite(SCREEN_CENTER_X, SCREEN_CENTER_Y, 'background');
 
-        // array of sprites that will be manually drawn on rendering texture
-        this.sprites = [
-            this.add.image(0, 0, 'car').setVisible(false)
-        ];
+        this.player = new Player(this);
+        this.add.existing(this.player.sprite);
 
         // instances
         this.circuit = new Circuit(this);
