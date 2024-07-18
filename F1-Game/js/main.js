@@ -36,8 +36,8 @@ class MainScene extends Phaser.Scene
         this.add.sprite(SCREEN_CENTER_X, SCREEN_CENTER_Y, 'background');
 
         // instances
-        this.settings = new Settings(this);
         this.circuit = new Circuit(this);
+        this.settings = new Settings(this);
 
         // listen for pause event
         this.input.keyboard.on('keydown_P', function() {
@@ -68,8 +68,7 @@ class MainScene extends Phaser.Scene
             
             case STATE_PLAY:
                 console.log("Playing game.");
-                // this.circuit.render2D();
-                state = STATE_GAMEOVER;
+                // this.circuit.render2D()
                 break;
             
             case STATE_GAMEOVER:
