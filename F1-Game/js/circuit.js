@@ -11,7 +11,7 @@ class Circuit
         this.segments = [];
 
         // single segment length
-        this.segmentLength = 200;
+        this.segmentLength = 100;
 
         // total number of segments
         this.total_segments = null;
