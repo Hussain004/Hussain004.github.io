@@ -72,8 +72,8 @@ class MainScene extends Phaser.Scene
             
             case STATE_PLAY:
                 // duration of the frame
-                var dt = delta / 1000;
-                
+                var dt = Math.min(1, delta / 1000);
+
                 this.player.update(dt);
                 this.camera.update();
                 this.circuit.render3D();

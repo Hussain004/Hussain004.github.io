@@ -24,7 +24,14 @@ class Camera
 
     // update camera position
     update() {
+        // references
+        var player = this.scene.player;
+        var circuit = this.scene.circuit;
+
+        // reference to the player
+        this.x = player.x * circuit.roadWidth;
+        
         // place the camera behind the player at the desired distance
-        this.z = - this.distToPlayer;
+        this.z = player.z - this.distToPlayer;
     }
 }
