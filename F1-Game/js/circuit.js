@@ -146,6 +146,11 @@ class Circuit
 
     // draw a road segment
     drawSegment(x1, y1, w1, x2, y2, w2, color) {
+        // draw grass
+        this.graphics.fillStyle(color.grass, 1);
+        this.graphics.fillRect(0, y2, SCREEN_WIDTH, y1-y2);
+
+        // draw road
         this.drawPolygon(x1-w1, y1, x1+w1, y1, x2+w2, y2, x2-w2, y2, color.road);
     }
 
