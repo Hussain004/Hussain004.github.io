@@ -4,6 +4,9 @@ class Circuit
         // reference to the game scene
         this.scene = scene;
 
+        // graphics to draw the road polygons
+        this.graphics = scene.add.graphics(0, 0);
+
         // array of road segments
         this.segments = [];
 
@@ -61,6 +64,8 @@ class Circuit
     }
 
     render2D() {
+        this.graphics.clear();
+
         // get the current and previous segments
         var currSegment = this.segments[1];
         var prevSegment = this.segments[0];
@@ -71,7 +76,31 @@ class Circuit
         var p1 = prevSegment.point.screen;
         var p2 = currSegment.point.screen;
 
-        console.log("Previous segment screen point: ", p1);
-        console.log("Current segment screen point: ", p2);
+        this.drawSegment(
+            p1.x, p1.y, p1.w,
+            p2.x, p2.y, p2.w,
+            currSegment.color
+        )
+        // console.log("Previous segment screen point: ", p1);
+        // console.log("Current segment screen point: ", p2);
+    }
+
+    // draw a road segment
+    drawSegment(x1, y1, w1, x2, y2, w2, color) {
+        this.drawPolygon(x1-w1, y1, x1+w1, y1, x2+w2, y2, x2-w2, y2, color.road);
+    }
+
+    // draw a polygon
+    drawPolygon(x1, y1, x2, y2, x3, y3, x4, y4, color) {
+        this.graphics.fillStyle(color, 1);
+        this.graphics.beginPath();
+
+        this.graphics.moveTo(x1, y1);
+        this.graphics.lineTo(x2, y2);
+        this.graphics.lineTo(x3, y3);
+        this.graphics.lineTo(x4, y4);
+
+        this.graphics.closePath();
+        this.graphics.fill();
     }
 }
