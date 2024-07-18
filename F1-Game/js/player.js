@@ -1,87 +1,123 @@
 class Player 
 {
     constructor(scene) {
-        // reference to the game scene
         this.scene = scene;
 
-        // reference to the player sprite
-        this.sprite = scene.sprites[PLAYER];
+        // Create the player sprite using the new spritesheet
+        this.sprite = scene.add.sprite(0, 0, 'car');
+        this.sprite.setOrigin(0.5, 0.5);
 
-        // player world coordinates
+        // Create animations
+        scene.anims.create({
+            key: 'straight',
+            frames: [{ key: 'car', frame: 1 }],
+            frameRate: 1,
+            repeat: 0
+        });
+
+        scene.anims.create({
+            key: 'left',
+            frames: [
+                { key: 'car', frame: 1 },
+                { key: 'car', frame: 0 }
+            ],
+            frameRate: 10,
+            repeat: 0
+        });
+
+        scene.anims.create({
+            key: 'right',
+            frames: [
+                { key: 'car', frame: 1 },
+                { key: 'car', frame: 2 },
+                { key: 'car', frame: 3 }
+            ],
+            frameRate: 10,
+            repeat: 0
+        });
+
+        // Player world coordinates
         this.x = 0;
         this.y = 0;
         this.z = 0;
 
-        // player screen coordinates
-        this.screen = {x: 0, y: 0, w: 0, scale: 0};
+        // Player screen coordinates
+        this.screen = { x: 0, y: 0 };
 
-        // player speed
+        // Player speed
         this.speed = 0;
 
-        // Add input handling
-        this.cursors = scene.input.keyboard.createCursorKeys();
-        this.acceleration = 0;
-        this.steering = 0;
+        // Steering state
+        this.steering = 'straight';
     }
 
     init() {
-        this.screen.w = this.sprite.width;
-    }
-
-    restart() {
+        // Initialize player position
         this.x = 0;
         this.y = 0;
         this.z = 0;
         this.speed = 0;
+        this.steering = 'straight';
+        this.sprite.play('straight');
+    }
+
+    restart() {
+        this.init();
     }
 
     update(dt) {
-        // Handle input
-        if (this.cursors.up.isDown) {
-            this.acceleration += 100 * dt;
-        } else if (this.cursors.down.isDown) {
-            this.acceleration -= 100 * dt;
-        } else {
-            this.acceleration *= 0.9; // Deceleration
-        }
-
-        if (this.cursors.left.isDown) {
-            this.steering -= 2 * dt;
-        } else if (this.cursors.right.isDown) {
-            this.steering += 2 * dt;
-        } else {
-            this.steering *= 0.9; // Steering centering
-        }
-
-        // Clamp acceleration and steering
-        this.acceleration = Math.max(-5, Math.min(5, this.acceleration));
-        this.steering = Math.max(-0.2, Math.min(0.2, this.steering));
-
-        // Update speed
-        this.speed += this.acceleration;
-        this.speed = Math.max(0, Math.min(500, this.speed)); // Clamp speed
-
-        // Update position
-        this.x += this.steering * this.speed * dt;
+        // Update player position based on speed
         this.z += this.speed * dt;
 
-        // Constrain x position to keep car on the road
-        const maxX = this.scene.circuit.roadWidth;
-        this.x = Math.max(-maxX, Math.min(maxX, this.x));
-
         // Loop the track
-        if (this.z >= this.scene.circuit.roadLength) {
-            this.z -= this.scene.circuit.roadLength;
+        if (this.z >= this.scene.circuit.roadLength) this.z -= this.scene.circuit.roadLength;
+
+        // Get the current segment
+        var segment = this.scene.circuit.getSegment(this.z);
+
+        // Update player's screen coordinates
+        this.screen.x = segment.point.screen.x - segment.point.screen.w * this.x;
+        this.screen.y = segment.point.screen.y;
+
+        // Update sprite position
+        this.sprite.x = this.screen.x;
+        this.sprite.y = this.screen.y;
+
+        // Adjust sprite scale based on segment scale
+        var scale = segment.point.scale * 0.3;  // Adjust the multiplier as needed
+        this.sprite.setScale(scale);
+
+        // Handle player input
+        if (this.scene.input.keyboard.addKey('UP').isDown) {
+            this.speed += 10 * dt;
+        } else if (this.scene.input.keyboard.addKey('DOWN').isDown) {
+            this.speed -= 10 * dt;
+        } else {
+            this.speed *= 0.9;  // Deceleration
         }
 
-        // Update screen position
-        const roadWidth = this.scene.circuit.roadWidth;
-        const screenScale = SCREEN_WIDTH / (2 * roadWidth);
-        this.screen.x = SCREEN_CENTER_X + (this.x * screenScale);
-        this.screen.y = SCREEN_HEIGHT - 100; // Fixed vertical position
+        // Handle steering
+        if (this.scene.input.keyboard.addKey('LEFT').isDown) {
+            if (this.steering !== 'left') {
+                this.steering = 'left';
+                this.sprite.play('left');
+            }
+            this.x = Math.max(-1, this.x - dt);
+        } else if (this.scene.input.keyboard.addKey('RIGHT').isDown) {
+            if (this.steering !== 'right') {
+                this.steering = 'right';
+                this.sprite.play('right');
+            }
+            this.x = Math.min(1, this.x + dt);
+        } else {
+            if (this.steering !== 'straight') {
+                this.steering = 'straight';
+                this.sprite.play('straight');
+            }
+            this.x *= 0.9;  // Return to center
+        }
 
-        // Ensure the car stays within the screen bounds
-        const halfCarWidth = this.sprite.width / 2;
-        this.screen.x = Math.max(halfCarWidth, Math.min(SCREEN_WIDTH - halfCarWidth, this.screen.x));
+        // Limit speed
+        this.speed = Phaser.Math.Clamp(this.speed, 0, 500);
     }
 }

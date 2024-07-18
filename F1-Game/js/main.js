@@ -28,7 +28,7 @@ class MainScene extends Phaser.Scene
     // load assets
     preload() {
         this.load.image('background', 'assets/background.jpg');
-        this.load.image('car', 'assets/car_backside.png');
+        this.load.spritesheet('car', 'assets/player.png', { frameWidth: 364, frameHeight: 50 });
     }
 
     // create game objects
