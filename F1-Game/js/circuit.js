@@ -169,8 +169,8 @@ class Circuit
         // draw rumble strips
         var rumble_w1 = w1/5;
         var rumble_w2 = w2/5;
-        this.drawPolygon(x1-w1, y1, x1-rumble_w1, y1, x2-rumble_w2, y2, x2-w2, y2, color.rumble);
-        this.drawPolygon(x1+w1, y1, x1+rumble_w1, y1, x2+rumble_w2, y2, x2+w2, y2, color.rumble);
+        this.drawPolygon(x1-w1-rumble_w1, y1, x1-w1, y1, x2-w2, y2, x2-w2-rumble_w2, y2, color.rumble);
+        this.drawPolygon(x1+w1+rumble_w1, y1, x1+w1, y1, x2+w2, y2, x2+w2+rumble_w2, y2, color.rumble);
 
         // draw lanes
         if (color.lane) {
