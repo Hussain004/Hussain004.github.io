@@ -42,7 +42,7 @@ class Circuit
         // colorize first segments in a starting color and last segments in a finishing color
         for (var n = 0; n < this.rumble_segments; n++) {
             this.segments[n].color = {road: '0x666666'};
-            this.segments[this.total_segments-1-n].color = {road: '0x666666'};
+            this.segments[this.segments.length-1-n].color = {road: '0x666666'};
         }
 
 
