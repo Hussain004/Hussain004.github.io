@@ -69,6 +69,7 @@ class MainScene extends Phaser.Scene
             case STATE_PLAY:
                 console.log("Playing game.");
                 this.circuit.render2D()
+                state = STATE_GAMEOVER;
                 break;
             
             case STATE_GAMEOVER:
