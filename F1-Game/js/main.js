@@ -14,6 +14,7 @@ const STATE_GAMEOVER = 4;
 
 // global variables
 var state = STATE_INIT;
+const PLAYER = 0;
 
 
 
@@ -27,6 +28,7 @@ class MainScene extends Phaser.Scene
     // load assets
     preload() {
         this.load.image('background', 'assets/background.jpg');
+        this.load.image('car', 'assets/car_backside.png');
     }
 
     // create game objects
@@ -34,6 +36,11 @@ class MainScene extends Phaser.Scene
 
         // background image
         this.add.sprite(SCREEN_CENTER_X, SCREEN_CENTER_Y, 'background');
+
+        // array of sprites that will be manually drawn on rendering texture
+        this.sprites = [
+            this.add.image(0, 0, 'car').setVisible(false)
+        ];
 
         // instances
         this.circuit = new Circuit(this);
@@ -59,6 +66,7 @@ class MainScene extends Phaser.Scene
         switch(state) {
             case STATE_INIT:
                 this.camera.init();
+                this.player.init();
                 
                 state = STATE_RESTART;
                 break;

@@ -7,6 +7,9 @@ class Circuit
         // graphics to draw the road polygons
         this.graphics = scene.add.graphics(0, 0);
 
+        // texture to draw the sprites on it
+        this.texture = scene.add.renderTexture(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
         // array of road segments
         this.segments = [];
 
@@ -164,6 +167,13 @@ class Circuit
 
             }
         }
+
+        // draw all the visible objects on the rendering texture
+        this.texture.clear()
+
+        // draw player
+        var player = this.scene.player;
+        this.texture.draw(player.sprite, player.screen.x, player.screen.y);
 
     }
 
