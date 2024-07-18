@@ -5,7 +5,8 @@ class Player
 
         // Create the player sprite using the new spritesheet
         this.sprite = scene.add.sprite(SCREEN_CENTER_X, SCREEN_HEIGHT - 100, 'car');
-        this.sprite.setOrigin(0.5, 1);
+        this.sprite.setOrigin(0.5, 0.5);
+        this.sprite.setScale(2);
 
         // Create animations
         scene.anims.create({
