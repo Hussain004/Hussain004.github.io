@@ -73,7 +73,7 @@ class MainScene extends Phaser.Scene
             
             case STATE_GAMEOVER:
                 console.log("Game over.");
-                break
+                break;
         }
     }
 }
