@@ -37,6 +37,7 @@ class MainScene extends Phaser.scene
 
         // instances
         this.settings = new Settings(this);
+        this.circuit = new Circuit(this);
 
         // listen for pause event
         this.input.keyboard.on('keydown_P', function() {
@@ -61,6 +62,7 @@ class MainScene extends Phaser.scene
             
             case STATE_RESTART:
                 console.log("Restart game.");
+                this.circuit.create();
                 state = STATE_PLAY;
                 break;
             
