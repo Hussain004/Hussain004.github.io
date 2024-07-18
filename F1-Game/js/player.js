@@ -7,8 +7,6 @@ class Player
         this.sprite = scene.add.sprite(SCREEN_CENTER_X, SCREEN_HEIGHT - 100, 'car');
         this.sprite.setOrigin(0.5, 1);
 
-        this.debugRect = scene.add.rectangle(SCREEN_CENTER_X, SCREEN_HEIGHT - 100, 50, 80, 0xff0000);
-
         // Create animations
         scene.anims.create({
             key: 'straight',
@@ -121,9 +119,6 @@ class Player
             }
             this.x *= 0.9;  // Return to center
         }
-
-        this.debugRect.x = this.screen.x;
-        this.debugRect.y = this.screen.y;
 
         // Limit speed
         this.speed = Phaser.Math.Clamp(this.speed, 0, 500);
