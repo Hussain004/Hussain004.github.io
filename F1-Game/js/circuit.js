@@ -24,7 +24,7 @@ class Circuit
 
     // create road
     createRoad() {
-        this.createSection();
+        this.createSection(10);
     }
 
     // create road section
