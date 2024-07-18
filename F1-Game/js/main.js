@@ -18,7 +18,7 @@ var state = STATE_INIT;
 
 
 // main scene
-class MainScene extends Phaser.scene 
+class MainScene extends Phaser.Scene 
 {
     constructor() {
         super({key: 'SceneMain'});
@@ -80,7 +80,7 @@ class MainScene extends Phaser.scene
 
 
 // pause scene
-class PauseScene extends Phaser.scene {
+class PauseScene extends Phaser.Scene {
     constructor() {
         super({key: 'ScenePause'});
     }
