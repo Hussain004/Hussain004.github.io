@@ -63,7 +63,7 @@ class Circuit
         // defining colors
         const COLORS = {
             LIGHT: {road: '0x888888', grass: '0x429352', rumble: '0xb8312e'},
-            DARK: {road: '0x666666', grass: '0x397d46', rumble: '0xDDDDDD'}
+            DARK: {road: '0x666666', grass: '0x397d46', rumble: '0xDDDDDD', lane: '0xFFFFFF'}
         };
 
         // get the current number of segments
@@ -164,6 +164,29 @@ class Circuit
         var rumble_w2 = w2/5;
         this.drawPolygon(x1-w1, y1, x1-rumble_w1, y1, x2-rumble_w2, y2, x2-w2, y2, color.rumble);
         this.drawPolygon(x1+w1, y1, x1+rumble_w1, y1, x2+rumble_w2, y2, x2+w2, y2, color.rumble);
+
+        // draw lanes
+        if (color.lane) {
+            var line_w1 = (w1/20) / 2;
+            var line_w2 = (w2/20) / 2;
+
+            var lane_w1 = (w1*2) / this.roadLanes;
+            var lane_w2 = (w2*2) / this.roadLanes;
+
+            var lane_x1 = x1 - w1;
+            var lane_x2 = x2 - w2;
+
+            for (var i = 1; i < this.roadLanes; i++) {
+                lane_x1 += lane_w1;
+                lane_x2 += lane_w2;
+
+                this.drawPolygon(lane_x1-line_w1, y1, 
+                            lane_x1+line_w1, y1, 
+                            lane_x2+line_w2, y2, 
+                            lane_x2-line_w2, y2, 
+                            color.lane);
+            }
+        }
     }
 
     // draw a polygon
