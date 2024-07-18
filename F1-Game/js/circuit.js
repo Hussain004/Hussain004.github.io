@@ -13,8 +13,17 @@ class Circuit
         // single segment length
         this.segmentLength = 200;
 
+        // total number of segments
+        this.total_segments = null;
+
+        // number of visible segments to be drawn
+        this.visible_segments = 200;
+
         // road width (half of the road)
         this.roadWidth = 1000;
+
+        // road length
+        this.roadLength = null;
     }
 
     create() {
@@ -23,18 +32,23 @@ class Circuit
 
         // create a road
         this.createRoad();
+
+        // store the total number of segments
+        this.total_segments = this.segments.length;
+
+        // calculate the road length
+        this.roadLength = this.total_segments * this.segmentLength;
     }
 
     // create road
     createRoad() {
-        this.createSection(10);
+        this.createSection(1000);
     }
 
     // create road section
     createSection(nSegments) {
         for (var i = 0; i < nSegments; i++) {
             this.createSegment();
-            console.log("Created segment:", this.segments[i])
         }
     }
 
@@ -55,6 +69,14 @@ class Circuit
 
             color: {road: '0x8888888'}
         })
+    }
+
+    // returns a segment at the given Z position
+    getSegment(positionZ) {
+        if (positionZ < 0) positionZ += this.roadLength;
+        var index = Math.floor(positionZ / this.segmentLength) % this.total_segments;
+        return this.segments[index];
+
     }
 
     // project a point from 3D to 2D
@@ -86,23 +108,33 @@ class Circuit
         // get the camera position
         var camera = this.scene.camera;
 
-        // get the current and previous segments
-        var currSegment = this.segments[1];
-        var prevSegment = this.segments[0];
+        // get the base segment
+        var baseSegment = this.getSegment(camera.z);
+        var baseIndex = baseSegment.index;
 
-        this.project3D(currSegment.point, camera.x, camera.y, camera.z, camera.distToPlane);
-        this.project3D(prevSegment.point, camera.x, camera.y, camera.z, camera.distToPlane);
+        for (var n = 0; n < this.visible_segments; n++) {
+            // get current segment
+            var currIndex = (baseIndex + n) % this.total_segments;
+            var currSegment = this.segments[currIndex];
 
-        var p1 = prevSegment.point.screen;
-        var p2 = currSegment.point.screen;
+            // project the segment to the screen space
+            this.project3D(currSegment.point, camera.x, camera.y, camera.z, camera.distToPlane);
+            
+            if (n > 0) {
+                var prevIndex = (currIndex > 0) ? currIndex - 1 : this.total_segments - 1;
+                var prevSegment = this.segments[prevIndex];
 
-        this.drawSegment(
-            p1.x, p1.y, p1.w,
-            p2.x, p2.y, p2.w,
-            currSegment.color
-        )
-        // console.log("Previous segment screen point: ", p1);
-        // console.log("Current segment screen point: ", p2);
+                var p1 = prevSegment.point.screen;
+                var p2 = currSegment.point.screen;
+
+                this.drawSegment(
+                    p1.x, p1.y, p1.w,
+                    p2.x, p2.y, p2.w,
+                    currSegment.color
+                );
+            }
+        }
+
     }
 
     // draw a road segment
