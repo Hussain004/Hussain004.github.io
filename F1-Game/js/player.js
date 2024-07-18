@@ -57,6 +57,7 @@ class Player
         this.z = 0;
         this.speed = 0;
         this.steering = 'straight';
+        this.sprite.setVisible(true);
         this.sprite.play('straight');
     }
 
@@ -67,28 +68,28 @@ class Player
     update(dt) {
         // Update player position based on speed
         this.z += this.speed * dt;
-
+    
         // ensure the sprite is visible
         this.sprite.setVisible(true);
-
+    
         // Loop the track
         if (this.z >= this.scene.circuit.roadLength) this.z -= this.scene.circuit.roadLength;
-
+    
         // Get the current segment
         var segment = this.scene.circuit.getSegment(this.z);
-
+    
         // Update player's screen coordinates
         this.screen.x = segment.point.screen.x - segment.point.screen.w * this.x;
         this.screen.y = segment.point.screen.y;
-
+    
         // Update sprite position
         this.sprite.x = this.screen.x;
         this.sprite.y = this.screen.y;
-
+    
         // Adjust sprite scale based on segment scale
         var scale = segment.point.scale * 0.3;  // Adjust the multiplier as needed
         this.sprite.setScale(scale);
-
+    
         // Handle player input
         if (this.scene.input.keyboard.addKey('UP').isDown) {
             this.speed += 100 * dt;
@@ -97,7 +98,7 @@ class Player
         } else {
             this.speed *= 0.9;  // Deceleration
         }
-
+    
         // Handle steering
         if (this.scene.input.keyboard.addKey('LEFT').isDown) {
             if (this.steering !== 'left') {
@@ -118,7 +119,7 @@ class Player
             }
             this.x *= 0.9;  // Return to center
         }
-
+    
         // Limit speed
         this.speed = Phaser.Math.Clamp(this.speed, 0, 500);
     }

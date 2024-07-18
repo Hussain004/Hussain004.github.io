@@ -127,62 +127,59 @@ class Circuit
     // render 3D
     render3D() {
         this.graphics.clear();
-
+    
         // define the clipping bottom line to render only the visible part of the road
         var clipBottomLine = SCREEN_HEIGHT;
-
+    
         // get the camera position
         var camera = this.scene.camera;
-
+    
         // get the base segment
         var baseSegment = this.getSegment(camera.z);
         var baseIndex = baseSegment.index;
-
+    
         for (var n = 0; n < this.visible_segments; n++) {
             // get current segment
             var currIndex = (baseIndex + n) % this.total_segments;
             var currSegment = this.segments[currIndex];
-
+    
             // get the camera offset-Z to loop back the road
             var offsetZ = (currIndex < baseIndex) ? this.roadLength : 0;
-
+    
             // project the segment to the screen space
             this.project3D(currSegment.point, camera.x, camera.y, camera.z-offsetZ, camera.distToPlane);
-
+    
             // draw this segment only if it is visible
             var currBottomLine = currSegment.point.screen.y;
-            
+    
             if (n > 0 && currBottomLine < clipBottomLine) {
                 var prevIndex = (currIndex > 0) ? currIndex - 1 : this.total_segments - 1;
                 var prevSegment = this.segments[prevIndex];
-
+    
                 var p1 = prevSegment.point.screen;
                 var p2 = currSegment.point.screen;
-
+    
                 this.drawSegment(
                     p1.x, p1.y, p1.w,
                     p2.x, p2.y, p2.w,
                     currSegment.color
                 );
-
+    
                 // update the clipping bottom line
                 clipBottomLine = currBottomLine;
-
             }
         }
-
+    
         // draw all the visible objects on the rendering texture
-        this.texture.clear()
-
+        this.texture.clear();
+    
         // Draw player
         var player = this.scene.player;
         this.texture.draw(player.sprite, player.screen.x, player.screen.y);
-
+    
         // Make sure the texture is visible
         this.texture.setVisible(true);
-
     }
-
     // draw a road segment
     drawSegment(x1, y1, w1, x2, y2, w2, color) {
         // draw grass
