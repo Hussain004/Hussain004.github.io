@@ -4,10 +4,10 @@ class Player
         this.scene = scene;
 
         // Create the player sprite using the spritesheet
-        this.sprite = scene.add.sprite(SCREEN_CENTER_X, SCREEN_HEIGHT - 100, 'car');
+        this.sprite = scene.add.sprite(SCREEN_CENTER_X, SCREEN_HEIGHT - 50, 'car');
         
         // Set the initial scale of the sprite (adjust as needed)
-        this.sprite.setScale(2);
+        this.sprite.setScale(4);
 
         // Set the initial frame to the center position (frame 2)
         this.sprite.setFrame(2);
