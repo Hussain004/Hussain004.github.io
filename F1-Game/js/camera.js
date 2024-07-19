@@ -24,17 +24,17 @@ class Camera
 
     // update camera position
     update() {
+        // references
+        var player = this.scene.player;
+        var circuit = this.scene.circuit;
+
+        // reference to the player
+        this.x = player.x * circuit.roadWidth;
+        
+        // place the camera behind the player at the desired distance
+        this.z = player.z - this.distToPlayer;
+
         // loop back the road
         if (this.z < 0) this.z += circuit.roadLength;
-
-        const player = this.scene.player;
-        const segment = this.scene.circuit.getSegment(player.z);
-
-        this.x = player.x * CAMERA_DEPTH / player.z;
-        this.y = player.y * CAMERA_DEPTH / player.z;
-        this.z = player.z;
-
-        // Add curve offset
-        this.x += segment.curve * (player.z / this.scene.circuit.segmentLength);
     }
 }
