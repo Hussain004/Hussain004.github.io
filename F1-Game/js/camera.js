@@ -36,5 +36,8 @@ class Camera
 
         // loop back the road
         if (this.z < 0) this.z += circuit.roadLength;
+
+        // Add curve offset
+        this.x += segment.curve * (player.z / this.scene.circuit.segmentLength);
     }
 }

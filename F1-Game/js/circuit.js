@@ -33,6 +33,9 @@ class Circuit
 
         // road length
         this.roadLength = null;
+
+        // array to hold curve information
+        this.curves = [];
     }
 
     create() {
@@ -54,6 +57,35 @@ class Circuit
 
         // calculate the road length
         this.roadLength = this.total_segments * this.segmentLength;
+    }
+
+    // add a segment to the road
+    addSegment(curve = 0) {
+        this.segments.push({
+            index: this.segments.length,
+            point: new Point(),
+            curve: curve
+        });
+    }
+
+    // add a road section
+    addRoad(enter, hold, leave, curve) {
+        const n = enter + hold + leave;
+        for (let i = 0; i < enter; i++)
+            this.addSegment(Phaser.Math.Easing.Quadratic.In(i / enter) * curve);
+        for (let i = 0; i < hold; i++)
+            this.addSegment(curve);
+        for (let i = 0; i < leave; i++)
+            this.addSegment(Phaser.Math.Easing.Quadratic.Out(i / leave) * curve);
+    }
+    
+    // generate road
+    generateRoad() {
+        this.addRoad(100, 100, 100, 0);     // Straight
+        this.addRoad(50, 100, 50, 1);       // Right curve
+        this.addRoad(50, 100, 50, -1);      // Left curve
+        this.addRoad(100, 100, 100, 0);     // Straight
+        // Add more road sections as needed
     }
 
     // create road
@@ -179,7 +211,22 @@ class Circuit
     
         // Make sure the texture is visible
         this.texture.setVisible(true);
+
+        let x = 0;
+        let dx = 0;
+
+        for (let n = 0; n < DRAW_DISTANCE; n++) {
+            const segment = this.getSegment(this.playerZ + (n * this.segmentLength));
+            const camera = this.scene.camera;
+
+            // Project points
+            this.project(segment.point, camera.x - x, camera.y + CAMERA_HEIGHT, camera.z - (n * this.segmentLength), CAMERA_DEPTH);
+
+            x += dx;
+            dx += segment.curve;
+        }
     }
+
     // draw a road segment
     drawSegment(x1, y1, w1, x2, y2, w2, color) {
         // draw grass

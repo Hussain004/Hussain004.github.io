@@ -81,6 +81,13 @@ class Player
         // Smooth interpolation of sprite position
         this.sprite.x += (this.screen.x - this.sprite.x) * this.smoothing;
         this.sprite.y += (this.screen.y - this.sprite.y) * this.smoothing;
+
+        // Handle curves
+        const segment = this.scene.circuit.getSegment(this.z);
+        this.x -= segment.curve * this.speed * dt;
+
+        // Clamp horizontal position
+        this.x = Phaser.Math.Clamp(this.x, -2, 2);
     }
 
     updateScreenPosition(dt) {
