@@ -4,10 +4,10 @@ class Player
         this.scene = scene;
 
         // Create the player sprite using the spritesheet
-        this.sprite = scene.add.sprite(SCREEN_CENTER_X, SCREEN_HEIGHT - 50, 'car');
+        this.sprite = scene.add.sprite(SCREEN_CENTER_X, SCREEN_HEIGHT * 0.8, 'car');
         
         // Set the initial scale of the sprite (adjust as needed)
-        this.sprite.setScale(4);
+        this.sprite.setScale(2);
 
         // Set the initial frame to the center position (frame 2)
         this.sprite.setFrame(2);
@@ -18,7 +18,7 @@ class Player
         this.z = 0;
 
         // Screen position
-        this.screen = { x: 0, y: 0 };
+        this.screen = { x: SCREEN_CENTER_X, y: SCREEN_HEIGHT * 0.8 };
 
         // Speed
         this.speed = 0;
@@ -33,6 +33,7 @@ class Player
         this.y = 0;
         this.z = 0;
         this.speed = 0;
+        this.screen = { x: SCREEN_CENTER_X, y: SCREEN_HEIGHT * 0.8 };
     }
 
     restart() {
@@ -89,7 +90,11 @@ class Player
         const dx = nextSegment.point.screen.x - segment.point.screen.x;
         const dy = nextSegment.point.screen.y - segment.point.screen.y;
 
+        // Adjust the vertical position to be higher up on the screen
+        const baseY = SCREEN_HEIGHT * 0.8;
+        const yOffset = (segment.point.screen.y - baseY) * 0.2;
+
         this.screen.x = segment.point.screen.x + dx * percentageInSegment + this.x * segment.point.screen.w;
-        this.screen.y = segment.point.screen.y + dy * percentageInSegment;
+        this.screen.y = baseY + yOffset;
     }
 }
