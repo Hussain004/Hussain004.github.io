@@ -19,12 +19,16 @@ class Player
 
         // Screen position
         this.screen = { x: SCREEN_CENTER_X, y: SCREEN_HEIGHT * 0.8 };
+        this.targetScreen = { x: SCREEN_CENTER_X, y: SCREEN_HEIGHT * 0.8 };
 
         // Speed
         this.speed = 0;
 
         // Input
         this.cursors = scene.input.keyboard.createCursorKeys();
+
+        // Smoothing factor
+        this.smoothing = 0.2;
     }
 
     init() {
@@ -34,6 +38,7 @@ class Player
         this.z = 0;
         this.speed = 0;
         this.screen = { x: SCREEN_CENTER_X, y: SCREEN_HEIGHT * 0.8 };
+        this.targetScreen = { x: SCREEN_CENTER_X, y: SCREEN_HEIGHT * 0.8 };
     }
 
     restart() {
@@ -71,13 +76,14 @@ class Player
         }
 
         // Update screen position
-        this.updateScreenPosition();
+        this.updateScreenPosition(dt);
 
-        // Update sprite position
-        this.sprite.setPosition(this.screen.x, this.screen.y);
+        // Smooth interpolation of sprite position
+        this.sprite.x += (this.screen.x - this.sprite.x) * this.smoothing;
+        this.sprite.y += (this.screen.y - this.sprite.y) * this.smoothing;
     }
 
-    updateScreenPosition() {
+    updateScreenPosition(dt) {
         // Get the current segment
         const segment = this.scene.circuit.getSegment(this.z);
 
@@ -94,7 +100,11 @@ class Player
         const baseY = SCREEN_HEIGHT * 0.8;
         const yOffset = (segment.point.screen.y - baseY) * 0.2;
 
-        this.screen.x = segment.point.screen.x + dx * percentageInSegment + this.x * segment.point.screen.w;
-        this.screen.y = baseY + yOffset;
+        this.targetScreen.x = segment.point.screen.x + dx * percentageInSegment + this.x * segment.point.screen.w;
+        this.targetScreen.y = baseY + yOffset;
+
+        // Smooth interpolation of screen position
+        this.screen.x += (this.targetScreen.x - this.screen.x) * this.smoothing;
+        this.screen.y += (this.targetScreen.y - this.screen.y) * this.smoothing;
     }
 }
