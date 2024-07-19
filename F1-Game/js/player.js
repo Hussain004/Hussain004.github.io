@@ -48,7 +48,7 @@ class Player
     update(dt) {
         // Handle input
         if (this.cursors.up.isDown) {
-            this.speed += 10 * dt; // Accelerate
+            this.speed += 50 * dt; // Accelerate
             this.sprite.setFrame(2); // Center frame
         } else {
             this.speed -= 5 * dt; // Decelerate when not accelerating
