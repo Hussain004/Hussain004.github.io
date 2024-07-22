@@ -16,7 +16,7 @@ let keys = {
 }
 
 let player = {
-    speed: 5,
+    speed: 2,
     score: 0,   
     highScore: 0
 };
