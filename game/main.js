@@ -54,7 +54,7 @@ function Start() {
         Opponents.style.top = Opponents.y + "px";
         gameArea.appendChild(Opponents);
         Opponents.style.left = Math.floor(Math.random() * 350) + "px";
-        Opponents.style.backgroundColor=randomColor();
+        // Opponents.style.backgroundColor=randomColor();
     }
 
     let car = document.createElement('div');
@@ -64,13 +64,13 @@ function Start() {
     player.y = car.offsetTop;
 }
 
-function randomColor(){
-    function c(){
-    let hex=Math.floor(Math.random()*256).toString(16);
-    return ("0"+String(hex)).substr(-2);
-    }
-    return "#"+c()+c()+c();
-}
+// function randomColor(){
+//     function c(){
+//     let hex=Math.floor(Math.random()*256).toString(16);
+//     return ("0"+String(hex)).substr(-2);
+//     }
+//     return "#"+c()+c()+c();
+// }
 
 //play the game
 function Play() {
@@ -134,7 +134,7 @@ function isCollide(a, b) {
     return !((aRect.top > bRect.bottom) || (aRect.bottom < bRect.top) || (aRect.right < bRect.left) || (aRect.left > bRect.right))
 }
 
-//game is end
+//end the game
 function endGame() {
     player.isStart = false;
     player.speed = 5;
