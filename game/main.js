@@ -54,7 +54,7 @@ function Start() {
         Opponents.style.top = Opponents.y + "px";
         gameArea.appendChild(Opponents);
         Opponents.style.left = Math.floor(Math.random() * 350) + "px";
-        // Opponents.style.backgroundColor=randomColor();
+        Opponents.style.backgroundColor=randomColor();
     }
 
     let car = document.createElement('div');
@@ -64,13 +64,13 @@ function Start() {
     player.y = car.offsetTop;
 }
 
-// function randomColor(){
-//     function c(){
-//     let hex=Math.floor(Math.random()*256).toString(16);
-//     return ("0"+String(hex)).substr(-2);
-//     }
-//     return "#"+c()+c()+c();
-// }
+function randomColor(){
+    function c(){
+    let hex=Math.floor(Math.random()*256).toString(16);
+    return ("0"+String(hex)).substr(-2);
+    }
+    return "#"+c()+c()+c();
+}
 
 //play the game
 function Play() {
@@ -88,7 +88,7 @@ function Play() {
         car.style.left = player.x + "px";
         highScore.innerHTML = "HighScore" + ":" + (player.highScore - 1);
         player.score++;
-        player.speed += 0.01;
+        player.speed += 0.001;
         if (player.highScore < player.score) {
             player.highScore++;
             highScore.innerHTML = "HighScore" + ":" + (player.highScore - 1);
