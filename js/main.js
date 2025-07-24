@@ -325,9 +325,19 @@
                         <button class="pdf-modal-close" onclick="closePdfModal()">&times;</button>
                     </div>
                     <div class="pdf-modal-body">
-                        <iframe src="${pdfPath}" width="100%" height="600px" frameborder="0">
-                            <p>Your browser does not support iframes. <a href="${pdfPath}" target="_blank">Click here to view the PDF</a></p>
+                        <div class="pdf-loading" id="pdfLoading">
+                            <div class="loading-spinner"></div>
+                            <p>Loading certificate...</p>
+                        </div>
+                        <iframe id="pdfFrame" src="${pdfPath}#toolbar=0&navpanes=0&scrollbar=0" width="100%" height="600px" frameborder="0" style="display: none;">
+                            <p>Your browser does not support PDF viewing. <a href="${pdfPath}" target="_blank">Click here to download the PDF</a></p>
                         </iframe>
+                        <div class="pdf-error" id="pdfError" style="display: none;">
+                            <div class="error-icon">⚠️</div>
+                            <h4>Unable to load PDF</h4>
+                            <p>The PDF preview is not available at the moment.</p>
+                            <a href="${pdfPath}" target="_blank" class="btn btn--primary">Open PDF in New Tab</a>
+                        </div>
                     </div>
                     <div class="pdf-modal-footer">
                         <a href="${pdfPath}" target="_blank" class="btn btn--primary">Open in New Tab</a>
@@ -345,6 +355,33 @@
         
         // Prevent body scroll
         $('body').addClass('modal-open');
+
+        // Handle iframe load events
+        const iframe = document.getElementById('pdfFrame');
+        const loadingDiv = document.getElementById('pdfLoading');
+        const errorDiv = document.getElementById('pdfError');
+
+        // Show PDF after loading
+        iframe.onload = function() {
+            setTimeout(() => {
+                loadingDiv.style.display = 'none';
+                iframe.style.display = 'block';
+            }, 1000);
+        };
+
+        // Handle errors
+        iframe.onerror = function() {
+            loadingDiv.style.display = 'none';
+            errorDiv.style.display = 'block';
+        };
+
+        // Fallback timeout
+        setTimeout(() => {
+            if (iframe.style.display === 'none' && errorDiv.style.display === 'none') {
+                loadingDiv.style.display = 'none';
+                errorDiv.style.display = 'block';
+            }
+        }, 5000);
 
         // Close modal when clicking outside
         $('#pdfModal').on('click', function(e) {
