@@ -4893,6 +4893,145 @@ html.no-csstransitions .s-hero__content {
 }
 
 
+/* ===================================================================
+ * ## PDF Modal
+ * ------------------------------------------------------------------- */
+.pdf-modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
+}
+
+.pdf-modal-content {
+    position: relative;
+    background-color: #1a1a1a;
+    margin: 2% auto;
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 1000px;
+    height: 90vh;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+}
+
+.pdf-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem;
+    border-bottom: 1px solid #333;
+    background: linear-gradient(135deg, var(--color-1), #4f46e5);
+    border-radius: 8px 8px 0 0;
+}
+
+.pdf-modal-header h3 {
+    margin: 0;
+    color: white;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.pdf-modal-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2.4rem;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.pdf-modal-close:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+}
+
+.pdf-modal-body {
+    flex: 1;
+    padding: 0;
+    overflow: hidden;
+}
+
+.pdf-modal-body iframe {
+    border-radius: 0;
+    background: white;
+}
+
+.pdf-modal-footer {
+    padding: 2rem;
+    border-top: 1px solid #333;
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    background-color: #262626;
+    border-radius: 0 0 8px 8px;
+}
+
+.pdf-modal-footer .btn {
+    min-width: 120px;
+}
+
+/* Prevent body scroll when modal is open */
+body.modal-open {
+    overflow: hidden;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 800px) {
+    .pdf-modal-content {
+        width: 95%;
+        margin: 1% auto;
+        height: 95vh;
+    }
+    
+    .pdf-modal-header,
+    .pdf-modal-footer {
+        padding: 1.5rem;
+    }
+    
+    .pdf-modal-header h3 {
+        font-size: 1.6rem;
+    }
+    
+    .pdf-modal-footer {
+        flex-direction: column;
+    }
+    
+    .pdf-modal-footer .btn {
+        width: 100%;
+        min-width: auto;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .pdf-modal-content {
+        width: 98%;
+        height: 98vh;
+        margin: 1% auto;
+    }
+    
+    .pdf-modal-body iframe {
+        height: 500px;
+    }
+}
+
+
+
 /* ------------------------------------------------------------------- 
  * responsive:
  * clients

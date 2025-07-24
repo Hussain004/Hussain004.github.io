@@ -313,6 +313,67 @@
 
 
 
+   /* PDF modal functionality
+    * ------------------------------------------------------ */
+    const openPdfModal = function(pdfPath) {
+        // Create modal HTML
+        const modalHtml = `
+            <div id="pdfModal" class="pdf-modal">
+                <div class="pdf-modal-content">
+                    <div class="pdf-modal-header">
+                        <h3>Certificate Preview</h3>
+                        <button class="pdf-modal-close" onclick="closePdfModal()">&times;</button>
+                    </div>
+                    <div class="pdf-modal-body">
+                        <iframe src="${pdfPath}" width="100%" height="600px" frameborder="0">
+                            <p>Your browser does not support iframes. <a href="${pdfPath}" target="_blank">Click here to view the PDF</a></p>
+                        </iframe>
+                    </div>
+                    <div class="pdf-modal-footer">
+                        <a href="${pdfPath}" target="_blank" class="btn btn--primary">Open in New Tab</a>
+                        <button onclick="closePdfModal()" class="btn btn--stroke">Close</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Add modal to body
+        $('body').append(modalHtml);
+        
+        // Show modal with animation
+        $('#pdfModal').fadeIn(300);
+        
+        // Prevent body scroll
+        $('body').addClass('modal-open');
+
+        // Close modal when clicking outside
+        $('#pdfModal').on('click', function(e) {
+            if (e.target === this) {
+                closePdfModal();
+            }
+        });
+
+        // Close modal with Escape key
+        $(document).on('keydown.pdfModal', function(e) {
+            if (e.keyCode === 27) { // Escape key
+                closePdfModal();
+            }
+        });
+    };
+
+    const closePdfModal = function() {
+        $('#pdfModal').fadeOut(300, function() {
+            $(this).remove();
+        });
+        $('body').removeClass('modal-open');
+        $(document).off('keydown.pdfModal');
+    };
+
+    // Make functions globally available
+    window.openPdfModal = openPdfModal;
+    window.closePdfModal = closePdfModal;
+
+
    /* initialize
     * ------------------------------------------------------ */
     (function ssInit() {
