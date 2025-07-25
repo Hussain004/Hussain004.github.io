@@ -4688,8 +4688,8 @@ html.no-csstransitions .s-hero__content {
     flex-shrink: 0;
     width: 6rem;
     height: 6rem;
-    background: linear-gradient(135deg, var(--color-1), #4f46e5);
-    border-radius: 12px;
+    /* background: linear-gradient(135deg, var(--color-1), #4f46e5); */
+    /* border-radius: 12px; */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -4707,10 +4707,10 @@ html.no-csstransitions .s-hero__content {
 }
 
 .certificate-provider {
-    color: var(--color-text-light);
+    color: #e2e8f0;
     font-size: 1.4rem;
-    font-weight: 500;
-    opacity: 0.8;
+    font-weight: 600;
+    opacity: 1;
 }
 
 /* ------------------------------------------------------------------- 
