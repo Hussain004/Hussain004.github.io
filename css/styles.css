@@ -4965,11 +4965,16 @@ html.no-csstransitions .s-hero__content {
     flex: 1;
     padding: 0;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
 }
 
 .pdf-modal-body iframe {
     border-radius: 0;
     background: white;
+    flex: 1;
+    min-height: 500px;
 }
 
 .pdf-loading {
@@ -4977,7 +4982,8 @@ html.no-csstransitions .s-hero__content {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 600px;
+    flex: 1;
+    min-height: 500px;
     color: var(--color-text-light);
 }
 
@@ -5007,7 +5013,8 @@ html.no-csstransitions .s-hero__content {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 600px;
+    flex: 1;
+    min-height: 500px;
     text-align: center;
     color: var(--color-text-light);
     padding: 2rem;
@@ -5082,8 +5089,10 @@ body.modal-open {
         margin: 1% auto;
     }
     
-    .pdf-modal-body iframe {
-        height: 500px;
+    .pdf-modal-body iframe,
+    .pdf-loading,
+    .pdf-error {
+        min-height: 400px;
     }
 }
 

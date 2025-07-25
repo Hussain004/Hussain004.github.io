@@ -329,7 +329,7 @@
                             <div class="loading-spinner"></div>
                             <p>Loading certificate...</p>
                         </div>
-                        <iframe id="pdfFrame" src="${pdfPath}#toolbar=0&navpanes=0&scrollbar=0" width="100%" height="600px" frameborder="0" style="display: none;">
+                        <iframe id="pdfFrame" src="${pdfPath}#toolbar=0&navpanes=0&scrollbar=0" width="100%" height="100%" frameborder="0" style="display: none;">
                             <p>Your browser does not support PDF viewing. <a href="${pdfPath}" target="_blank">Click here to download the PDF</a></p>
                         </iframe>
                         <div class="pdf-error" id="pdfError" style="display: none;">
