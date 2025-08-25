@@ -1136,6 +1136,105 @@ textarea {
  * ## mobile devices
  * ------------------------------------------------------------------- */
 @media screen and (max-width: 600px) {
+    body, .s-hero, .s-about, .s-interests, .s-projects, .s-certificates, .s-contact {
+        padding-left: 1.2rem;
+        padding-right: 1.2rem;
+        box-sizing: border-box;
+    }
+    .row, .block-large-1-2, .block-tab-full, .s-projects__list {
+        flex-direction: column !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .column, .item, .certificate-item {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box;
+        margin: 0 0 2rem 0 !important;
+        padding: 0 !important;
+    }
+    .certificate-item, .folio-item {
+        padding: 1.2rem !important;
+        border-radius: 8px !important;
+    }
+    .certificate-header, .certificate-details, .certificate-actions {
+        flex-direction: column !important;
+        gap: 1rem !important;
+        align-items: flex-start !important;
+    }
+    .certificate-title, .display-1, h1, h2, h3 {
+        font-size: 2rem !important;
+        line-height: 1.2 !important;
+    }
+    .certificate-provider, .certificate-detail-label, .certificate-detail-value {
+        font-size: 1.1rem !important;
+    }
+    .cert-btn {
+        min-width: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        font-size: 1.1rem !important;
+        padding: 1rem 0.5rem !important;
+        margin-bottom: 0.7rem !important;
+        height: auto !important;
+    }
+    .cert-btn i {
+        font-size: 1rem !important;
+    }
+    .s-hero__content h1 {
+        font-size: 2.5rem !important;
+        margin-bottom: 1rem !important;
+    }
+    .s-hero__content-about {
+        font-size: 1.2rem !important;
+        padding-left: 0.5em !important;
+        padding-right: 0.5em !important;
+    }
+    .s-hero__content-social {
+        font-size: 1.2rem !important;
+    }
+    .s-hero__scroll {
+        display: none !important;
+    }
+    .s-header__logo, .s-header__menu-toggle {
+        left: 1.2rem !important;
+        right: 1.2rem !important;
+    }
+    .folio-item__thumb img {
+        width: 100% !important;
+        height: auto !important;
+    }
+    .folio-item__info, .folio-item__caption {
+        padding: 0.5rem !important;
+    }
+    .folio-item__project-link {
+        position: static !important;
+        margin-top: 0.5rem !important;
+        width: 100% !important;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .certificate-title, .display-1, h1, h2, h3 {
+        font-size: 1.3rem !important;
+    }
+    .certificate-provider, .certificate-detail-label, .certificate-detail-value {
+        font-size: 0.95rem !important;
+    }
+    .cert-btn {
+        font-size: 0.95rem !important;
+        padding: 0.7rem 0.3rem !important;
+    }
+    .s-hero__content h1 {
+        font-size: 1.5rem !important;
+    }
+    .s-hero__content-about {
+        font-size: 0.95rem !important;
+    }
+}
     .row {
         width: 100%;
         padding-left: 6vw;
@@ -1225,7 +1324,7 @@ textarea {
     .hide-on-mobile {
         display: none;
     }
-}
+
 
 /* ------------------------------------------------------------------- 
  * ## small mobile devices <= 400px
