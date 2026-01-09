@@ -294,8 +294,8 @@ const F1Game = {
         const cy = this.canvas.height / 2;
         
         // Create an F1-style circuit (simplified oval with chicanes)
-        const outerRadius = 250;
-        const innerRadius = 180;
+        const outerRadius = 280;
+        const innerRadius = 200;
         const trackWidth = outerRadius - innerRadius;
         
         // Generate track path points (figure-8 inspired circuit)
@@ -332,18 +332,20 @@ const F1Game = {
             }
         }
         
-        // Start/finish line position
+        // Start/finish line position (at rightmost point of track)
+        const startAngle = 0; // Right side of track
+        const startRadius = (outerRadius + innerRadius) / 2; // Middle of track
         this.track.startLine = {
-            x: cx + outerRadius - trackWidth / 2,
-            y: cy,
+            x: cx + Math.cos(startAngle) * startRadius,
+            y: cy + Math.sin(startAngle) * startRadius * 0.7, // Account for oval shape
             angle: Math.PI / 2
         };
     },
     
     setupPlayer() {
         const startPos = this.track.startLine;
-        this.player.x = startPos.x - 50;
-        this.player.y = startPos.y + 80;
+        this.player.x = startPos.x - 40;
+        this.player.y = startPos.y;
         this.player.angle = -Math.PI / 2;
         this.player.speed = 0;
         
