@@ -1144,17 +1144,19 @@ textarea {
     
     .s-hero__bg {
         width: 100%;
-        height: 35vh;
-        min-height: 200px;
+        height: 30vh;
+        min-height: 180px;
+        max-height: 250px;
         top: 0;
         left: 0;
         right: 0;
-        background-size: cover;
-        background-position: center center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center top;
     }
     
     .s-hero__content {
-        padding-top: 38vh;
+        padding-top: 33vh;
         padding-bottom: 3rem;
     }
     
@@ -1205,23 +1207,41 @@ textarea {
         right: 1.5rem;
     }
 
+    /* Override single-column stacking - keep two columns */
+    .block-tab-full > .column,
+    .block-large-1-2 > .column {
+        flex: 0 0 50% !important;
+        max-width: 50% !important;
+    }
+    
+    /* Full width for title rows */
+    .large-12 {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+    
+    /* Reduce column padding for better fit */
+    .column {
+        padding: 0 0.5rem;
+    }
+
     /* Typography - smaller but readable */
     .display-1 {
-        font-size: 2.4rem;
-        line-height: 1.35;
+        font-size: 2rem;
+        line-height: 1.3;
     }
     
     .item-title {
-        font-size: 1.6rem;
-    }
-    
-    .lead {
         font-size: 1.5rem;
     }
     
-    p {
+    .lead {
         font-size: 1.4rem;
-        line-height: 1.6;
+    }
+    
+    p {
+        font-size: 1.3rem;
+        line-height: 1.5;
     }
 
     /* Portfolio items */
@@ -1232,6 +1252,16 @@ textarea {
 }
 
 @media screen and (max-width: 400px) {
+    .s-hero__bg {
+        height: 25vh;
+        min-height: 150px;
+        max-height: 200px;
+    }
+    
+    .s-hero__content {
+        padding-top: 28vh;
+    }
+    
     .s-hero__content h1 {
         font-size: 3rem;
     }
@@ -1241,20 +1271,20 @@ textarea {
     }
     
     .display-1 {
-        font-size: 2rem;
-        line-height: 1.35;
+        font-size: 1.7rem;
+        line-height: 1.3;
     }
     
     .item-title {
-        font-size: 1.4rem;
-    }
-    
-    .lead {
         font-size: 1.3rem;
     }
     
-    p {
+    .lead {
         font-size: 1.2rem;
+    }
+    
+    p {
+        font-size: 1.1rem;
     }
     
     .s-header__logo {
@@ -1262,6 +1292,10 @@ textarea {
     }
     .s-header__menu-toggle {
         right: 1rem;
+    }
+    
+    .column {
+        padding: 0 0.3rem;
     }
         .row {
             width: 100%;
