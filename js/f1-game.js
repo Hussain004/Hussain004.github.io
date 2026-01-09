@@ -295,8 +295,8 @@ const F1Game = {
         
         // Store track parameters for use in collision detection
         this.trackParams = {
-            outerRadius: 285,
-            innerRadius: 195,
+            outerRadius: 340,
+            innerRadius: 240,
             centerX: cx,
             centerY: cy
         };
@@ -305,22 +305,27 @@ const F1Game = {
         const innerRadius = this.trackParams.innerRadius;
         const trackWidth = outerRadius - innerRadius;
         
-        // Generate track path points with figure-8 inspired shape
+        // Generate track path points with complex layout including hairpin
         this.track.outerPath = [];
         this.track.innerPath = [];
         this.track.checkpoints = [];
         
-        const numPoints = 120; // More points for smoother track
+        const numPoints = 150; // More points for complex track
         for (let i = 0; i < numPoints; i++) {
             const t = (i / numPoints) * Math.PI * 2;
             
-            // Create figure-8 style circuit with chicanes
-            const variation = Math.sin(t * 4) * 25 + Math.cos(t * 3) * 15;
+            // Create complex circuit with chicanes, fast corners, and a hairpin
+            // Multiple frequency variations create different corner types
+            const fastCorner = Math.sin(t * 2) * 40; // Long sweeping corners
+            const chicane = Math.sin(t * 6) * 20; // Quick chicanes
+            const hairpin = Math.cos(t * 1) * 35; // Slow hairpin section
+            const variation = fastCorner + chicane + hairpin;
+            
             const outerR = outerRadius + variation;
             const innerR = innerRadius + variation;
             
-            // Figure-8 shape with squashed oval
-            const radiusModifier = 0.65; // Make it more elongated
+            // More elongated oval for longer straights and tighter hairpin
+            const radiusModifier = 0.55; // Very elongated
             const ox = cx + Math.cos(t) * outerR;
             const oy = cy + Math.sin(t) * outerR * radiusModifier;
             
@@ -330,7 +335,7 @@ const F1Game = {
             this.track.outerPath.push({ x: ox, y: oy });
             this.track.innerPath.push({ x: ix, y: iy });
             
-            // Add checkpoints every 30 points
+            // Add checkpoints every 30 points (5 checkpoints)
             if (i % 30 === 0) {
                 this.track.checkpoints.push({
                     index: i,
@@ -557,16 +562,19 @@ const F1Game = {
         
         // Calculate distance from center (accounting for oval shape)
         const dx = x - cx;
-        const dy = (y - cy) / 0.65; // Account for elongated oval
+        const dy = (y - cy) / 0.55; // Account for very elongated oval
         const dist = Math.sqrt(dx * dx + dy * dy);
         
         // Track boundaries with variation matching track shape
         const angle = Math.atan2(dy, dx);
-        const variation = Math.sin(angle * 4) * 25 + Math.cos(angle * 3) * 15;
+        const fastCorner = Math.sin(angle * 2) * 40;
+        const chicane = Math.sin(angle * 6) * 20;
+        const hairpin = Math.cos(angle * 1) * 35;
+        const variation = fastCorner + chicane + hairpin;
         const outerRadius = this.trackParams.outerRadius + variation;
         const innerRadius = this.trackParams.innerRadius + variation;
         
-        return dist >= innerRadius - 15 && dist <= outerRadius + 15;
+        return dist >= innerRadius - 20 && dist <= outerRadius + 20;
     },
     
     checkCollisions() {
