@@ -284,9 +284,9 @@ const F1Game = {
         this.canvas = document.getElementById('f1-game-canvas');
         this.ctx = this.canvas.getContext('2d');
         
-        // Set canvas size
-        this.canvas.width = 800;
-        this.canvas.height = 600;
+        // Set canvas size - larger for bigger track
+        this.canvas.width = 1000;
+        this.canvas.height = 700;
     },
     
     setupTrack() {
@@ -624,10 +624,11 @@ const F1Game = {
     
     checkCheckpoints() {
         const progress = this.getTrackProgress(this.player.x, this.player.y);
-        const checkpointIndex = Math.floor(progress / 25);
+        const numCheckpoints = this.track.checkpoints.length; // Should be 4 checkpoints
+        const checkpointIndex = Math.floor(progress / 30); // 120 points / 4 checkpoints = 30
         
-        // Check if crossed start/finish line
-        if (this.lastCheckpoint === 3 && checkpointIndex === 0) {
+        // Check if crossed start/finish line (checkpoint 0 after checkpoint 3)
+        if (this.lastCheckpoint === numCheckpoints - 1 && checkpointIndex === 0) {
             // Completed a lap
             const lapTime = Date.now() - this.lapStartTime;
             
