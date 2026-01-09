@@ -4988,6 +4988,7 @@ html.no-csstransitions .s-hero__content {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
+    align-items: stretch;
 }
 
 .cert-btn {
@@ -5007,6 +5008,8 @@ html.no-csstransitions .s-hero__content {
     border: 1px solid rgba(255, 255, 255, 0.15);
     cursor: pointer;
     box-sizing: border-box;
+    height: 42px;
+    min-width: 42px;
 }
 
 .cert-btn:hover {
@@ -5021,8 +5024,8 @@ html.no-csstransitions .s-hero__content {
     background: linear-gradient(135deg, var(--color-1), #4f46e5);
     border-color: transparent;
     color: white;
-    flex: 1;
-    min-width: 120px;
+    min-width: 110px;
+    max-width: 140px;
 }
 
 .cert-btn-verify:hover {
@@ -5096,12 +5099,12 @@ html.no-csstransitions .s-hero__content {
     }
     
     .cert-btn {
-        flex: 1;
-        min-width: auto;
+        min-width: 42px;
     }
     
     .cert-btn-verify {
-        flex: 2;
+        flex: 1;
+        max-width: none;
     }
 }
 
