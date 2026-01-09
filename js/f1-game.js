@@ -295,15 +295,15 @@ const F1Game = {
         
         // Store track parameters for use in collision detection
         this.trackParams = {
-            outerRadius: 340,
-            innerRadius: 240,
+            outerRadius: 420,
+            innerRadius: 300,
             centerX: cx,
             centerY: cy
         };
         
         const outerRadius = this.trackParams.outerRadius;
         const innerRadius = this.trackParams.innerRadius;
-        const trackWidth = outerRadius - innerRadius;
+        const trackWidth = outerRadius - innerRadius; // Now 120 pixels wide
         
         // Generate track path points with complex layout including hairpin
         this.track.outerPath = [];
@@ -574,7 +574,7 @@ const F1Game = {
         const outerRadius = this.trackParams.outerRadius + variation;
         const innerRadius = this.trackParams.innerRadius + variation;
         
-        return dist >= innerRadius - 20 && dist <= outerRadius + 20;
+        return dist >= innerRadius - 25 && dist <= outerRadius + 25;
     },
     
     checkCollisions() {
