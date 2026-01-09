@@ -4880,11 +4880,11 @@ html.no-csstransitions .s-hero__content {
  * ## certificate items
  * ------------------------------------------------------------------- */
 .certificate-item {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 3rem;
-    margin-bottom: 3rem;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    padding: 2rem 2.5rem;
+    margin-bottom: 2rem;
     position: relative;
     overflow: hidden;
     backdrop-filter: blur(10px);
@@ -4894,8 +4894,9 @@ html.no-csstransitions .s-hero__content {
 
 .certificate-item:hover {
     border-color: var(--color-1);
-    transform: translateY(-5px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
 }
 
 .certificate-item::before {
@@ -4904,7 +4905,7 @@ html.no-csstransitions .s-hero__content {
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
+    height: 3px;
     background: linear-gradient(90deg, var(--color-1), #4f46e5, #06b6d4);
     opacity: 0;
     transition: opacity 0.3s ease;
@@ -4914,22 +4915,27 @@ html.no-csstransitions .s-hero__content {
     opacity: 1;
 }
 
-/* ------------------------------------------------------------------- 
- * ## certificate badge
- * ------------------------------------------------------------------- */
-.certificate-badge {
-    position: absolute;
-    top: 2rem;
-    right: 2rem;
-    background: linear-gradient(135deg, #10b981, #059669);
-    color: white;
-    font-size: 1.2rem;
-    font-weight: 600;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+.certificate-coming-soon {
+    opacity: 0.5;
+    border-style: dashed;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.certificate-coming-soon:hover {
+    opacity: 0.6;
+    transform: none;
+}
+
+.certificate-coming-soon .certificate-icon {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.certificate-coming-soon .certificate-title {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.certificate-coming-soon .certificate-provider {
+    color: rgba(255, 255, 255, 0.4);
 }
 
 /* ------------------------------------------------------------------- 
@@ -4937,73 +4943,42 @@ html.no-csstransitions .s-hero__content {
  * ------------------------------------------------------------------- */
 .certificate-header {
     display: flex;
-    align-items: flex-start;
-    gap: 2rem;
-    margin-bottom: 2.5rem;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.certificate-info {
+    flex: 1;
 }
 
 .certificate-icon {
     flex-shrink: 0;
-    width: 6rem;
-    height: 6rem;
+    width: 5rem;
+    height: 5rem;
     background: linear-gradient(135deg, var(--color-1), #4f46e5);
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    font-size: 2.4rem;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    font-size: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .certificate-title {
     color: white;
-    font-size: 2.2rem;
+    font-size: 1.8rem;
     font-weight: 600;
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 0.4rem 0;
     line-height: 1.3;
 }
 
 .certificate-provider {
-    color: #e2e8f0;
-    font-size: 1.4rem;
-    font-weight: 600;
-    opacity: 1;
-}
-
-/* ------------------------------------------------------------------- 
- * ## certificate details
- * ------------------------------------------------------------------- */
-.certificate-details {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2.5rem;
-    padding: 2rem;
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.certificate-detail {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.certificate-detail-label {
-    color: var(--color-text-light);
-    font-size: 1.2rem;
+    color: #cbd5e1;
+    font-size: 1.3rem;
     font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    opacity: 0.7;
-}
-
-.certificate-detail-value {
-    color: white;
-    font-size: 1.4rem;
-    font-weight: 600;
+    opacity: 0.9;
 }
 
 /* ------------------------------------------------------------------- 
@@ -5011,7 +4986,7 @@ html.no-csstransitions .s-hero__content {
  * ------------------------------------------------------------------- */
 .certificate-actions {
     display: flex;
-    gap: 1.5rem;
+    gap: 1rem;
     flex-wrap: wrap;
 }
 
@@ -5019,49 +4994,44 @@ html.no-csstransitions .s-hero__content {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.8rem;
-    padding: 1.2rem 2.4rem;
-    background: linear-gradient(135deg, var(--color-1), #4f46e5);
-    color: white;
+    gap: 0.6rem;
+    padding: 0.9rem 1.2rem;
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.9);
     text-decoration: none;
-    border-radius: 6px;
-    font-size: 1.4rem;
-    font-weight: 600;
-    line-height: 1.4;
+    border-radius: 8px;
+    font-size: 1.3rem;
+    font-weight: 500;
+    line-height: 1;
     transition: all 0.3s ease;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.15);
     cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    min-width: 200px;
-    height: 52px;
-    flex: 1;
-    max-width: 250px;
     box-sizing: border-box;
-    vertical-align: top;
 }
 
 .cert-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-    background: linear-gradient(135deg, #4f46e5, var(--color-1));
-}
-
-.cert-btn-secondary {
-    background: transparent;
-    border: 2px solid var(--color-1);
-    color: var(--color-1);
-}
-
-.cert-btn-secondary:hover {
-    background: var(--color-1);
-    color: white;
+    background: rgba(255, 255, 255, 0.12);
     border-color: var(--color-1);
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.cert-btn-verify {
+    background: linear-gradient(135deg, var(--color-1), #4f46e5);
+    border-color: transparent;
+    color: white;
+    flex: 1;
+    min-width: 120px;
+}
+
+.cert-btn-verify:hover {
+    background: linear-gradient(135deg, #4f46e5, var(--color-1));
+    box-shadow: 0 4px 15px rgba(var(--color-1-rgb), 0.4);
 }
 
 .cert-btn i {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
 }
 
 /* ------------------------------------------------------------------- 
@@ -5074,42 +5044,31 @@ html.no-csstransitions .s-hero__content {
     }
     
     .certificate-title {
-        font-size: 2rem;
+        font-size: 1.7rem;
     }
 }
 
 @media screen and (max-width: 800px) {
     .certificate-item {
-        padding: 2rem;
+        padding: 1.8rem;
     }
     
     .certificate-header {
-        flex-direction: column;
-        text-align: center;
-        gap: 1.5rem;
+        gap: 1.2rem;
     }
     
     .certificate-icon {
-        align-self: center;
-        width: 5rem;
-        height: 5rem;
-        font-size: 2rem;
+        width: 4.5rem;
+        height: 4.5rem;
+        font-size: 1.8rem;
     }
     
-    .certificate-badge {
-        position: static;
-        align-self: center;
-        margin-bottom: 1rem;
-    }
-    
-    .certificate-details {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-        padding: 1.5rem;
+    .certificate-title {
+        font-size: 1.6rem;
     }
     
     .certificate-actions {
-        justify-content: center;
+        gap: 0.8rem;
     }
 }
 
@@ -5118,21 +5077,31 @@ html.no-csstransitions .s-hero__content {
         padding: 1.5rem;
     }
     
+    .certificate-header {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+    }
+    
     .certificate-title {
-        font-size: 1.8rem;
+        font-size: 1.5rem;
     }
     
     .certificate-provider {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
     }
     
     .certificate-actions {
-        flex-direction: column;
+        width: 100%;
     }
     
     .cert-btn {
-        justify-content: center;
-        padding: 1rem 2rem;
+        flex: 1;
+        min-width: auto;
+    }
+    
+    .cert-btn-verify {
+        flex: 2;
     }
 }
 
@@ -5141,12 +5110,14 @@ html.no-csstransitions .s-hero__content {
         padding-top: var(--vspace-4);
     }
     
-    .certificate-details {
-        padding: 1rem;
+    .certificate-item {
+        padding: 1.2rem;
     }
     
-    .certificate-detail-value {
-        font-size: 1.3rem;
+    .certificate-icon {
+        width: 4rem;
+        height: 4rem;
+        font-size: 1.6rem;
     }
 }
 
