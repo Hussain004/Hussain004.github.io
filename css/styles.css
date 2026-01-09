@@ -1138,185 +1138,180 @@ textarea {
 @media screen and (max-width: 600px) {
     /* Hero section mobile improvements */
     .s-hero__content-about {
-        max-width: 95vw;
+        max-width: 90%;
         margin: 0 auto;
-        padding: 0.5em 0.2em;
-        text-align: center;
+        padding: 1em 1em;
+        text-align: left;
     }
     .hero-intro-text {
-        font-size: 1.15em;
-        line-height: 1.4;
+        font-size: 1.8rem;
+        line-height: 1.6;
         word-break: break-word;
-        max-width: 95vw;
-        margin: 0 auto 0.5em auto;
-        padding: 0.2em 0.1em;
-        letter-spacing: 0.01em;
-        font-weight: 500;
+        margin: 0 0 1.5em 0;
+        letter-spacing: 0;
+        font-weight: 400;
     }
-    .s-hero__bg, .s-hero__bg img, .s-hero__bg .gradient-overlay {
-        width: 100vw !important;
-        min-width: 100vw !important;
-        max-width: 100vw !important;
-        height: 40vw !important;
-        min-height: 120px !important;
-        max-height: 180px !important;
-        object-fit: cover !important;
-        left: 0 !important;
-        right: 0 !important;
-        margin: 0 auto !important;
-        display: block !important;
+    .s-hero__bg {
+        width: 100%;
+        height: 50vh;
+        min-height: 300px;
+        max-height: 400px;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: auto;
     }
-    .s-hero__content h1 {
-        font-size: 2em !important;
-        margin-bottom: 0.5em !important;
-        margin-top: 0.5em !important;
-        text-align: center !important;
+    .s-hero {
+        min-height: 100vh;
+        height: auto;
     }
     .s-hero__content {
-        padding-top: 1.2em !important;
-        padding-bottom: 0.5em !important;
-        margin: 0 auto !important;
-        width: 100vw !important;
-        max-width: 100vw !important;
-    }
-    .s-hero__content-social {
-        justify-content: center !important;
-        gap: 1em !important;
-        margin-top: 0.5em !important;
-    }
-    .s-hero__content-social a {
-        font-size: 1.3em !important;
-        margin: 0 0.3em !important;
-    }
-
-    body, .s-hero, .s-about, .s-interests, .s-projects, .s-certificates, .s-contact {
-        padding-left: 1.2rem;
-        padding-right: 1.2rem;
-        box-sizing: border-box;
-    }
-        .row, .block-large-1-2, .block-tab-full, .s-projects__list {
-            flex-direction: column !important;
-            width: 100% !important;
-            max-width: 100% !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-        .s-hero__content h1 {
-            font-size: 2.5rem !important;
-            margin-bottom: 1rem !important;
-        }
-        .s-hero__content-about {
-            font-size: 1.2rem !important;
-            padding-left: 0.5em !important;
-            padding-right: 0.5em !important;
-        }
-        .s-hero__content-social {
-            font-size: 1.2rem !important;
-        }
-        .s-hero__scroll {
-            display: none !important;
-        }
-        .s-header__logo, .s-header__menu-toggle {
-            left: 1.2rem !important;
-            right: 1.2rem !important;
-        }
-        .folio-item__thumb img {
-            width: 100% !important;
-            height: auto !important;
-        }
-        .folio-item__info, .folio-item__caption {
-            padding: 0.5rem !important;
-        }
-        .folio-item__project-link {
-            position: static !important;
-            margin-top: 0.5rem !important;
-            width: 100% !important;
-        }
-    .column, .item, .certificate-item {
-        width: 100% !important;
-        max-width: 100% !important;
-        min-width: 0 !important;
-        box-sizing: border-box;
-        margin: 0 0 2rem 0 !important;
-        padding: 0 !important;
-    }
-    .certificate-item, .folio-item {
-        padding: 1.2rem !important;
-        border-radius: 8px !important;
-    }
-    .certificate-header, .certificate-details, .certificate-actions {
-        flex-direction: column !important;
-        gap: 1rem !important;
-        align-items: flex-start !important;
-    }
-    .certificate-title, .display-1, h1, h2, h3 {
-        font-size: 2rem !important;
-        line-height: 1.2 !important;
-    }
-    .certificate-provider, .certificate-detail-label, .certificate-detail-value {
-        font-size: 1.1rem !important;
-    }
-    .cert-btn {
-        min-width: 0 !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        font-size: 1.1rem !important;
-        padding: 1rem 0.5rem !important;
-        margin-bottom: 0.7rem !important;
-        height: auto !important;
-    }
-    .cert-btn i {
-        font-size: 1rem !important;
+        padding-top: 60vh;
+        padding-bottom: 4vh;
+        justify-content: flex-start;
+        align-items: flex-start;
     }
     .s-hero__content h1 {
-        font-size: 2.5rem !important;
-        margin-bottom: 1rem !important;
+        font-size: 12vw;
+        margin-bottom: 0.3em;
+        margin-top: 0;
+        text-align: left;
+        line-height: 1.1;
     }
-    .s-hero__content-about {
-        font-size: 1.2rem !important;
-        padding-left: 0.5em !important;
-        padding-right: 0.5em !important;
+    .s-hero__content h1::before {
+        display: none;
     }
     .s-hero__content-social {
-        font-size: 1.2rem !important;
+        display: flex;
+        justify-content: flex-start;
+        gap: 1.5rem;
+        margin-top: 1rem;
+    }
+    .s-hero__content-social a {
+        font-size: 2rem;
+        margin: 0;
+    }
+
+    .s-hero, .s-about, .s-interests, .s-projects, .s-certificates, .s-contact {
+        padding-left: 2rem;
+        padding-right: 2rem;
+        box-sizing: border-box;
+    }
+    .row {
+        padding-left: 2rem;
+        padding-right: 2rem;
     }
     .s-hero__scroll {
-        display: none !important;
+        display: none;
     }
-    .s-header__logo, .s-header__menu-toggle {
-        left: 1.2rem !important;
-        right: 1.2rem !important;
+    .s-header__logo {
+        left: 2rem;
+    }
+    .s-header__menu-toggle {
+        right: 2rem;
     }
     .folio-item__thumb img {
-        width: 100% !important;
-        height: auto !important;
+        width: 100%;
+        height: auto;
+        object-fit: cover;
     }
     .folio-item__info, .folio-item__caption {
-        padding: 0.5rem !important;
+        padding: 1rem;
     }
     .folio-item__project-link {
-        position: static !important;
-        margin-top: 0.5rem !important;
-        width: 100% !important;
+        position: static;
+        margin-top: 1rem;
+        width: 100%;
+    }
+    .column {
+        width: 100%;
+        padding: 0 1rem;
+    }
+    .item, .certificate-item {
+        width: 100%;
+        margin: 0 0 3rem 0;
+    }
+    .certificate-item, .folio-item {
+        padding: 1.5rem;
+        border-radius: 8px;
+    }
+    .certificate-header, .certificate-details, .certificate-actions {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    .display-1 {
+        font-size: 3rem;
+        line-height: 1.3;
+    }
+    h1 {
+        font-size: 3.5rem;
+        line-height: 1.2;
+    }
+    h2 {
+        font-size: 2.5rem;
+        line-height: 1.3;
+    }
+    h3 {
+        font-size: 2rem;
+        line-height: 1.3;
+    }
+    .certificate-title {
+        font-size: 1.8rem;
+    }
+    .certificate-provider, .certificate-detail-label, .certificate-detail-value {
+        font-size: 1.4rem;
+    }
+    .cert-btn {
+        width: 100%;
+        font-size: 1.4rem;
+        padding: 1.2rem 1rem;
+        margin-bottom: 1rem;
+    }
+    .cert-btn i {
+        font-size: 1.2rem;
     }
 }
 
 @media screen and (max-width: 400px) {
-    .certificate-title, .display-1, h1, h2, h3 {
-        font-size: 1.3rem !important;
+    .s-hero, .s-about, .s-interests, .s-projects, .s-certificates, .s-contact {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+    .display-1 {
+        font-size: 2.2rem;
+        line-height: 1.3;
+    }
+    h1 {
+        font-size: 2.8rem;
+        line-height: 1.2;
+    }
+    h2 {
+        font-size: 2rem;
+        line-height: 1.3;
+    }
+    h3 {
+        font-size: 1.6rem;
+        line-height: 1.3;
+    }
+    .certificate-title {
+        font-size: 1.5rem;
     }
     .certificate-provider, .certificate-detail-label, .certificate-detail-value {
-        font-size: 0.95rem !important;
+        font-size: 1.2rem;
     }
     .cert-btn {
-        font-size: 0.95rem !important;
-        padding: 0.7rem 0.3rem !important;
+        font-size: 1.2rem;
+        padding: 1rem 0.8rem;
     }
     .s-hero__content h1 {
-        font-size: 1.5rem !important;
+        font-size: 10vw;
     }
     .s-hero__content-about {
-        font-size: 0.95rem !important;
+        padding: 0.8em 0.5em;
+    }
+    .hero-intro-text {
+        font-size: 1.6rem;
     }
         .row {
             width: 100%;
