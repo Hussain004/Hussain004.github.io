@@ -1240,8 +1240,8 @@ textarea {
     }
     
     h3, .item-title {
-        font-size: 1rem;
-        line-height: 1.3;
+        font-size: 1rem !important;
+        line-height: 1.3 !important;
     }
     
     .lead {
@@ -1293,8 +1293,8 @@ textarea {
     }
     
     h3, .item-title {
-        font-size: 0.95rem;
-        line-height: 1.3;
+        font-size: 0.95rem !important;
+        line-height: 1.3 !important;
     }
     
     .lead {
