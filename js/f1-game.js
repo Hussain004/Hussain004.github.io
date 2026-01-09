@@ -295,8 +295,8 @@ const F1Game = {
         
         // Store track parameters for use in collision detection
         this.trackParams = {
-            outerRadius: 270,
-            innerRadius: 190,
+            outerRadius: 285,
+            innerRadius: 195,
             centerX: cx,
             centerY: cy
         };
@@ -357,7 +357,14 @@ const F1Game = {
         const startPos = this.track.startLine;
         this.player.x = startPos.x;
         this.player.y = startPos.y;
-        this.player.angle = -Math.PI / 2;
+        
+        // Calculate angle same way as opponents (pointing forward along track)
+        const nextIndex = 1;
+        const nextOuter = this.track.outerPath[nextIndex];
+        const nextInner = this.track.innerPath[nextIndex];
+        const nextX = (nextOuter.x + nextInner.x) / 2;
+        const nextY = (nextOuter.y + nextInner.y) / 2;
+        this.player.angle = Math.atan2(nextY - this.player.y, nextX - this.player.x);
         this.player.speed = 0;
         
         this.currentLap = 0;
@@ -762,15 +769,24 @@ const F1Game = {
         const ctx = this.ctx;
         const start = this.track.startLine;
         
-        // Checkered flag pattern at start
+        // Calculate perpendicular angle to track direction
+        const startOuter = this.track.outerPath[0];
+        const startInner = this.track.innerPath[0];
+        const lineAngle = Math.atan2(startOuter.y - startInner.y, startOuter.x - startInner.x);
+        
+        // Checkered flag pattern at start (perpendicular to track)
         ctx.save();
         ctx.translate(start.x, start.y);
+        ctx.rotate(lineAngle);
         
         const squareSize = 8;
-        for (let i = -3; i <= 3; i++) {
-            for (let j = 0; j < 2; j++) {
+        const lineWidth = 70; // Width of finish line across track
+        const lineHeight = 16; // Height along track direction
+        
+        for (let i = 0; i < Math.floor(lineWidth / squareSize); i++) {
+            for (let j = 0; j < Math.floor(lineHeight / squareSize); j++) {
                 ctx.fillStyle = (i + j) % 2 === 0 ? '#fff' : '#000';
-                ctx.fillRect(i * squareSize - 35, j * squareSize - squareSize, squareSize, squareSize);
+                ctx.fillRect((i * squareSize) - lineWidth/2, (j * squareSize) - lineHeight/2, squareSize, squareSize);
             }
         }
         
