@@ -1227,29 +1227,29 @@ textarea {
 
     /* Typography - smaller but readable */
     .display-1 {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
         line-height: 1.3;
     }
     
     h1 {
-        font-size: 2rem;
+        font-size: 1.8rem;
     }
     
     h2 {
-        font-size: 1.6rem;
+        font-size: 1.4rem;
     }
     
     h3, .item-title {
-        font-size: 1.2rem;
+        font-size: 1rem;
         line-height: 1.3;
     }
     
     .lead {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
     }
     
     p {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         line-height: 1.5;
     }
 
@@ -1280,29 +1280,29 @@ textarea {
     }
     
     .display-1 {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
         line-height: 1.3;
     }
     
     h1 {
-        font-size: 1.7rem;
+        font-size: 1.5rem;
     }
     
     h2 {
-        font-size: 1.4rem;
+        font-size: 1.2rem;
     }
     
     h3, .item-title {
-        font-size: 1.1rem;
+        font-size: 0.95rem;
         line-height: 1.3;
     }
     
     .lead {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
     }
     
     p {
-        font-size: 1.1rem;
+        font-size: 1rem;
     }
     
     .s-header__logo {
