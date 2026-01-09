@@ -293,36 +293,45 @@ const F1Game = {
         const cx = this.canvas.width / 2;
         const cy = this.canvas.height / 2;
         
-        // Create an F1-style circuit (simplified oval with chicanes)
-        const outerRadius = 280;
-        const innerRadius = 200;
+        // Store track parameters for use in collision detection
+        this.trackParams = {
+            outerRadius: 270,
+            innerRadius: 190,
+            centerX: cx,
+            centerY: cy
+        };
+        
+        const outerRadius = this.trackParams.outerRadius;
+        const innerRadius = this.trackParams.innerRadius;
         const trackWidth = outerRadius - innerRadius;
         
-        // Generate track path points (figure-8 inspired circuit)
+        // Generate track path points with figure-8 inspired shape
         this.track.outerPath = [];
         this.track.innerPath = [];
         this.track.checkpoints = [];
         
-        const numPoints = 100;
+        const numPoints = 120; // More points for smoother track
         for (let i = 0; i < numPoints; i++) {
             const t = (i / numPoints) * Math.PI * 2;
             
-            // Create an interesting track shape
-            const variation = Math.sin(t * 3) * 30 + Math.cos(t * 2) * 20;
+            // Create figure-8 style circuit with chicanes
+            const variation = Math.sin(t * 4) * 25 + Math.cos(t * 3) * 15;
             const outerR = outerRadius + variation;
             const innerR = innerRadius + variation;
             
+            // Figure-8 shape with squashed oval
+            const radiusModifier = 0.65; // Make it more elongated
             const ox = cx + Math.cos(t) * outerR;
-            const oy = cy + Math.sin(t) * outerR * 0.7; // Oval shape
+            const oy = cy + Math.sin(t) * outerR * radiusModifier;
             
             const ix = cx + Math.cos(t) * innerR;
-            const iy = cy + Math.sin(t) * innerR * 0.7;
+            const iy = cy + Math.sin(t) * innerR * radiusModifier;
             
             this.track.outerPath.push({ x: ox, y: oy });
             this.track.innerPath.push({ x: ix, y: iy });
             
-            // Add checkpoints every 25 points
-            if (i % 25 === 0) {
+            // Add checkpoints every 30 points
+            if (i % 30 === 0) {
                 this.track.checkpoints.push({
                     index: i,
                     x: (ox + ix) / 2,
@@ -332,19 +341,21 @@ const F1Game = {
             }
         }
         
-        // Start/finish line position (at rightmost point of track)
-        const startAngle = 0; // Right side of track
-        const startRadius = (outerRadius + innerRadius) / 2; // Middle of track
+        // Start/finish line - positioned at the middle of the right side of track
+        const startIndex = 0;
+        const startOuter = this.track.outerPath[startIndex];
+        const startInner = this.track.innerPath[startIndex];
+        
         this.track.startLine = {
-            x: cx + Math.cos(startAngle) * startRadius,
-            y: cy + Math.sin(startAngle) * startRadius * 0.7, // Account for oval shape
+            x: (startOuter.x + startInner.x) / 2,
+            y: (startOuter.y + startInner.y) / 2,
             angle: Math.PI / 2
         };
     },
     
     setupPlayer() {
         const startPos = this.track.startLine;
-        this.player.x = startPos.x - 40;
+        this.player.x = startPos.x;
         this.player.y = startPos.y;
         this.player.angle = -Math.PI / 2;
         this.player.speed = 0;
@@ -534,21 +545,21 @@ const F1Game = {
     
     isOnTrack(x, y) {
         // Simple point-in-polygon check between outer and inner track
-        const cx = this.canvas.width / 2;
-        const cy = this.canvas.height / 2;
+        const cx = this.trackParams.centerX;
+        const cy = this.trackParams.centerY;
         
         // Calculate distance from center (accounting for oval shape)
         const dx = x - cx;
-        const dy = (y - cy) / 0.7; // Account for oval
+        const dy = (y - cy) / 0.65; // Account for elongated oval
         const dist = Math.sqrt(dx * dx + dy * dy);
         
-        // Track boundaries (approximate)
+        // Track boundaries with variation matching track shape
         const angle = Math.atan2(dy, dx);
-        const variation = Math.sin(angle * 3) * 30 + Math.cos(angle * 2) * 20;
-        const outerRadius = 250 + variation;
-        const innerRadius = 180 + variation;
+        const variation = Math.sin(angle * 4) * 25 + Math.cos(angle * 3) * 15;
+        const outerRadius = this.trackParams.outerRadius + variation;
+        const innerRadius = this.trackParams.innerRadius + variation;
         
-        return dist >= innerRadius - 10 && dist <= outerRadius + 10;
+        return dist >= innerRadius - 15 && dist <= outerRadius + 15;
     },
     
     checkCollisions() {
