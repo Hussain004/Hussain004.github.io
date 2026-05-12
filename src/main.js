@@ -259,6 +259,62 @@ function initSmoothScroll() {
 }
 
 // ============================================
+// CITATION COUNTER
+// ============================================
+async function initCitationCounters() {
+  const citationElements = document.querySelectorAll('.pub-citations');
+  
+  citationElements.forEach(async (el) => {
+    const doi = el.getAttribute('data-doi');
+    const manualCount = parseInt(el.getAttribute('data-manual-count') || '0', 10);
+    if (!doi) return;
+    
+    const countEl = el.querySelector('.citation-count');
+    
+    try {
+      let apiCount = null;
+      
+      // Try Semantic Scholar API first
+      try {
+        const ssRes = await fetch(`https://api.semanticscholar.org/graph/v1/paper/DOI:${doi}?fields=citationCount`);
+        if (ssRes.ok) {
+          const ssData = await ssRes.json();
+          if (ssData && ssData.citationCount !== undefined) {
+            apiCount = ssData.citationCount;
+          }
+        }
+      } catch (e) {
+        console.warn('Semantic Scholar fetch failed, falling back to Crossref');
+      }
+
+      // Fallback to Crossref API
+      if (apiCount === null) {
+        const crRes = await fetch(`https://api.crossref.org/works/${doi}`);
+        if (crRes.ok) {
+          const crData = await crRes.json();
+          apiCount = crData.message['is-referenced-by-count'] || 0;
+        }
+      }
+
+      // Use whichever count is higher (manual override vs API)
+      // This solves the issue where Google Scholar updates faster than open APIs
+      const finalCount = Math.max(manualCount, apiCount || 0);
+
+      countEl.textContent = `${finalCount} ${finalCount === 1 ? 'Citation' : 'Citations'}`;
+      el.style.display = 'inline-flex';
+      
+    } catch (error) {
+      console.error('Error fetching citation count for DOI:', doi, error);
+      // If network fails completely, at least show the manual count if > 0
+      if (manualCount > 0) {
+        countEl.textContent = `${manualCount} ${manualCount === 1 ? 'Citation' : 'Citations'}`;
+        el.style.display = 'inline-flex';
+      }
+    }
+  });
+}
+
+// ============================================
 // INIT
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -267,4 +323,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initNav()
   initScrollReveal()
   initSmoothScroll()
+  initCitationCounters()
 })
