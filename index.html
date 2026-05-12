@@ -1,642 +1,368 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en">
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hussain Habib — Robotics &amp; Computer Vision</title>
+  <meta name="description" content="Portfolio of Hussain Habib — exploring computer vision, robotics, applied ML, and precision agriculture." />
+  <meta name="author" content="Hussain Habib" />
 
-    <!--- basic page needs
-    ================================================== -->
-    <meta charset="utf-8">
-    <title>Binary Bots</title>
-    <meta name="description" content="">
-    <meta name="author" content="">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 
-    <!-- mobile specific metas
-    ================================================== -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- CSS
-    ================================================== -->
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/vendor.css">
-
-    <!-- script
-    ================================================== -->
-    <script src="js/modernizr.js"></script>
-    <script defer src="js/fontawesome/all.min.js"></script>
-
-    <!-- favicons
-    ================================================== -->
-    <link rel="apple-touch-icon" sizes="180x180" href="favicon.png">
-    <link rel="icon" href="favicon.png">
-    <link rel="manifest" href="site.webmanifest">
-
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 </head>
+<body>
 
-<body id="top">
+  <!-- ==================== NAVIGATION ==================== -->
+  <nav id="main-nav" class="nav">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo">hussain<span>.dev</span></a>
+      <ul id="nav-links" class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#certificates">Certificates</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <button id="nav-toggle" class="nav-toggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
 
+  <!-- ==================== HERO ==================== -->
+  <section id="hero" class="hero">
+    <canvas id="hero-canvas" class="hero-canvas"></canvas>
+    <div class="hero-overlay"></div>
 
-    <!-- header
-    ================================================== -->
-    <header class="s-header">
+    <div class="hero-content">
+      <p class="hero-greeting">// welcome</p>
+      <h1 class="hero-name">Hussain Habib</h1>
+      <p class="hero-tagline">
+        I work on <span id="typewriter" class="typed-text"></span><span class="cursor"></span>
+      </p>
 
-        <div class="s-header__logo">
-            <a href="index.html">
-                <img src="images/logo.svg" alt="Homepage">
-            </a>
+      <div class="hero-socials">
+        <!-- GitHub -->
+        <a href="https://github.com/Hussain004" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+          </svg>
+        </a>
+        <!-- LinkedIn -->
+        <a href="https://www.linkedin.com/in/hussain-habib/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+            <rect x="2" y="9" width="4" height="12" />
+            <circle cx="4" cy="4" r="2" />
+          </svg>
+        </a>
+        <!-- Twitter/X -->
+        <a href="https://x.com/Hussain2004004" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
+          </svg>
+        </a>
+        <!-- Reddit -->
+        <a href="https://www.reddit.com/user/Visible04/" target="_blank" rel="noopener noreferrer" aria-label="Reddit">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-scroll">
+      <a href="#about">
+        <span>scroll</span>
+        <span class="scroll-line"></span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ==================== ABOUT ==================== -->
+  <section id="about" class="section">
+    <div class="reveal">
+      <span class="section-label">01 — About</span>
+      <h2 class="section-title">A bit about me.</h2>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-photo-wrapper reveal stagger-1">
+        <div class="about-photo">
+          <img src="/avatar.png" alt="Hussain Habib" id="about-photo" />
         </div>
+        <div class="about-photo-decoration"></div>
+      </div>
 
-        <div class="s-header__content">
-    
-            <nav class="s-header__nav-wrap">
-                <ul class="s-header__nav">
-                    <li><a class="smoothscroll" href="#hero" title="Intro">Home</a></li>
-                    <li><a class="smoothscroll" href="#about" title="About">About</a></li>
-                    <li><a class="smoothscroll" href="#interests" title="Interests">Interests</a></li>
-                    <li><a class="smoothscroll" href="#projects" title="Works">Projects</a></li>
-                    <li><a class="smoothscroll" href="#certificates" title="Certificates">Certificates</a></li>
-                </ul>
-            </nav> <!-- end s-header__nav-wrap -->
+      <div class="about-text reveal stagger-2">
+        <p>
+          I'm Hussain — an undergraduate researcher working at the intersection of 
+          perception and intelligent systems. I build things that help machines 
+          <em>see</em>, <em>understand</em>, and <em>act</em> in the physical world.
+        </p>
+        <p>
+          My primary focus is <strong>computer vision</strong> — from classical image processing 
+          to deep learning–based detection and segmentation. I'm fascinated by how visual 
+          understanding can be paired with <strong>robotics</strong> to create autonomous systems 
+          that navigate, manipulate, and make decisions in real environments. Lately, I've been 
+          diving deep into <strong>applied ML</strong>, particularly vision-language models (VLMs) 
+          that bridge the gap between seeing and reasoning. I've also been putting these skills 
+          to work in <strong>precision agriculture</strong> — using drones, LiDAR, and multi-spectral 
+          imaging to phenotype crops and automate field analysis.
+        </p>
 
-        </div> <!-- end header-content -->
-
-        <a class="s-header__menu-toggle" href="#0"><span>Menu</span></a>
-
-    </header> <!-- end s-header -->
-
-
-    <!-- hero
-    ================================================== -->
-    <section id="hero" class="s-hero target-section">
-
-        <div class="s-hero__bg">
-            <div class="gradient-overlay"></div>
+        <div class="about-interests">
+          <h4>// focus areas</h4>
+          <div class="interest-tags">
+            <span class="interest-tag primary">Computer Vision</span>
+            <span class="interest-tag primary">Robotics</span>
+            <span class="interest-tag">Applied ML</span>
+            <span class="interest-tag">Vision-Language Models</span>
+            <span class="interest-tag">Precision Agriculture</span>
+            <span class="interest-tag">LiDAR</span>
+            <span class="interest-tag">ROS2</span>
+            <span class="interest-tag">Autonomous Navigation</span>
+          </div>
         </div>
+      </div>
+    </div>
+  </section>
 
-        <div class="row s-hero__content">
-            <div class="column">
+  <div class="section-divider"></div>
 
-                <h1>Hello.</h1>
-                <div class="s-hero__content-about">
+  <!-- ==================== PROJECTS ==================== -->
+  <section id="projects" class="section">
+    <div class="reveal">
+      <span class="section-label">02 — Projects</span>
+      <h2 class="section-title">Things I've built.</h2>
+    </div>
 
-                    <p class="hero-intro-text">
-                        Welcome to Binary Bots! Discover my CS & Robotics projects below.
-                    </p>
-    
-                    <footer>
-                        <div class="s-hero__content-social">
-                            <a href="https://www.linkedin.com/in/hussain-habib/"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a>
-                            <a href="https://x.com/Hussain2004004"><i class="fab fa-twitter" aria-hidden="true"></i></a>
-                            <a href="https://www.instagram.com/hussain04habib/"><i class="fab fa-instagram" aria-hidden="true"></i></a>
-                            <a href="https://www.reddit.com/user/Visible04/"><i class="fab fa-reddit-alien" aria-hidden="true"></i></a>
-                        </div>
-                    </footer>
-                </div>
+    <div class="projects-grid">
 
-            </div>
+      <!-- Project 1: EV Signs Detection -->
+      <a href="https://github.com/Hussain004/Parking-Signs-Detection-Using-YOLOv4" target="_blank" rel="noopener noreferrer" class="project-card reveal stagger-1" id="project-ev-signs">
+        <div class="project-card-image">
+          <img src="/projects/parking_signs_detect.png" alt="EV Signs and Charger Detection" loading="lazy" />
+          <div class="project-overlay">
+            <span>View on GitHub →</span>
+          </div>
         </div>
-
-        <div class="s-hero__scroll">
-            <a href="#about" class="s-hero__scroll-link smoothscroll">
-                Scroll Down
-            </a>
+        <div class="project-card-body">
+          <span class="project-card-category">Transfer Learning</span>
+          <h3 class="project-card-title">EV Signs & Charger Detection</h3>
+          <p class="project-card-desc">YOLOv4 deep learning to detect EV signs, charging stations, and accessible parking signs — 74% mAP via transfer learning.</p>
         </div>
+      </a>
 
-    </section> <!-- end s-hero -->
-
-
-    <!-- about
-    ================================================== -->
-    <section id="about" class="s-about">
-
-        <div class="horizontal-line"></div>
-
-        <div class="row">
-            <div class="column large-12">
-
-                <div class="section-title" data-num="01" data-aos="fade-up">
-                    <h3 class="h6">Who Am I?</h3>
-                </div>
-
-            </div>
-
-            <div class="column large-6 w-900-stack s-about__intro-text">
-                <h1 class="display-1" data-aos="fade-up">
-                    An under-grad student wanting to showcase his robotics and computer science projects, including code, videos, and articles.
-                </h1>
-
-                <p class="lead" data-aos="fade-up">
-                    Robotics and Computer Science (CS) are deeply intertwined fields
-                    that complement each other seamlessly. The fusion of these fields 
-                    enables the creation of intelligent, autonomous systems that can 
-                    tackle complex real-world challenges.
-                </p>
-            </div>
-
-            <div class="column large-6 w-900-stack s-about__photo-block">
-                <div class="s-about__photo" data-aos="fade-up"></div>
-            </div>
+      <!-- Project 2: Pick & Drop -->
+      <a href="https://github.com/Hussain004/Pick-and-Place-using-Marker-Detection" target="_blank" rel="noopener noreferrer" class="project-card reveal stagger-2" id="project-pick-drop">
+        <div class="project-card-image">
+          <img src="/projects/pick-and-drop.jpg" alt="Pick and Drop" loading="lazy" />
+          <div class="project-overlay">
+            <span>View on GitHub →</span>
+          </div>
         </div>
-
-        <div class="row block-large-1-2 block-tab-full s-about__process item-list">
-            <div class="column item item-process" data-aos="fade-up">
-                <h3 class="item-title">Synergy</h3>
-                <p>
-                    Robotics leverages CS principles to develop advanced control systems,
-                    sensor integration, and decision-making algorithms, while CS benefits
-                    from the practical applications and challenges posed by robotics.
-                </p>
-            </div>
-            <div class="column item item-process" data-aos="fade-up">
-                <h3 class="item-title">Automation</h3>
-                <p>
-                    Combining robotics with CS enhances automation, enabling efficient, 
-                    precise operations in various domains, reducing human error, and 
-                    improving productivity.
-                </p>
-            </div>
-            <div class="column item item-process" data-aos="fade-up">
-                <h3 class="item-title">Perception</h3>
-                <p>
-                    Robotics relies on CS techniques, such as computer vision 
-                    and machine learning, to perceive and interpret the 
-                    surrounding environment, enabling more sophisticated and 
-                    adaptable robotic systems.
-                </p>
-            </div>
-            <div class="column item item-process" data-aos="fade-up">
-                <h3 class="item-title">Intelligence</h3>
-                <p>
-                    Integrating robotics with CS equips machines with problem-solving 
-                    capabilities, enabling them to adapt, learn, and tackle challenges 
-                    in dynamic environments, enhancing their functionality and application.
-                </p>
-            </div>
+        <div class="project-card-body">
+          <span class="project-card-category">Marker Detection</span>
+          <h3 class="project-card-title">Pick & Drop</h3>
+          <p class="project-card-desc">Robomaster robot with computer vision and PID control to detect markers, pick up objects, and place them at target locations.</p>
         </div>
+      </a>
 
-    </section> <!-- end s-about -->
-
-
-    <!-- interests
-    ================================================== -->
-    <section id="interests" class="s-interests">
-
-        <div class="row">
-            <div class="column large-12">
-                <div class="section-title" data-num="02" data-aos="fade-up">
-                    <h3 class="h6">My Interests</h3>
-                </div>
-            </div>
-            <div class="column large-6 w-900-stack">
-                <h1 class="display-1" data-aos="fade-up">
-                    Let's talk about my research interests:
-                </h1>
-            </div>
-            <div class="column large-6 w-900-stack">
-                <p class="lead" data-aos="fade-up">
-                    My research explores the intersection of Computer Science and Robotics, 
-                    focusing on autonomous systems, human-robot interaction, and machine 
-                    learning. I aim to develop intelligent solutions that enhance efficiency, 
-                    adaptability, and interaction in diverse real-world applications.
-                </p>
-            </div>
+      <!-- Project 3: Object Detection YOLOv3 -->
+      <a href="https://github.com/Hussain004/Object-Detection-using-YOLOv3" target="_blank" rel="noopener noreferrer" class="project-card reveal stagger-3" id="project-yolov3">
+        <div class="project-card-image">
+          <img src="/projects/object-detection.png" alt="Object Detection using YOLOv3" loading="lazy" />
+          <div class="project-overlay">
+            <span>View on GitHub →</span>
+          </div>
         </div>
-
-        <div class="row block-large-1-2 block-tab-full s-interests__interests item-list">
-            <div class="column item item-interests" data-aos="fade-up">
-                <span class="interests-icon interests-icon--control-systems"></span>
-                <h3 class="item-title">Control Systems</h3>
-                <p>
-                    I have recently started exploring the field of robotic control systems 
-                    and algorithms. I have done a handful of projects using control theory, 
-                    which has given me a solid foundation in areas such as sensor integration, 
-                    motion planning, and closed-loop control. I am eager to delve deeper into 
-                    this domain and apply my growing expertise in robotics and automation.
-                </p>
-            </div>
-            <div class="column item item-interests" data-aos="fade-up">
-                <span class="interests-icon interests-icon--AI"></span>
-                <h3 class="item-title">Artificial Intelligence</h3>
-                <p>
-                    I have experience using the Python OpenCV library for computer vision 
-                    and image/video processing. I'm particularly interested in the 
-                    intersection of computer vision and artificial intelligence, exploring 
-                    techniques like object detection, classification, and tracking using 
-                    machine learning approaches.
-                </p>
-            </div>
-            <div class="column item item-interests" data-aos="fade-up">
-                <span class="interests-icon interests-icon--frontend icon-red"></span>
-                <h3 class="item-title">Frontend Development</h3>
-                <p>
-                    I have a basic understanding of HTML, CSS, and JavaScript, and I 
-                    have primarily focused on learning JavaScript. I am currently 
-                    focused on learning Kotlin. I am interested in expanding my mobile
-                    app development skills and exploring Android development frameworks and libraries.
-                </p>
-            </div>
-            <div class="column item item-interests" data-aos="fade-up">
-                <span class="interests-icon interests-icon--simulations"></span>
-                <h3 class="item-title">Simulations</h3>
-                <p>
-                    Alongwith control systems I have a keen interest in simulation and 
-                    modeling tools for robotics. I have explored Robot Operating System 
-                    (ROS2) and Gazebo, utilizing these platforms to simulate robotic systems 
-                    and test control algorithms. This hands-on experience has been invaluable 
-                    in advancing my understanding of robotic software development.
-                </p>
-            </div>
+        <div class="project-card-body">
+          <span class="project-card-category">Machine Learning</span>
+          <h3 class="project-card-title">Real-Time Object Detection</h3>
+          <p class="project-card-desc">YOLOv3-based real-time object detection in video streams with bounding boxes and class labels.</p>
         </div>
+      </a>
 
-    </section> <!-- end s-interests -->
-
-    <section id="projects" class="s-projects">
-
-        <div class="row s-porfolio__top">
-            <div class="column large-6 w-900-stack">
-                <div class="section-title" data-num="03" data-aos="fade-up">
-                    <h3 class="h6">Recent Works</h3>
-                </div>
-            </div>
-            <div class="column large-6 w-900-stack">
-                <h1 class="display-1" data-aos="fade-up">
-                    Here are some of my projects I've done recently. Feel
-                    free to check them out!
-                </h1>
-            </div>
-        </div> <!-- end s-projects__top-->
-
-        <div class="row s-projects__list block-large-1-2 block-tab-full collapse">
-
-            <div class="column" data-aos="fade-up">
-                <div class="folio-item">
-                    <div class="folio-item__thumb">
-                        <a class="folio-item__thumb-link" href="images/projects/gallery/parking_signs_detect.png" title="EV Signs and Charger Detction" data-size="1050x700">
-                            <img src="images/projects/gallery/parking_signs_detect.png" 
-                                 srcset="images/projects/gallery/parking_signs_detect.png 1x, images/projects/gallery/parking_signs_detect.png 2x" alt="">
-                        </a>
-                    </div>
-                    <div class="folio-item__info">
-                        <div class="folio-item__cat">CV Transfer Learning Project</div>
-                        <h4 class="folio-item__title">EV Signs and Charger Detction</h4>
-                    </div>
-                    <a href="https://github.com/Hussain004/Parking-Signs-Detection-Using-YOLOv4" title="Project Link" class="folio-item__project-link">Project Link</a>
-                    <div class="folio-item__caption">
-                        <p>This project uses YOLOv4 deep learning to automatically detect electric vehicle signs, EV charging stations, and accessible parking signs in parking lot images, achieving 74% mAP through transfer learning on a custom dataset.</p>
-                    </div>
-                </div>
-            </div> <!-- end column -->
-            <div class="column" data-aos="fade-up">
-                <div class="folio-item">
-                    <div class="folio-item__thumb">
-                        <a class="folio-item__thumb-link" href="images/projects/gallery/pick-and-drop.jpg" title="Pick & Drop" data-size="1050x700">
-                            <img src="images/projects/gallery/pick-and-drop.jpg" 
-                                 srcset="images/projects/gallery/pick-and-drop.jpg 1x, images/projects/gallery/pick-and-drop.jpg 2x" alt="">
-                        </a>
-                    </div>
-                    <div class="folio-item__info">
-                        <div class="folio-item__cat">Marker Detection Project</div>
-                        <h4 class="folio-item__title">Pick & Drop</h4>
-                    </div>
-                    <a href="https://github.com/Hussain004/Pick-and-Place-using-Marker-Detection" title="Project Link" class="folio-item__project-link">Project Link</a>
-                    <div class="folio-item__caption">
-                        <p>This project uses a Robomaster robot with computer vision and PID control to detect markers, pick up an object, and place it at a target location.</p>
-                    </div>
-                </div>
-            </div> <!-- end column -->
-            <div class="column" data-aos="fade-up">
-                <div class="folio-item">
-                    <div class="folio-item__thumb">
-                        <a class="folio-item__thumb-link" href="images/projects/gallery/object-detection.png" title="Object Detection using YOLOv3" data-size="1050x700">
-                            <img src="images/projects/gallery/object-detection.png" 
-                                 srcset="images/projects/gallery/object-detection.png 1x, images/projects/gallery/object-detection.png 2x" alt="">
-                        </a>
-                    </div>
-                    <div class="folio-item__info">
-                        <div class="folio-item__cat">Machine Learning Project</div>
-                        <h4 class="folio-item__title">Object Detection using YOLOv3</h4>
-                    </div>
-                    <a href="https://github.com/Hussain004/Object-Detection-using-YOLOv3" title="Project Link" class="folio-item__project-link">Project Link</a>
-                    <div class="folio-item__caption">
-                        <p>This project uses the YOLOv3 object detection algorithm to identify objects in real-time video streams, displaying bounding boxes and class labels.</p>
-                    </div>
-                </div>
-            </div> <!-- end column -->
-            <div class="column" data-aos="fade-up">
-                <div class="folio-item">
-                    <div class="folio-item__thumb">
-                        <a class="folio-item__thumb-link" href="images/projects/gallery/mapping.png" Title="Obstacle Mapping" data-size="1050x700">
-                            <img src="images/projects/gallery/mapping.png" 
-                                 srcset="images/projects/gallery/mapping.png 1x, images/projects/gallery/mapping.png 2x" alt="">
-                        </a>
-                    </div>
-                    <div class="folio-item__info">
-                        <div class="folio-item__cat">Simulation Project</div>
-                        <h4 class="folio-item__title">Obstacle Mapping</h4>
-                    </div>
-                    <a href="https://github.com/Hussain004/Obstacle-Mapping-Simulation" title="Project Link" class="folio-item__project-link">Project Link</a>
-                    <div class="folio-item__caption">
-                        <p>This ROS1 project uses Turtlebot3 robot in Gazebo to detect obstacles, map their positions, and generate a 2D visualization of the environment.</p>
-                    </div>
-                </div>
-            </div> <!-- end column -->
-            <div class="column" data-aos="fade-up">
-                <div class="folio-item">
-                    <div class="folio-item__thumb">
-                        <a class="folio-item__thumb-link" href="images/projects/gallery/masking.png" title="Masking and Contouring a Green Bottle" data-size="1050x700">
-                            <img src="images/projects/gallery/masking.png" 
-                                 srcset="images/projects/gallery/masking.png 1x, images/projects/gallery/masking.png 2x" alt="">
-                        </a>
-                    </div>
-                    <div class="folio-item__info">
-                        <div class="folio-item__cat">OpenCV Project</div>
-                        <h4 class="folio-item__title">Masking and Contouring a Green Bottle</h4>
-                    </div>
-                    <a href="https://github.com/Hussain004/Contour-Detection" title="Project Link" class="folio-item__project-link">Project Link</a>
-                    <div class="folio-item__caption">
-                        <p>This project uses OpenCV to detect a green bottle, calculate its distance and angle, and then use a Robomaster robot to pick up and return the bottle.</p>
-                    </div>
-                </div>
-            </div> <!-- end column -->
-            <div class="column" data-aos="fade-up">
-                <div class="folio-item">
-                    <div class="folio-item__thumb">
-                        <a class="folio-item__thumb-link" href="images/projects/gallery/line-following.png" title="Line Following" data-size="1050x700">
-                            <img src="images/projects/gallery/line-following.png" 
-                                 srcset="images/projects/gallery/line-following.png 1x, images/projects/gallery/line-following.png 2x" alt="">
-                        </a>
-                    </div>
-                    <div class="folio-item__info">
-                        <div class="folio-item__cat">OpenCV Project</div>
-                        <h4 class="folio-item__title">Line Following</h4>
-                    </div>
-                    <a href="https://github.com/Hussain004/Line-Following" title="Project Link" class="folio-item__project-link">
-                        Project Link
-                    </a>
-                    <div class="folio-item__caption">
-                        <p>This project uses computer vision techniques like Canny edge detection and Hough transform to enable a robot to follow lines of different colors.</p>
-                    </div>
-                </div>
-            </div> <!-- end column -->
-            <div class="column" data-aos="fade-up">
-                <div class="folio-item">
-                    <div class="folio-item__thumb">
-                        <a class="folio-item__thumb-link" href="images/projects/gallery/F1-Pit-Stop.png" title="F1 Pit Stop Strategist" data-size="1050x700">
-                            <img src="images/projects/gallery/F1-Pit-Stop.png" 
-                                 srcset="images/projects/gallery/F1-Pit-Stop.jpg 1x, images/projects/gallery/F1-Pit-Stop.png 2x" alt="">
-                        </a>
-                    </div>
-                    <div class="folio-item__info">
-                        <div class="folio-item__cat">C++ Project</div>
-                        <h4 class="folio-item__title">F1 Pit Stop Strategist</h4>
-                    </div>
-                    <a href="https://github.com/Hussain004/F1-Pit-Stop-Strategist" title="Project Link" class="folio-item__project-link">Project Link</a>
-                    <div class="folio-item__caption">
-                        <p>The F1 Pit Stop Strategist is a tool that optimizes pit stop strategies for Formula 1 teams, considering track conditions, car performance, and weather to provide the most effective strategy.</p>
-                    </div>
-                </div>
-            </div> <!-- end column -->
-
-        </div> <!-- folio-list -->
-
-    </section> <!-- end s-projects -->
-
-     <!-- certificates
-    ================================================== -->
-    <section id="certificates" class="s-certificates">
-        <div class="row">
-            <div class="column large-12">
-                <div class="section-title" data-num="04" data-aos="fade-up">
-                    <h3 class="h6">Professional Development</h3>
-                </div>
-            </div>
-            <div class="column large-6 w-900-stack">
-                <h1 class="display-1" data-aos="fade-up">
-                    Certificates & Achievements
-                </h1>
-            </div>
-            <div class="column large-6 w-900-stack">
-                <p class="lead" data-aos="fade-up">
-                    Continuous learning is at the heart of my professional development. 
-                    Here are some of the certifications I've earned to deepen my expertise 
-                    in computer vision, machine learning, and advanced technologies.
-                </p>
-            </div>
+      <!-- Project 4: Obstacle Mapping -->
+      <a href="https://github.com/Hussain004/Obstacle-Mapping-Simulation" target="_blank" rel="noopener noreferrer" class="project-card reveal stagger-4" id="project-mapping">
+        <div class="project-card-image">
+          <img src="/projects/mapping.png" alt="Obstacle Mapping" loading="lazy" />
+          <div class="project-overlay">
+            <span>View on GitHub →</span>
+          </div>
         </div>
-
-        <div class="row">
-            <div class="column large-12">
-                
-                <!-- Certificate 1: Advanced Computer Vision with TensorFlow -->
-                <div class="certificate-item" data-aos="fade-up">
-                    <div class="certificate-header">
-                        <div class="certificate-icon">
-                            <i class="fas fa-eye"></i>
-                        </div>
-                        <div class="certificate-info">
-                            <h3 class="certificate-title">Advanced Computer Vision with TensorFlow</h3>
-                            <div class="certificate-provider">DeepLearning.AI • Coursera</div>
-                        </div>
-                    </div>
-                    <div class="certificate-actions">
-                        <button class="cert-btn" onclick="openPdfModal('certificates/advanced_tensorflow_certificate.pdf')" title="Preview Certificate">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                        <a href="certificates/advanced_tensorflow_certificate.pdf" class="cert-btn" download title="Download Certificate">
-                            <i class="fas fa-download"></i>
-                        </a>
-                        <a href="https://coursera.org/verify/X4VGGF1N3ZEU" class="cert-btn cert-btn-verify" target="_blank" title="Verify Certificate">
-                            <i class="fas fa-check-circle"></i>
-                            Verify
-                        </a>
-                    </div>
-                </div>
-
-                
-                <!-- Certificate 2: Advanced Deep Learning (MathWorks) -->
-                <div class="certificate-item" data-aos="fade-up">
-                    <div class="certificate-header">
-                        <div class="certificate-icon">
-                            <i class="fas fa-brain"></i>
-                        </div>
-                        <div class="certificate-info">
-                            <h3 class="certificate-title">Advanced Deep Learning</h3>
-                            <div class="certificate-provider">MathWorks • Coursera</div>
-                        </div>
-                    </div>
-                    <div class="certificate-actions">
-                        <button class="cert-btn" onclick="openPdfModal('certificates/advanced_deep_learning_mathworks.pdf')" title="Preview Certificate">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                        <a href="certificates/advanced_deep_learning_mathworks.pdf" class="cert-btn" download title="Download Certificate">
-                            <i class="fas fa-download"></i>
-                        </a>
-                        <a href="https://www.coursera.org/account/accomplishments/verify/S39QXAR2DEA9" class="cert-btn cert-btn-verify" target="_blank" title="Verify Certificate">
-                            <i class="fas fa-check-circle"></i>
-                            Verify
-                        </a>
-                    </div>
-                </div>
-                <!-- Certificate 3: Camera and Imaging -->
-                <div class="certificate-item" data-aos="fade-up">
-                    <div class="certificate-header">
-                        <div class="certificate-icon">
-                            <i class="fas fa-camera"></i>
-                        </div>
-                        <div class="certificate-info">
-                            <h3 class="certificate-title">Camera and Imaging</h3>
-                            <div class="certificate-provider">Columbia University • Coursera</div>
-                        </div>
-                    </div>
-                    <div class="certificate-actions">
-                        <button class="cert-btn" onclick="openPdfModal('certificates/camera_and_imaging_certificate.pdf')" title="Preview Certificate">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                        <a href="certificates/camera_and_imaging_certificate.pdf" class="cert-btn" download title="Download Certificate">
-                            <i class="fas fa-download"></i>
-                        </a>
-                        <a href="https://www.coursera.org/account/accomplishments/verify/0OSA9A11Z1XY" class="cert-btn cert-btn-verify" target="_blank" title="Verify Certificate">
-                            <i class="fas fa-check-circle"></i>
-                            Verify
-                        </a>
-                    </div>
-                </div>
-                <div class="certificate-item certificate-coming-soon" data-aos="fade-up">
-                    <div class="certificate-header">
-                        <div class="certificate-icon">
-                            <i class="fas fa-plus"></i>
-                        </div>
-                        <div class="certificate-info">
-                            <h3 class="certificate-title">More Certificates Coming Soon</h3>
-                            <div class="certificate-provider">Currently pursuing additional certifications</div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+        <div class="project-card-body">
+          <span class="project-card-category">ROS Simulation</span>
+          <h3 class="project-card-title">Obstacle Mapping</h3>
+          <p class="project-card-desc">Turtlebot3 in ROS1/Gazebo detecting obstacles, mapping positions, and generating 2D environment visualizations.</p>
         </div>
-    </section> <!-- end s-certificates -->
+      </a>
 
-    <!-- contact
-    ================================================== -->
-    <section class="s-contact">
-
-        <div class="row narrower s-contact__top h-text-center">
-            <div class="column">
-                <h3 class="h6">End of the Road? </h3>
-                <h1 class="display-1">
-                I am currently working on more projects and will update this page soon. Stay tuned!
-                </h1>
-            </div>
-        </div> <!-- s-footer__top -->
-
-        <div class="row h-text-center">
-            <div class="column">
-                <p class="s-contact__email">
-                    COMING SOON
-                </p>
-            </div>
+      <!-- Project 5: Green Bottle Contouring -->
+      <a href="https://github.com/Hussain004/Contour-Detection" target="_blank" rel="noopener noreferrer" class="project-card reveal stagger-5" id="project-contour">
+        <div class="project-card-image">
+          <img src="/projects/masking.png" alt="Masking and Contouring" loading="lazy" />
+          <div class="project-overlay">
+            <span>View on GitHub →</span>
+          </div>
         </div>
-
-    </section>  <!-- end s-contact -->
-
-
-    <!-- footer
-    ================================================== -->
-    <footer class="s-footer">
-        <div class="row row-y-top">
-
-            <div class="column large-8 medium-12">
-                <div class="row">
-                    <div class="column large-7 tab-12 s-footer__block">
-                        <h4 class="h6">Which Robot(s) do I use?</h4>
-        
-                        <p>
-                        DJI Robomaster EP Core <br>
-                        (Da-Jiang Innovations) <br>
-                        <br>
-
-                        <a href="https://www.dji.com/global/robomaster-ep-core">Click here to check them out</a>
-                        </p>
-                    </div>
-        
-                    <div class="column large-5 tab-12 s-footer__block">
-                        <h4 class="h6">Follow Me</h4>
-        
-                        <ul class="s-footer__list">
-                            <li><a href="https://www.linkedin.com/in/hussain-habib/">LinkedIn</a></li>
-                            <li><a href="https://www.reddit.com/user/Visible04/">Reddit</a></li>
-                            <li><a href="https://x.com/Hussain2004004">Twitter</a></li>
-                            <li><a href="https://github.com/Hussain004">GitHub</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="column large-4 medium-12 s-footer__block--end">
-                <a href="mailto:hussain04habib@gmail.com" class="btn h-full-width">Let's Talk</a>
-
-                <div class="ss-smile">
-                    <span>Images provided by <a href="https://poe.com">Poe</a></span> 
-                    <span>Template by <a href="https://www.styleshout.com/">StyleShout</a></span> 
-                </div>
-            </div>
-
-            <div class="ss-go-top">
-                <a class="smoothscroll" title="Back to Top" href="#top">
-                    top
-                </a>
-            </div> <!-- end ss-go-top -->
-
+        <div class="project-card-body">
+          <span class="project-card-category">OpenCV</span>
+          <h3 class="project-card-title">Contour Detection & Retrieval</h3>
+          <p class="project-card-desc">OpenCV-based green bottle detection with distance/angle calculation, driving a Robomaster to pick up and return the object.</p>
         </div>
-    </footer>
-    
+      </a>
 
-    <!-- photoswipe background
-    ================================================== -->
-    <div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
-
-        <div class="pswp__bg"></div>
-        <div class="pswp__scroll-wrap">
-
-            <div class="pswp__container">
-                <div class="pswp__item"></div>
-                <div class="pswp__item"></div>
-                <div class="pswp__item"></div>
-            </div>
-
-            <div class="pswp__ui pswp__ui--hidden">
-                <div class="pswp__top-bar">
-                    <div class="pswp__counter"></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button> <button class="pswp__button pswp__button--share" title=
-                    "Share"></button> <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button> <button class="pswp__button pswp__button--zoom" title=
-                    "Zoom in/out"></button>
-                    <div class="pswp__preloader">
-                        <div class="pswp__preloader__icn">
-                            <div class="pswp__preloader__cut">
-                                <div class="pswp__preloader__donut"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-                    <div class="pswp__share-tooltip"></div>
-                </div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button> <button class="pswp__button pswp__button--arrow--right" title=
-                "Next (arrow right)"></button>
-                <div class="pswp__caption">
-                    <div class="pswp__caption__center"></div>
-                </div>
-            </div>
-
+      <!-- Project 6: Line Following -->
+      <a href="https://github.com/Hussain004/Line-Following" target="_blank" rel="noopener noreferrer" class="project-card reveal stagger-6" id="project-line-follow">
+        <div class="project-card-image">
+          <img src="/projects/line-following.png" alt="Line Following" loading="lazy" />
+          <div class="project-overlay">
+            <span>View on GitHub →</span>
+          </div>
         </div>
+        <div class="project-card-body">
+          <span class="project-card-category">OpenCV</span>
+          <h3 class="project-card-title">Line Following</h3>
+          <p class="project-card-desc">Canny edge detection and Hough transform enabling a robot to follow colored lines in real time.</p>
+        </div>
+      </a>
 
-    </div> <!-- end photoSwipe background -->
+    </div>
+  </section>
 
+  <div class="section-divider"></div>
 
-    <!-- Java Script
-    ================================================== -->
-    <script src="js/jquery-3.2.1.min.js"></script>
-    <script src="js/plugins.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/f1-game.js"></script>
+  <!-- ==================== CERTIFICATES ==================== -->
+  <section id="certificates" class="section">
+    <div class="reveal">
+      <span class="section-label">03 — Certificates</span>
+      <h2 class="section-title">Continuous learning.</h2>
+    </div>
+
+    <div class="certs-list">
+
+      <!-- Cert 1 -->
+      <div class="cert-card reveal stagger-1">
+        <div class="cert-info">
+          <div class="cert-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <circle cx="12" cy="12" r="4" />
+              <line x1="21.17" y1="8" x2="12" y2="8" />
+              <line x1="3.95" y1="6.06" x2="8.54" y2="14" />
+              <line x1="10.88" y1="21.94" x2="15.46" y2="14" />
+            </svg>
+          </div>
+          <div class="cert-details">
+            <h4>Advanced Computer Vision with TensorFlow</h4>
+            <p>DeepLearning.AI · Coursera</p>
+          </div>
+        </div>
+        <div class="cert-actions">
+          <a href="https://coursera.org/verify/X4VGGF1N3ZEU" target="_blank" rel="noopener noreferrer" class="cert-action-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Verify
+          </a>
+        </div>
+      </div>
+
+      <!-- Cert 2 -->
+      <div class="cert-card reveal stagger-2">
+        <div class="cert-info">
+          <div class="cert-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a4 4 0 0 0-4 4v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2h-2V6a4 4 0 0 0-4-4z"/>
+            </svg>
+          </div>
+          <div class="cert-details">
+            <h4>Advanced Deep Learning</h4>
+            <p>MathWorks · Coursera</p>
+          </div>
+        </div>
+        <div class="cert-actions">
+          <a href="https://www.coursera.org/account/accomplishments/verify/S39QXAR2DEA9" target="_blank" rel="noopener noreferrer" class="cert-action-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Verify
+          </a>
+        </div>
+      </div>
+
+      <!-- Cert 3 -->
+      <div class="cert-card reveal stagger-3">
+        <div class="cert-info">
+          <div class="cert-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+              <circle cx="12" cy="13" r="4"/>
+            </svg>
+          </div>
+          <div class="cert-details">
+            <h4>Camera and Imaging</h4>
+            <p>Columbia University · Coursera</p>
+          </div>
+        </div>
+        <div class="cert-actions">
+          <a href="https://www.coursera.org/account/accomplishments/verify/0OSA9A11Z1XY" target="_blank" rel="noopener noreferrer" class="cert-action-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Verify
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ==================== CONTACT / FOOTER ==================== -->
+  <footer id="contact" class="footer">
+    <div class="footer-inner">
+      <div class="footer-cta reveal">
+        <h3>Let's work together.</h3>
+        <p>Have a project in mind, or just want to chat about robots and vision models?</p>
+        <a href="mailto:hussain04habib@gmail.com" class="footer-email">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          hussain04habib@gmail.com
+        </a>
+      </div>
+
+      <div class="footer-socials reveal stagger-1">
+        <a href="https://github.com/Hussain004" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+          </svg>
+        </a>
+        <a href="https://www.linkedin.com/in/hussain-habib/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+            <rect x="2" y="9" width="4" height="12" />
+            <circle cx="4" cy="4" r="2" />
+          </svg>
+        </a>
+        <a href="https://x.com/Hussain2004004" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
+          </svg>
+        </a>
+      </div>
+
+      <p class="footer-bottom">© 2026 Hussain Habib. Built with purpose.</p>
+    </div>
+  </footer>
+
+  <!-- ==================== SCRIPTS ==================== -->
+  <script type="module" src="/src/main.js"></script>
 
 </body>
-
 </html>
