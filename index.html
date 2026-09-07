@@ -2,456 +2,418 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hussain's Portfolio</title>
-  <meta name="description" content="Portfolio of Hussain Habib → exploring computer vision, robotics, applied ML, and precision agriculture." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hussain Habib, robot perception and field phenotyping</title>
+  <meta name="description" content="Undergraduate researcher working on perception for robots in unstructured environments. Multi-robot open-vocabulary semantic navigation, and UAV crop phenotyping published in Computers and Electronics in Agriculture." />
   <meta name="author" content="Hussain Habib" />
+  <link rel="canonical" href="https://hussain004.github.io/" />
 
-  <!-- Fonts -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Hussain Habib, robot perception and field phenotyping" />
+  <meta property="og:description" content="Multi-robot open-vocabulary semantic navigation, and UAV crop phenotyping published in Computers and Electronics in Agriculture." />
+  <meta property="og:image" content="/projects/yolo_world_demo.webp" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <script>
+    // set before first paint so the theme never flashes
+    try {
+      var t = localStorage.getItem('theme')
+        || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+      document.documentElement.dataset.theme = t
+    } catch (e) { document.documentElement.dataset.theme = 'light' }
+  </script>
 </head>
 <body>
 
-  <!-- ==================== NAVIGATION ==================== -->
-  <nav id="main-nav" class="nav">
-    <div class="nav-inner">
-      <a href="#hero" class="nav-logo">hussain<span> habib</span></a>
-      <ul id="nav-links" class="nav-links">
-        <li><a href="#about">About</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#publications">Publications</a></li>
-        <li><a href="#certificates">Certificates</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-      <button id="nav-toggle" class="nav-toggle" aria-label="Toggle menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-    </div>
-  </nav>
+<a class="skip" href="#main">Skip to content</a>
 
-  <!-- ==================== HERO ==================== -->
-  <section id="hero" class="hero">
-    <canvas id="hero-canvas" class="hero-canvas"></canvas>
-    <div class="hero-overlay"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="i-arrow"><path d="M7 17 17 7M9 7h8v8"/></g>
+    <g id="i-github"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></g>
+    <g id="i-linkedin"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></g>
+    <g id="i-x"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></g>
+    <g id="i-mail"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></g>
+    <g id="i-sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g>
+    <g id="i-moon"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></g>
+    <g id="i-menu"><path d="M3 6h18M3 12h18M3 18h18"/></g>
+    <g id="i-server"><rect x="2" y="3" width="20" height="7" rx="2"/><rect x="2" y="14" width="20" height="7" rx="2"/><path d="M6 6.5h.01M6 17.5h.01"/></g>
+    <g id="i-share"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></g>
+    <g id="i-bot"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 8V4M9 14h.01M15 14h.01M2 13v3M22 13v3"/></g>
+    <g id="i-award"><circle cx="12" cy="8" r="6"/><path d="M8.2 13.5 7 22l5-3 5 3-1.2-8.5"/></g>
+    <g id="i-drag"><path d="M5 9l-3 3 3 3M19 9l3 3-3 3M9 5l3-3 3 3M9 19l3 3 3-3"/></g>
+    <g id="i-book"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></g>
+  </defs>
+</svg>
 
-    <div class="hero-content">
-      <p class="hero-greeting">// welcome</p>
-      <h1 class="hero-name">Hussain Habib</h1>
-      <p class="hero-tagline">
-        I work on <span id="typewriter" class="typed-text"></span><span class="cursor"></span>
+<!-- ========================= NAV ========================= -->
+<nav class="nav" id="nav">
+  <a class="nav-brand" href="#top"><span class="dot"></span>Hussain Habib</a>
+
+  <ul class="nav-menu" id="nav-menu">
+    <li><a href="#research">Research</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#publications">Publications</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+
+  <div class="nav-right">
+    <button class="icon-btn theme-btn" id="theme-toggle" aria-label="Toggle colour theme">
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><use href="#i-sun"/></svg>
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><use href="#i-moon"/></svg>
+    </button>
+    <button class="icon-btn nav-toggle" id="nav-toggle" aria-label="Open menu" aria-controls="nav-menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><use href="#i-menu"/></svg>
+    </button>
+  </div>
+</nav>
+
+<main id="main">
+
+<!-- ========================= HERO ========================= -->
+<section class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <span class="hero-status mono"><span class="pulse"></span>Under review, ICRA 2027</span>
+
+      <h1>
+        <span class="line"><span>Hussain</span></span>
+        <span class="line"><span>Habib<em>.</em></span></span>
+      </h1>
+
+      <p class="lede">
+        I work on perception for robots that have to operate without being told
+        what they will find. My current project sends a fleet of ground robots
+        into a university wing and asks them to locate rooms described only in
+        natural language.
       </p>
 
-      <div class="hero-socials">
-        <!-- GitHub -->
-        <a href="https://github.com/Hussain004" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
-          </svg>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#research">
+          Read the research
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><use href="#i-arrow"/></svg>
         </a>
-        <!-- LinkedIn -->
-        <a href="https://www.linkedin.com/in/hussain-habib/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-            <rect x="2" y="9" width="4" height="12" />
-            <circle cx="4" cy="4" r="2" />
-          </svg>
-        </a>
-        <!-- Twitter/X -->
-        <a href="https://x.com/Hussain2004004" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
-          </svg>
-        </a>
-        <!-- Reddit -->
-        <a href="https://www.reddit.com/user/Visible04/" target="_blank" rel="noopener noreferrer" aria-label="Reddit">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/>
-          </svg>
+        <a class="btn btn-ghost" href="https://github.com/Hussain004" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-github"/></svg>
+          GitHub
         </a>
       </div>
     </div>
 
-    <div class="hero-scroll">
-      <a href="#about">
-        <span>scroll</span>
-        <span class="scroll-line"></span>
-      </a>
+    <div class="stage" id="wing-stage">
+      <canvas id="wing-canvas" role="img" aria-label="Interactive model of a floor plan being explored and classified by a small fleet of robots"></canvas>
+      <div class="stage-labels" id="wing-labels"></div>
+      <p class="stage-hint">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><use href="#i-drag"/></svg>
+        Drag to orbit, click a room
+      </p>
+      <p class="stage-fallback">Interactive floor model needs WebGL</p>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ==================== ABOUT ==================== -->
-  <section id="about" class="section">
-    <div class="reveal">
-      <span class="section-label">01 — About</span>
-      <h2 class="section-title">A bit about me.</h2>
-    </div>
+<!-- ========================= RESEARCH ========================= -->
+<section class="section" id="research">
+  <div class="wrap">
+    <header class="section-head reveal">
+      <p class="eyebrow mono"><b>01</b> Current research</p>
+      <h2>Hive-Nav</h2>
+      <p class="lede">
+        Multi-robot open-vocabulary semantic navigation. A fleet finds and
+        classifies rooms given nothing but a natural language description,
+        then sweeps each one for target objects.
+      </p>
+    </header>
 
-    <div class="about-grid">
-      <div class="about-photo-wrapper reveal stagger-1">
-        <div class="about-photo">
-          <img src="/avatar.png" alt="Hussain Habib" id="about-photo" />
+    <div class="feature">
+      <div class="feature-body reveal">
+        <div class="tag-row">
+          <span class="tag is-accent">ICRA 2027, under review</span>
+          <span class="tag">ROS 2</span>
+          <span class="tag">Nav2</span>
+          <span class="tag">Open vocabulary</span>
+          <span class="tag">Multi-robot</span>
         </div>
-        <div class="about-photo-decoration"></div>
-      </div>
 
-      <div class="about-text reveal stagger-2">
         <p>
-          I am Hussain, an undergraduate researcher working at the intersection of 
-          perception and intelligent systems. I build things that help machines 
-          <em>see</em>, <em>understand</em>, and <em>act</em> in the physical world.
-        </p>
-        <p>
-          My primary focus is <strong>computer vision</strong> ranging from classical image processing 
-          to deep learning-based detection and segmentation. I am fascinated by how visual 
-          understanding can be paired with <strong>robotics</strong> to create autonomous systems 
-          that navigate, manipulate, and make decisions in real environments. Lately, I have been 
-          diving deep into <strong>applied ML</strong>, particularly vision-language models (VLMs) 
-          that bridge the gap between seeing and reasoning. I have also been putting these skills 
-          to work in <strong>precision agriculture</strong> using drones, LiDAR, and remote sensing to 
-          phenotype crops and automate field analysis.
+          Hive-Nav coordinates a fleet of DJI RoboMaster EP Core robots across a
+          university wing. Each robot carries a Raspberry Pi 5 and runs its own
+          Nav2 stack. A single GPU workstation orchestrates the fleet and holds
+          the inference models. The mission runs in two phases.
         </p>
 
-        <div class="about-interests">
-          <h4>// focus areas</h4>
-          <div class="interest-tags">
-            <span class="interest-tag primary">Computer Vision</span>
-            <span class="interest-tag primary">Robotics</span>
-            <span class="interest-tag">Applied ML</span>
-            <span class="interest-tag">Vision-Language Models</span>
-            <span class="interest-tag">Precision Agriculture</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  
-  <div class="section-divider"></div>
+        <p>
+          <strong>Phase 1 is semantic room classification under dynamic
+          allocation.</strong> The workstation dispatches a room task list, and
+          each robot measures candidate path lengths locally with
+          <code>ComputePathToPose</code>. Allocation therefore reflects true
+          reachable distance rather than straight line distance, and no planning
+          query ever crosses the domain bridge. On arrival a robot spins in place
+          and captures frames. The workstation classifies the room with a tiered
+          pipeline that starts at YOLO detection and escalates to CLIP and a
+          vision language model when tier-one evidence is weak. The allocator
+          confirms or denies each room until the floor is resolved.
+        </p>
 
-  <!-- ==================== PROJECTS ==================== -->
-  <section id="projects" class="section">
-    <div class="reveal">
-      <span class="section-label">02 — Projects</span>
-      <h2 class="section-title">Things I've built.</h2>
-    </div>
-    
-    <div class="projects-grid">
+        <p>
+          <strong>Phase 2 is coverage search.</strong> Once every room is
+          identified, the workstation computes viewpoint waypoints per room from
+          an open-area flood fill and streams them to the robot, which drives
+          <code>NavigateThroughPoses</code> and samples frames for object
+          detection at each pose.
+        </p>
 
-      <!-- Project 1: Open-Vocabulary Semantic Room Navigation -->
-      <a href="https://github.com/Hussain004/Open-Vocabulary-Semantic-Room-Navigation" target="_blank" rel="noopener noreferrer" class="project-card reveal stagger-5" id="project-open-vocabulary-semantic-room-navigation">
-        <div class="project-card-image">
-          <img src="/projects/yolo_world_demo.png" alt="Open-Vocabulary Semantic Room Navigation" loading="lazy" />
-          <div class="project-overlay">
-            <span>View on GitHub →</span>
-          </div>
-        </div>
-        <div class="project-card-body">
-          <span class="project-card-category">ROS 2 · YOLO-World</span>
-          <h3 class="project-card-title">Open-Vocabulary Semantic Room Navigation</h3>
-          <p class="project-card-desc">YOLO-World-powered robot that classifies rooms on sight, skips irrelevant ones, and remembers layouts across missions, distributed across Pi 5 and laptop.</p>
-        </div>
-      </a>
-
-      <!-- Project 2: BAGEL — Browser ROS Bag Visualizer -->
-      <a href="https://github.com/Hussain004/BAGEL" target="_blank" rel="noopener noreferrer" class="project-card reveal stagger-3" id="project-bagel">
-        <div class="project-card-image">
-          <img src="/projects/bagel.png" alt="BAGEL: Browser ROS Bag Visualizer" loading="lazy" />
-          <div class="project-overlay">
-            <span>View on GitHub →</span>
-          </div>
-        </div>
-        <div class="project-card-body">
-          <span class="project-card-category">ROS · WebAssembly</span>
-          <h3 class="project-card-title">BAGEL: Browser ROS Bag Visualizer</h3>
-          <p class="project-card-desc">Zero-install web app for ROS1 (.bag) and ROS2 (.mcap, .db3) files with 3D point clouds, time-series plots, and TF-aware rendering, fully client-side via Web Workers and WASM.</p>
-        </div>
-      </a>
-
-      <!-- Project 3: 3D Scene Reconstruction & Virtual Tour -->
-      <a href="https://github.com/Hussain004/Computer_Vision_Project" target="_blank" rel="noopener noreferrer" class="project-card reveal stagger-6" id="project-sfm-tour">
-        <div class="project-card-image">
-          <img src="/projects/web_viewer_demo.png" alt="3D Scene Reconstruction Virtual Tour" loading="lazy" />
-          <div class="project-overlay">
-            <span>View on GitHub →</span>
-          </div>
-        </div>
-        <div class="project-card-body">
-          <span class="project-card-category">Structure from Motion</span>
-          <h3 class="project-card-title">3D Virtual Tour</h3>
-          <p class="project-card-desc">Incremental SfM pipeline reconstructing 200K+ 3D points from 30 images with bundle adjustment, served as an interactive Three.js virtual tour.</p>
-        </div>
-      </a>
-
-      <!-- Project 4: Pick & Drop -->
-      <a href="https://github.com/Hussain004/Pick-and-Place-using-Marker-Detection" target="_blank" rel="noopener noreferrer" class="project-card reveal stagger-2" id="project-pick-drop">
-        <div class="project-card-image">
-          <img src="/projects/pick-and-drop.jpg" alt="Pick and Drop" loading="lazy" />
-          <div class="project-overlay">
-            <span>View on GitHub →</span>
-          </div>
-        </div>
-        <div class="project-card-body">
-          <span class="project-card-category">Marker Detection</span>
-          <h3 class="project-card-title">Pick & Drop</h3>
-          <p class="project-card-desc">Robomaster robot with computer vision and PID control to detect markers, pick up objects, and place them at target locations.</p>
-        </div>
-      </a>
-
-      <!-- Project 5: EV Signs Detection -->
-      <a href="https://github.com/Hussain004/Parking-Signs-Detection-Using-YOLOv4" target="_blank" rel="noopener noreferrer" class="project-card reveal stagger-1" id="project-ev-signs">
-        <div class="project-card-image">
-          <img src="/projects/parking_signs_detect.png" alt="EV Signs and Charger Detection" loading="lazy" />
-          <div class="project-overlay">
-            <span>View on GitHub →</span>
-          </div>
-        </div>
-        <div class="project-card-body">
-          <span class="project-card-category">Transfer Learning</span>
-          <h3 class="project-card-title">EV Signs & Charger Detection</h3>
-          <p class="project-card-desc">YOLOv4 deep learning to detect EV signs, charging stations, and accessible parking signs achieving 74% mAP via transfer learning.</p>
-        </div>
-      </a>
-
-      <!-- Project 6: Obstacle Mapping -->
-      <a href="https://github.com/Hussain004/Obstacle-Mapping-Simulation" target="_blank" rel="noopener noreferrer" class="project-card reveal stagger-4" id="project-mapping">
-        <div class="project-card-image">
-          <img src="/projects/mapping.png" alt="Obstacle Mapping" loading="lazy" />
-          <div class="project-overlay">
-            <span>View on GitHub →</span>
-          </div>
-        </div>
-        <div class="project-card-body">
-          <span class="project-card-category">ROS Simulation</span>
-          <h3 class="project-card-title">Obstacle Mapping</h3>
-          <p class="project-card-desc">Turtlebot3 in ROS1/Gazebo detecting obstacles, mapping positions, and generating 2D environment visualizations.</p>
-        </div>
-      </a>
-
-    </div>
-  </section>
-
-  <div class="section-divider"></div>
-
-  <!-- ==================== PUBLICATIONS ==================== -->
-  <section id="publications" class="section">
-    <div class="reveal">
-      <span class="section-label">03 — Publications</span>
-      <h2 class="section-title">Research work.</h2>
-    </div>
-
-    <div class="pubs-list">
-
-      <!-- Publication 1 -->
-      <div class="pub-card reveal stagger-1">
-        <div class="pub-accent-bar"></div>
-        <div class="pub-content">
-          <div class="pub-venue">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-            </svg>
-            <span>Computers and Electronics in Agriculture</span>
-            <span class="pub-venue-sep">·</span>
-            <span>Elsevier</span>
-            <span class="pub-venue-sep">·</span>
-            <span>Vol. 246C</span>
-          </div>
-          <h3 class="pub-title">UAV-based crop reconstruction and trait estimation using RGB imagery without external geospatial infrastructure</h3>
-          <p class="pub-authors">
-            <strong>Muhammad Hussain Habib Chaudhry</strong>, Muhammad Ibrahim Rana, Hassan Jaleel
-          </p>
-          <p class="pub-abstract">
-            Infrastructure-free UAV phenotyping using only RGB imagery and a consumer drone. Dual-altitude RANSAC-corrected orthomosaics achieve 94.95% plant counting and 91.59% panicle detection accuracy, with strong DEM-ground truth correlation (R = 0.876) — all without GCPs or RTK-GPS.
-          </p>
-          <div class="pub-meta">
-            <span class="pub-date">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                <line x1="16" y1="2" x2="16" y2="6"/>
-                <line x1="8" y1="2" x2="8" y2="6"/>
-                <line x1="3" y1="10" x2="21" y2="10"/>
-              </svg>
-              March 2026
-            </span>
-            <span class="pub-doi">
-              Article 111677
-            </span>
-            <span class="pub-citations" data-doi="10.1016/j.compag.2026.111677" data-manual-count="1" style="display: none; align-items: center; gap: 0.4rem; color: var(--color-warm); font-weight: 500;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1.5.5 1.5 1.727 0 1.333-1 2.273-2.5 2.273"/>
-                <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.5c0 1.227-.5 1.727-1.5 1.727-1.5 0-2.5.94-2.5 2.273"/>
-              </svg>
-              <span class="citation-count">Loading...</span>
-            </span>
-          </div>
-          <div class="pub-actions">
-            <a href="https://doi.org/10.1016/j.compag.2026.111677" target="_blank" rel="noopener noreferrer" class="pub-action-btn pub-action-primary">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-              View on ScienceDirect
-            </a>
-          </div>
-        </div>
+        <dl class="stats reveal" data-delay="1">
+          <div class="stat"><dt>Platform</dt><dd>RoboMaster<small> EP Core</small></dd></div>
+          <div class="stat"><dt>Onboard compute</dt><dd>Pi 5<small> per robot</small></dd></div>
+          <div class="stat"><dt>Navigation</dt><dd>Nav2<small> AMCL</small></dd></div>
+          <div class="stat"><dt>Sensing</dt><dd>RPLiDAR<small> A2M12</small></dd></div>
+        </dl>
       </div>
 
-    </div>
-  </section>
+      <aside class="arch reveal" data-delay="2">
+        <h4>System layout</h4>
 
-  <div class="section-divider"></div>
-
-  <!-- ==================== CERTIFICATES ==================== -->
-  <section id="certificates" class="section">
-    <div class="reveal">
-      <span class="section-label">04 — Certificates</span>
-      <h2 class="section-title">Continuous learning.</h2>
-    </div>
-
-    <div class="certs-list">
-
-      <!-- Cert 1 -->
-      <div class="cert-card reveal stagger-1">
-        <div class="cert-info">
-          <div class="cert-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10" />
-              <circle cx="12" cy="12" r="4" />
-              <line x1="21.17" y1="8" x2="12" y2="8" />
-              <line x1="3.95" y1="6.06" x2="8.54" y2="14" />
-              <line x1="10.88" y1="21.94" x2="15.46" y2="14" />
-            </svg>
-          </div>
-          <div class="cert-details">
-            <h4>Vision Language Models (VLM) Bootcamp</h4>
-            <p>OpenCV · OpenCV University</p>
-          </div>
+        <div class="arch-node">
+          <span class="arch-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><use href="#i-server"/></svg></span>
+          <span>
+            <b>GPU workstation</b>
+            <span>Mission control, dynamic room allocation, YOLO and CLIP inference server, belief fusion, metrics.</span>
+          </span>
         </div>
-        <div class="cert-actions">
-          <a href="https://courses.opencv.org/certificates/d45b4d7a750d4e1c9c2a5250af119252" target="_blank" rel="noopener noreferrer" class="cert-action-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            Verify
+
+        <div class="arch-link"></div>
+
+        <div class="arch-node">
+          <span class="arch-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><use href="#i-share"/></svg></span>
+          <span>
+            <b>Domain bridge</b>
+            <span>Each robot lives in its own ROS 2 domain. The bridge exposes only the topics the fleet controller needs.</span>
+          </span>
+        </div>
+
+        <div class="arch-link"></div>
+
+        <div class="arch-node">
+          <span class="arch-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><use href="#i-bot"/></svg></span>
+          <span>
+            <b>Robot, one per unit</b>
+            <span>RPLiDAR, laser odometry, Nav2 with a regulated pure pursuit controller, camera bridge, room visit executor.</span>
+          </span>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= PROJECTS ========================= -->
+<section class="section" id="projects">
+  <div class="wrap">
+    <header class="section-head reveal">
+      <p class="eyebrow mono"><b>02</b> Selected work</p>
+      <h2>Things I built to find out whether they would work.</h2>
+    </header>
+
+    <div class="projects">
+
+      <a class="card reveal" href="https://github.com/Hussain004/Open-Vocabulary-Semantic-Room-Navigation" target="_blank" rel="noopener noreferrer">
+        <div class="card-media"><img src="/projects/yolo_world_demo.webp" alt="Robot view with open vocabulary detections overlaid" loading="lazy" width="800" height="500" /></div>
+        <div class="card-body">
+          <p class="card-kicker">ROS 2, YOLO-World</p>
+          <h3>Open-vocabulary room navigation</h3>
+          <p>The single robot predecessor to Hive-Nav. It classifies rooms on sight, skips the ones that do not match the query, and carries layout knowledge between missions. Compute is split across a Raspberry Pi 5 and a laptop.</p>
+          <span class="card-foot">View source <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><use href="#i-arrow"/></svg></span>
+        </div>
+      </a>
+
+      <a class="card reveal" data-delay="1" href="https://github.com/Hussain004/BAGEL" target="_blank" rel="noopener noreferrer">
+        <div class="card-media"><img src="/projects/bagel.webp" alt="Browser interface showing a point cloud and time series plots from a ROS bag" loading="lazy" width="800" height="500" /></div>
+        <div class="card-body">
+          <p class="card-kicker">WebAssembly, Web Workers</p>
+          <h3>BAGEL</h3>
+          <p>A ROS bag viewer that runs entirely in the browser. It opens ROS 1 <code>.bag</code> and ROS 2 <code>.mcap</code> and <code>.db3</code> files, renders TF-aware point clouds and time series, and uploads nothing. Decoding happens client side in WebAssembly.</p>
+          <span class="card-foot">View source <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><use href="#i-arrow"/></svg></span>
+        </div>
+      </a>
+
+      <a class="card reveal" data-delay="2" href="https://github.com/Hussain004/Computer_Vision_Project" target="_blank" rel="noopener noreferrer">
+        <div class="card-media"><img src="/projects/web_viewer_demo.webp" alt="Reconstructed 3D point cloud of a scene in a web viewer" loading="lazy" width="800" height="500" /></div>
+        <div class="card-body">
+          <p class="card-kicker">Structure from motion</p>
+          <h3>Incremental SfM virtual tour</h3>
+          <p>An incremental structure from motion pipeline that reconstructs more than 200,000 points from 30 photographs, refined by bundle adjustment and served as a walkable Three.js tour.</p>
+          <span class="card-foot">View source <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><use href="#i-arrow"/></svg></span>
+        </div>
+      </a>
+
+      <a class="card reveal" data-delay="3" href="https://github.com/Hussain004/Pick-and-Place-using-Marker-Detection" target="_blank" rel="noopener noreferrer">
+        <div class="card-media"><img src="/projects/pick-and-drop.webp" alt="RoboMaster robot picking up a marked object" loading="lazy" width="800" height="500" /></div>
+        <div class="card-body">
+          <p class="card-kicker">Visual servoing</p>
+          <h3>Marker guided pick and place</h3>
+          <p>A RoboMaster manipulator that closes a PID loop on marker detections to approach, grasp, and place objects at a target pose. The control loop runs on the vision estimate directly.</p>
+          <span class="card-foot">View source <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><use href="#i-arrow"/></svg></span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ========================= PUBLICATIONS ========================= -->
+<section class="section" id="publications">
+  <div class="wrap">
+    <header class="section-head reveal">
+      <p class="eyebrow mono"><b>03</b> Publications</p>
+      <h2>Peer reviewed work.</h2>
+    </header>
+
+    <article class="pub reveal">
+      <div>
+        <p class="pub-venue">
+          <span class="badge">Published</span>
+          <span>Computers and Electronics in Agriculture</span>
+          <span>Elsevier</span>
+          <span>Vol. 246C, Article 111677</span>
+        </p>
+
+        <h3>UAV-based crop reconstruction and trait estimation using RGB imagery without external geospatial infrastructure</h3>
+
+        <p class="pub-authors"><b>Muhammad Hussain Habib Chaudhry</b>, Muhammad Ibrahim Rana, Hassan Jaleel</p>
+
+        <p class="abstract">
+          Field phenotyping normally depends on ground control points or RTK-GPS,
+          which is exactly the infrastructure a smallholder does not have. We show
+          that a consumer drone and RGB imagery alone are enough. Dual-altitude
+          capture with RANSAC-corrected orthomosaics reaches 94.95 percent accuracy
+          on plant counting and 91.59 percent on panicle detection, and the derived
+          elevation model correlates with ground truth at R equal to 0.876.
+        </p>
+
+        <div class="pub-actions">
+          <a class="btn btn-primary" href="https://doi.org/10.1016/j.compag.2026.111677" target="_blank" rel="noopener noreferrer">
+            Read on ScienceDirect
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><use href="#i-arrow"/></svg>
           </a>
         </div>
       </div>
 
-      <!-- Cert 2 -->
-      <div class="cert-card reveal stagger-1">
-        <div class="cert-info">
-          <div class="cert-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10" />
-              <circle cx="12" cy="12" r="4" />
-              <line x1="21.17" y1="8" x2="12" y2="8" />
-              <line x1="3.95" y1="6.06" x2="8.54" y2="14" />
-              <line x1="10.88" y1="21.94" x2="15.46" y2="14" />
-            </svg>
-          </div>
-          <div class="cert-details">
-            <h4>Advanced Computer Vision with TensorFlow</h4>
-            <p>DeepLearning.AI · Coursera</p>
-          </div>
-        </div>
-        <div class="cert-actions">
-          <a href="https://coursera.org/verify/X4VGGF1N3ZEU" target="_blank" rel="noopener noreferrer" class="cert-action-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            Verify
+      <div class="crop-stage" id="crop-stage">
+        <canvas id="crop-canvas" role="img" aria-label="Model of a quadcopter flying a survey pattern over a growing wheat plot"></canvas>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ========================= ABOUT ========================= -->
+<section class="section" id="about">
+  <div class="wrap">
+    <header class="section-head reveal">
+      <p class="eyebrow mono"><b>04</b> About</p>
+      <h2>Who is writing this.</h2>
+    </header>
+
+    <div class="about">
+      <div class="portrait reveal">
+        <img src="/avatar.webp" alt="Hussain Habib" width="760" height="760" />
+      </div>
+
+      <div class="about-body reveal" data-delay="1">
+        <p>
+          I am an undergraduate researcher working on the perception side of
+          autonomy. The through line in my work is systems that have to act on
+          what they see rather than on a map somebody handed them in advance.
+        </p>
+        <p>
+          Most of my time goes to <strong>robotics and computer vision</strong>,
+          from camera geometry and structure from motion through to detection,
+          segmentation, and the open-vocabulary models that let a robot be given
+          a goal in words. I care about the part where a method leaves the
+          benchmark and has to survive a real floor, real lighting, and a
+          Raspberry Pi budget.
+        </p>
+        <p>
+          The other half of my work is <strong>field phenotyping</strong>. I fly
+          drones over crop plots and turn the imagery into plant counts, panicle
+          counts, and elevation models. That work put a first-author paper in
+          Computers and Electronics in Agriculture, and it is what convinced me
+          that the interesting problems are the ones where the sensor is cheap
+          and the environment refuses to cooperate.
+        </p>
+        <p>
+          I am looking for research positions where I can keep working on
+          embodied perception. If that is your lab, I would like to hear from you.
+        </p>
+
+        <div class="certs">
+          <a class="cert" href="https://courses.opencv.org/certificates/d45b4d7a750d4e1c9c2a5250af119252" target="_blank" rel="noopener noreferrer">
+            <span class="cert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><use href="#i-award"/></svg></span>
+            <span><b>Vision Language Models Bootcamp</b><span>OpenCV University</span></span>
+            <span class="verify">Verify</span>
+          </a>
+          <a class="cert" href="https://coursera.org/verify/X4VGGF1N3ZEU" target="_blank" rel="noopener noreferrer">
+            <span class="cert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><use href="#i-award"/></svg></span>
+            <span><b>Advanced Computer Vision with TensorFlow</b><span>DeepLearning.AI</span></span>
+            <span class="verify">Verify</span>
+          </a>
+          <a class="cert" href="https://www.coursera.org/account/accomplishments/verify/S39QXAR2DEA9" target="_blank" rel="noopener noreferrer">
+            <span class="cert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><use href="#i-award"/></svg></span>
+            <span><b>Advanced Deep Learning</b><span>MathWorks</span></span>
+            <span class="verify">Verify</span>
+          </a>
+          <a class="cert" href="https://www.coursera.org/account/accomplishments/verify/0OSA9A11Z1XY" target="_blank" rel="noopener noreferrer">
+            <span class="cert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><use href="#i-award"/></svg></span>
+            <span><b>Camera and Imaging</b><span>Columbia University</span></span>
+            <span class="verify">Verify</span>
           </a>
         </div>
       </div>
-
-      <!-- Cert 3 -->
-      <div class="cert-card reveal stagger-2">
-        <div class="cert-info">
-          <div class="cert-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2a4 4 0 0 0-4 4v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2h-2V6a4 4 0 0 0-4-4z"/>
-            </svg>
-          </div>
-          <div class="cert-details">
-            <h4>Advanced Deep Learning</h4>
-            <p>MathWorks · Coursera</p>
-          </div>
-        </div>
-        <div class="cert-actions">
-          <a href="https://www.coursera.org/account/accomplishments/verify/S39QXAR2DEA9" target="_blank" rel="noopener noreferrer" class="cert-action-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            Verify
-          </a>
-        </div>
-      </div>
-
-      <!-- Cert 4 -->
-      <div class="cert-card reveal stagger-3">
-        <div class="cert-info">
-          <div class="cert-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-              <circle cx="12" cy="13" r="4"/>
-            </svg>
-          </div>
-          <div class="cert-details">
-            <h4>Camera and Imaging</h4>
-            <p>Columbia University · Coursera</p>
-          </div>
-        </div>
-        <div class="cert-actions">
-          <a href="https://www.coursera.org/account/accomplishments/verify/0OSA9A11Z1XY" target="_blank" rel="noopener noreferrer" class="cert-action-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            Verify
-          </a>
-        </div>
-      </div>
-
     </div>
-  </section>
+  </div>
+</section>
 
-  <div class="section-divider"></div>
+</main>
 
-  <!-- ==================== CONTACT / FOOTER ==================== -->
-  <footer id="contact" class="footer">
-    <div class="footer-inner">
-      <div class="footer-cta reveal">
-        <h3>Let's work together.</h3>
-        <p>Have a project in mind, or just want to chat about robots and vision models?</p>
-        <a href="mailto:hussain04habib@gmail.com" class="footer-email">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-            <polyline points="22,6 12,13 2,6"/>
-          </svg>
-          hussain04habib@gmail.com
-        </a>
-      </div>
+<!-- ========================= CONTACT ========================= -->
+<footer class="footer" id="contact">
+  <div class="wrap">
+    <div class="footer-cta reveal">
+      <p class="eyebrow mono" style="justify-content:center"><b>05</b> Contact</p>
+      <h2>Get in touch.</h2>
+      <p class="lede">
+        I read everything, and I reply to anything about robots, perception, or
+        why a pipeline that worked in simulation fell apart in the corridor.
+      </p>
+      <a class="mailto" href="mailto:hussain04habib@gmail.com">hussain04habib@gmail.com</a>
+    </div>
 
-      <div class="footer-socials reveal stagger-1">
+    <div class="footer-bar">
+      <p>&copy; <span id="year">2026</span> Hussain Habib</p>
+      <div class="socials">
         <a href="https://github.com/Hussain004" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
-          </svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-github"/></svg>
         </a>
         <a href="https://www.linkedin.com/in/hussain-habib/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-            <rect x="2" y="9" width="4" height="12" />
-            <circle cx="4" cy="4" r="2" />
-          </svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-linkedin"/></svg>
         </a>
-        <a href="https://x.com/Hussain2004004" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
-          </svg>
+        <a href="https://x.com/Hussain2004004" target="_blank" rel="noopener noreferrer" aria-label="X">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-x"/></svg>
+        </a>
+        <a href="mailto:hussain04habib@gmail.com" aria-label="Email">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-mail"/></svg>
         </a>
       </div>
-
-      <p class="footer-bottom">© 2026 Hussain Habib. Built with purpose.</p>
     </div>
-  </footer>
+  </div>
+</footer>
 
-  <!-- ==================== SCRIPTS ==================== -->
-  <script type="module" src="/src/main.js"></script>
-
+<script type="module" src="/src/main.js"></script>
 </body>
 </html>
