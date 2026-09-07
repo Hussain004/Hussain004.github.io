@@ -1,327 +1,146 @@
 import './style.css'
 
-// ============================================
-// DOT GRID — Canvas-based animated point cloud
-// ============================================
-function initDotGrid() {
-  const canvas = document.getElementById('hero-canvas')
-  if (!canvas) return
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+const $ = (sel, root = document) => root.querySelector(sel)
+const $$ = (sel, root = document) => [...root.querySelectorAll(sel)]
 
-  const ctx = canvas.getContext('2d')
-  let width, height, dots, mouse, animationId
+/* --------------------------------------------------------------------------
+   Theme
+   -------------------------------------------------------------------------- */
+const themeListeners = new Set()
 
-  mouse = { x: -1000, y: -1000 }
-
-  function resize() {
-    width = canvas.width = window.innerWidth
-    height = canvas.height = window.innerHeight
-    createDots()
-  }
-
-  function createDots() {
-    dots = []
-    const spacing = 50
-    const cols = Math.ceil(width / spacing) + 1
-    const rows = Math.ceil(height / spacing) + 1
-
-    for (let i = 0; i < cols; i++) {
-      for (let j = 0; j < rows; j++) {
-        dots.push({
-          x: i * spacing,
-          y: j * spacing,
-          baseX: i * spacing,
-          baseY: j * spacing,
-          vx: 0,
-          vy: 0,
-          radius: Math.random() * 1.5 + 0.5,
-        })
-      }
-    }
-  }
-
-  function animate() {
-    ctx.clearRect(0, 0, width, height)
-
-    const mouseRadius = 150
-    const time = Date.now() * 0.001
-
-    dots.forEach((dot, i) => {
-      // Gentle ambient drift
-      dot.x = dot.baseX + Math.sin(time * 0.5 + i * 0.1) * 3
-      dot.y = dot.baseY + Math.cos(time * 0.3 + i * 0.15) * 3
-
-      // Mouse interaction — repel
-      const dx = dot.x - mouse.x
-      const dy = dot.y - mouse.y
-      const dist = Math.sqrt(dx * dx + dy * dy)
-
-      if (dist < mouseRadius) {
-        const force = (1 - dist / mouseRadius) * 20
-        dot.x += (dx / dist) * force
-        dot.y += (dy / dist) * force
-      }
-
-      // Draw dot
-      const alpha = 0.15 + (dist < mouseRadius ? (1 - dist / mouseRadius) * 0.4 : 0)
-      ctx.beginPath()
-      ctx.arc(dot.x, dot.y, dot.radius, 0, Math.PI * 2)
-      ctx.fillStyle = `rgba(230, 57, 70, ${alpha})`
-      ctx.fill()
-    })
-
-    // Draw connections
-    for (let i = 0; i < dots.length; i++) {
-      for (let j = i + 1; j < dots.length; j++) {
-        const dx = dots[i].x - dots[j].x
-        const dy = dots[i].y - dots[j].y
-        const dist = Math.sqrt(dx * dx + dy * dy)
-
-        if (dist < 70) {
-          ctx.beginPath()
-          ctx.moveTo(dots[i].x, dots[i].y)
-          ctx.lineTo(dots[j].x, dots[j].y)
-          ctx.strokeStyle = `rgba(230, 57, 70, ${0.05 * (1 - dist / 70)})`
-          ctx.lineWidth = 0.5
-          ctx.stroke()
-        }
-      }
-    }
-
-    animationId = requestAnimationFrame(animate)
-  }
-
-  canvas.addEventListener('mousemove', (e) => {
-    mouse.x = e.clientX
-    mouse.y = e.clientY
-  })
-
-  canvas.addEventListener('mouseleave', () => {
-    mouse.x = -1000
-    mouse.y = -1000
-  })
-
-  window.addEventListener('resize', resize)
-  resize()
-  animate()
-
-  return () => {
-    cancelAnimationFrame(animationId)
-    window.removeEventListener('resize', resize)
-  }
+function applyTheme(name) {
+  document.documentElement.dataset.theme = name
+  try { localStorage.setItem('theme', name) } catch {}
+  themeListeners.forEach((fn) => fn(name))
 }
 
-// ============================================
-// TYPEWRITER EFFECT
-// ============================================
-function initTypewriter() {
-  const el = document.getElementById('typewriter')
-  if (!el) return
-
-  const phrases = [
-    'Computer Vision',
-    'Robotics',
-    'Precision Agriculture',
-    'Applied ML',
-    'Vision-Language Models',
-  ]
-
-  let phraseIndex = 0
-  let charIndex = 0
-  let isDeleting = false
-  let timeout
-
-  function type() {
-    const current = phrases[phraseIndex]
-
-    if (isDeleting) {
-      charIndex--
-      el.textContent = current.substring(0, charIndex)
-    } else {
-      charIndex++
-      el.textContent = current.substring(0, charIndex)
-    }
-
-    let speed = isDeleting ? 40 : 80
-
-    if (!isDeleting && charIndex === current.length) {
-      speed = 2000 // pause at end
-      isDeleting = true
-    } else if (isDeleting && charIndex === 0) {
-      isDeleting = false
-      phraseIndex = (phraseIndex + 1) % phrases.length
-      speed = 400 // pause before next word
-    }
-
-    timeout = setTimeout(type, speed)
-  }
-
-  // Start after hero animations
-  setTimeout(type, 1200)
-
-  return () => clearTimeout(timeout)
-}
-
-// ============================================
-// NAVIGATION
-// ============================================
-function initNav() {
-  const nav = document.getElementById('main-nav')
-  const toggle = document.getElementById('nav-toggle')
-  const links = document.getElementById('nav-links')
-
-  if (!nav) return
-
-  // Scroll effect
-  let lastScroll = 0
-  window.addEventListener('scroll', () => {
-    const scrollY = window.scrollY
-    if (scrollY > 50) {
-      nav.classList.add('scrolled')
-    } else {
-      nav.classList.remove('scrolled')
-    }
-    lastScroll = scrollY
-  })
-
-  // Mobile toggle
-  if (toggle && links) {
-    toggle.addEventListener('click', () => {
-      toggle.classList.toggle('active')
-      links.classList.toggle('open')
-    })
-
-    // Close on link click
-    links.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        toggle.classList.remove('active')
-        links.classList.remove('open')
-      })
-    })
-  }
-
-  // Active section tracking
-  const sections = document.querySelectorAll('section[id]')
-  const navLinks = document.querySelectorAll('.nav-links a')
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        navLinks.forEach(link => {
-          link.classList.remove('active')
-          if (link.getAttribute('href') === `#${entry.target.id}`) {
-            link.classList.add('active')
-          }
-        })
-      }
-    })
-  }, { threshold: 0.3 })
-
-  sections.forEach(section => observer.observe(section))
-}
-
-// ============================================
-// SCROLL REVEAL ANIMATION
-// ============================================
-function initScrollReveal() {
-  const reveals = document.querySelectorAll('.reveal')
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible')
-        observer.unobserve(entry.target)
-      }
-    })
-  }, {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-  })
-
-  reveals.forEach(el => observer.observe(el))
-}
-
-// ============================================
-// SMOOTH SCROLL
-// ============================================
-function initSmoothScroll() {
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', (e) => {
-      e.preventDefault()
-      const target = document.querySelector(anchor.getAttribute('href'))
-      if (target) {
-        target.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        })
-      }
-    })
-  })
-}
-
-// ============================================
-// CITATION COUNTER
-// ============================================
-async function initCitationCounters() {
-  const citationElements = document.querySelectorAll('.pub-citations');
-  
-  citationElements.forEach(async (el) => {
-    const doi = el.getAttribute('data-doi');
-    const manualCount = parseInt(el.getAttribute('data-manual-count') || '0', 10);
-    if (!doi) return;
-    
-    const countEl = el.querySelector('.citation-count');
-    
-    try {
-      let apiCount = null;
-      
-      // Try Semantic Scholar API first
-      try {
-        const ssRes = await fetch(`https://api.semanticscholar.org/graph/v1/paper/DOI:${doi}?fields=citationCount`);
-        if (ssRes.ok) {
-          const ssData = await ssRes.json();
-          if (ssData && ssData.citationCount !== undefined) {
-            apiCount = ssData.citationCount;
-          }
-        }
-      } catch (e) {
-        console.warn('Semantic Scholar fetch failed, falling back to Crossref');
-      }
-
-      // Fallback to Crossref API
-      if (apiCount === null) {
-        const crRes = await fetch(`https://api.crossref.org/works/${doi}`);
-        if (crRes.ok) {
-          const crData = await crRes.json();
-          apiCount = crData.message['is-referenced-by-count'] || 0;
-        }
-      }
-
-      // Use whichever count is higher (manual override vs API)
-      // This solves the issue where Google Scholar updates faster than open APIs
-      const finalCount = Math.max(manualCount, apiCount || 0);
-
-      countEl.textContent = `${finalCount} ${finalCount === 1 ? 'Citation' : 'Citations'}`;
-      el.style.display = 'inline-flex';
-      
-    } catch (error) {
-      console.error('Error fetching citation count for DOI:', doi, error);
-      // If network fails completely, at least show the manual count if > 0
-      if (manualCount > 0) {
-        countEl.textContent = `${manualCount} ${manualCount === 1 ? 'Citation' : 'Citations'}`;
-        el.style.display = 'inline-flex';
-      }
-    }
-  });
-}
-
-// ============================================
-// INIT
-// ============================================
-document.addEventListener('DOMContentLoaded', () => {
-  initDotGrid()
-  initTypewriter()
-  initNav()
-  initScrollReveal()
-  initSmoothScroll()
-  initCitationCounters()
+$('#theme-toggle')?.addEventListener('click', () => {
+  applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark')
 })
+
+/* --------------------------------------------------------------------------
+   Navigation
+   -------------------------------------------------------------------------- */
+const nav = $('#nav')
+const menu = $('#nav-menu')
+
+$('#nav-toggle')?.addEventListener('click', () => {
+  menu.classList.toggle('is-open')
+})
+menu?.addEventListener('click', (e) => {
+  if (e.target.closest('a')) menu.classList.remove('is-open')
+})
+
+// hide the bar on the way down, bring it back on the way up
+let lastY = window.scrollY
+addEventListener('scroll', () => {
+  const y = window.scrollY
+  if (!menu?.classList.contains('is-open')) {
+    nav?.classList.toggle('is-hidden', y > lastY && y > 220)
+  }
+  nav?.classList.toggle('is-scrolled', y > 30)
+  lastY = y
+}, { passive: true })
+
+/* Mark the section currently in view. rootMargin biases the trigger toward
+   the upper third so the highlight changes when a section actually reads
+   as the one you are looking at. */
+const navLinks = $$('#nav-menu a')
+const spy = new IntersectionObserver((entries) => {
+  for (const entry of entries) {
+    if (!entry.isIntersecting) continue
+    const id = `#${entry.target.id}`
+    navLinks.forEach((a) => a.setAttribute('aria-current', String(a.getAttribute('href') === id)))
+  }
+}, { rootMargin: '-30% 0px -60% 0px' })
+$$('section[id], footer[id]').forEach((s) => spy.observe(s))
+
+/* --------------------------------------------------------------------------
+   Reveal on scroll
+   -------------------------------------------------------------------------- */
+const revealer = new IntersectionObserver((entries, obs) => {
+  for (const entry of entries) {
+    if (!entry.isIntersecting) continue
+    entry.target.classList.add('is-in')
+    obs.unobserve(entry.target)
+  }
+}, { rootMargin: '0px 0px -12% 0px', threshold: 0.05 })
+$$('.reveal').forEach((el) => revealer.observe(el))
+
+/* --------------------------------------------------------------------------
+   3D scenes
+   Both are lazy imported, so three.js never blocks first paint, and both
+   are paused whenever they are off screen or the tab is hidden.
+   -------------------------------------------------------------------------- */
+function mountScene({ host, canvas, load, init }) {
+  if (!canvas) return
+  let scene = null
+  let visible = false
+
+  const sync = () => {
+    if (!scene) return
+    if (visible && !document.hidden && !reduced) scene.start()
+    else scene.stop()
+  }
+
+  const io = new IntersectionObserver(async (entries) => {
+    visible = entries[0].isIntersecting
+    if (visible && !scene) {
+      io.unobserve(canvas)
+      try {
+        const mod = await load()
+        scene = init(mod, canvas)
+      } catch (err) {
+        host?.classList.add('no-webgl')
+        return
+      }
+      if (!scene) { host?.classList.add('no-webgl'); return }
+      if (import.meta.env.DEV && host) host.__scene = scene   // dev handle for stepping frames by hand
+
+      themeListeners.add(() => scene.refreshTheme())
+      new ResizeObserver(() => {
+        scene.resize()
+        if (reduced) scene.renderOnce()
+      }).observe(canvas)
+
+      if (reduced) { scene.renderOnce(); return }
+      io.observe(canvas)
+    }
+    sync()
+  }, { rootMargin: '200px' })
+
+  io.observe(canvas)
+  document.addEventListener('visibilitychange', sync)
+}
+
+mountScene({
+  host: $('#wing-stage'),
+  canvas: $('#wing-canvas'),
+  load: () => import('./wing.js'),
+  init: (mod, canvas) => mod.createWing(canvas, $('#wing-labels'), {
+    onPick: (section) => $(section)?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' }),
+  }),
+})
+
+mountScene({
+  host: $('#crop-stage'),
+  canvas: $('#crop-canvas'),
+  load: () => import('./crop.js'),
+  init: (mod, canvas) => mod.createCrop(canvas),
+})
+
+/* --------------------------------------------------------------------------
+   Stage affordance
+   -------------------------------------------------------------------------- */
+const stage = $('#wing-stage')
+stage?.addEventListener('pointerdown', () => {
+  stage.classList.add('is-touched', 'is-grabbing')
+})
+addEventListener('pointerup', () => stage?.classList.remove('is-grabbing'))
+
+/* --------------------------------------------------------------------------
+   Footer year
+   -------------------------------------------------------------------------- */
+const year = $('#year')
+if (year) year.textContent = new Date().getFullYear()

@@ -1,5 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="6" fill="#0a0a0f"/>
-  <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="monospace" font-weight="700" font-size="18" fill="#e63946">H</text>
-  <circle cx="26" cy="6" r="3" fill="#d4a574" opacity="0.8"/>
+  <rect width="32" height="32" rx="7" fill="#f7f4ed"/>
+  <!-- antenna -->
+  <path d="M16 9V6" stroke="#191712" stroke-width="2.2" stroke-linecap="round"/>
+  <circle cx="16" cy="4.6" r="2.2" fill="#27774c"/>
+  <!-- head, kept chunky so it still reads at 16px -->
+  <rect x="5" y="9" width="22" height="16" rx="5.5" fill="#191712"/>
+  <circle cx="11.5" cy="17" r="2.4" fill="#5cc182"/>
+  <circle cx="20.5" cy="17" r="2.4" fill="#5cc182"/>
 </svg>
