@@ -24,6 +24,7 @@
   /* Accents */
   --sprout:       #27774c;   /* AA as text on paper, was #2f8f5b at 3.7:1 */
   --sprout-soft:  #d8ecdf;
+  --sprout-ink:   #1d5c3a;
   --amber:        #d97b1f;
   --amber-soft:   #fbe6cd;
   --peri:         #5563d8;
@@ -86,6 +87,7 @@
 
   --sprout:       #5cc182;
   --sprout-soft:  #1c3a28;
+  --sprout-ink:   #5cc182;
   --amber:        #f0a350;
   --amber-soft:   #3d2a13;
   --peri:         #8b95f0;
@@ -278,12 +280,6 @@ p { text-wrap: pretty; }
   backdrop-filter: blur(14px);
   box-shadow: var(--lift-1);
 }
-.nav-brand .dot {
-  width: 9px; height: 9px;
-  border-radius: 50%;
-  background: var(--sprout);
-  box-shadow: 0 0 0 3px var(--sprout-soft);
-}
 
 .nav-menu {
   display: flex;
@@ -339,11 +335,22 @@ p { text-wrap: pretty; }
     border-radius: var(--r-lg);
     box-shadow: var(--lift-3);
     transform: translateY(140%);
-    transition: transform .4s var(--ease);
+    opacity: 0;
+    /* visibility is switched on a delay rather than interpolated, so opening
+       is instant and closing waits for the slide-out to finish */
+    visibility: hidden;
+    transition: transform .4s var(--ease), opacity .3s var(--ease), visibility 0s .4s;
   }
-  .nav-menu.is-open { transform: none; }
+  .nav-menu.is-open {
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    transition: transform .4s var(--ease), opacity .3s var(--ease), visibility 0s;
+  }
   .nav-menu a { padding: .7rem 1rem; font-size: 1rem; }
   .nav-toggle { display: grid; }
+  /* never transform the bar on mobile, or the fixed menu re-anchors to it */
+  .nav.is-hidden { transform: none; }
 }
 
 /* --------------------------------------------------------------------------
@@ -400,24 +407,6 @@ p { text-wrap: pretty; }
   color: var(--text-2);
   font-size: .8rem;
   margin-bottom: 1.75rem;
-}
-.hero-status .pulse {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--sprout);
-  position: relative;
-}
-.hero-status .pulse::after {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  border: 1px solid var(--sprout);
-  animation: ping 2.4s var(--ease-soft) infinite;
-}
-@keyframes ping {
-  0%   { transform: scale(.6); opacity: 1; }
-  100% { transform: scale(1.9); opacity: 0; }
 }
 
 .hero h1 { margin-bottom: 1.5rem; }
@@ -518,10 +507,10 @@ p { text-wrap: pretty; }
   opacity: 1;
   visibility: visible;
   transform: translate(-50%, -50%) scale(1);
-  color: var(--text);
-  border-color: color-mix(in oklab, var(--accent) 40%, var(--rule));
+  background: var(--sprout-soft);
+  border-color: color-mix(in oklab, var(--sprout) 45%, transparent);
+  color: var(--sprout-ink);
 }
-.room-label .tick { color: var(--sprout); margin-right: .3rem; }
 
 .stage-hint {
   position: absolute;
@@ -798,6 +787,19 @@ p { text-wrap: pretty; }
   color: color-mix(in oklab, var(--sprout) 80%, var(--ink));
   font-weight: 600;
 }
+.pub-citations {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .22rem .6rem;
+  border-radius: 999px;
+  background: var(--sprout-soft);
+  color: var(--sprout-ink);
+  font-weight: 600;
+}
+.pub-citations svg { width: 12px; height: 12px; }
+.pub-citations[hidden] { display: none; }
+
 .pub h3 { margin-bottom: .85rem; }
 .pub-authors { font-size: .9rem; color: var(--text-2); margin-bottom: .9rem; }
 .pub-authors b { color: var(--text); font-weight: 600; }

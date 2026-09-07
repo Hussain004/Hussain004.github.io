@@ -63,12 +63,20 @@ export function createMission() {
     timer: 0,
     odo: 0,                        // distance travelled, drives wheel spin
     target: null,
+    inRoom: null,                  // room currently occupied, null on the corridor
   }))
 
   function assign(r) {
     const room = rooms[r.route[r.leg % r.route.length]]
-    // drive the corridor centreline, then turn in at the doorway
-    r.waypoints = [{ x: room.doorX, z: 0 }, { x: room.cx, z: room.cz }]
+    r.waypoints = []
+    // A robot parked in a room has to come back out through its own doorway
+    // first. Heading straight for the next door would cut the near wall.
+    if (r.inRoom) {
+      r.waypoints.push({ x: r.inRoom.doorX, z: 0 })
+      r.inRoom = null
+    }
+    // then along the corridor centreline, and in at the target doorway
+    r.waypoints.push({ x: room.doorX, z: 0 }, { x: room.cx, z: room.cz })
     r.target = room
     r.state = 'drive'
   }
@@ -104,7 +112,7 @@ export function createMission() {
         r.timer += dt
         r.heading += dt * 1.5        // spin in place, as the real robot does
         if (r.timer > SCAN_TIME) {
-          if (r.target) r.target.found = true
+          if (r.target) { r.target.found = true; r.inRoom = r.target }
           r.leg += 1
           if (r.leg < r.route.length) assign(r)
           else { r.state = 'idle'; r.waypoints = [] }
@@ -139,6 +147,7 @@ export function createMission() {
       r.x = room.cx
       r.z = room.cz
       r.state = 'idle'
+      r.inRoom = room
       r.waypoints = []
     })
   }

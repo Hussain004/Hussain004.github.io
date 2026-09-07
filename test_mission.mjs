@@ -4,7 +4,7 @@
 import assert from 'node:assert/strict'
 import {
   createMission, approachAngle, ROOM_DEFS, ROUTES, STARTS,
-  HALF_W, DOOR, CENTRE_Z, SCAN_TIME, RESET_PAUSE,
+  HALF_W, DOOR, CENTRE_Z, NEAR_Z, SCAN_TIME, RESET_PAUSE,
 } from './src/mission.js'
 
 /* --- angle wrapping ---------------------------------------------------- */
@@ -38,15 +38,38 @@ const DT = 1 / 60
 const BOUND_X = Math.max(...ROOM_DEFS.map((r) => Math.abs(r.cx))) + HALF_W
 
 let tFound = null
+let prev = m.robots.map((r) => ({ x: r.x, z: r.z }))
+let crossings = 0
+
 for (let i = 0; i < 60 * 120; i++) {          // two simulated minutes, hard ceiling
   m.step(DT)
-  for (const r of m.robots) {
+  for (let k = 0; k < m.robots.length; k++) {
+    const r = m.robots[k]
     assert.ok(Math.abs(r.x) <= BOUND_X + 0.01, 'robot stays on the floor in x')
     assert.ok(Math.abs(r.z) <= CENTRE_Z + 0.01, 'robot stays on the floor in z')
     assert.ok(Number.isFinite(r.heading), 'heading stays finite')
+
+    // A robot may only pass the near wall through a doorway. Interpolate the
+    // exact x where it crosses |z| = NEAR_Z and check it is inside the gap.
+    const a = prev[k]
+    for (const side of [-1, 1]) {
+      const wall = side * NEAR_Z
+      const before = a.z * side < NEAR_Z
+      const after = r.z * side < NEAR_Z
+      if (before === after) continue
+      const t = (wall - a.z) / (r.z - a.z)
+      const xAt = a.x + (r.x - a.x) * t
+      const door = ROOM_DEFS.filter((d) => d.side === side)
+        .find((d) => Math.abs(xAt - d.cx) <= DOOR / 2)
+      assert.ok(door, `robot ${k} crossed the wall at x=${xAt.toFixed(2)}, not through a doorway`)
+      crossings++
+    }
+    prev[k] = { x: r.x, z: r.z }
   }
   if (tFound === null && m.rooms.every((r) => r.found)) tFound = i * DT
 }
+// each robot enters and leaves two rooms per mission, over several missions
+assert.ok(crossings >= 12, `robots actually move between rooms, saw ${crossings} doorway crossings`)
 assert.ok(tFound !== null, 'every room gets classified')
 // Two legs each, so the slowest robot needs both scans plus its driving.
 assert.ok(tFound > SCAN_TIME * 2, `classification is not instant, took ${tFound.toFixed(1)}s`)
