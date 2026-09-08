@@ -127,10 +127,10 @@
         </div>
 
         <div class="stage-face stage-back" id="grow-stage" inert>
-          <canvas id="grow-canvas" role="img" aria-label="Model of a plant grown from four camera views, then predicted forward past the last observed day"></canvas>
+          <canvas id="grow-canvas" role="img" aria-label="One photographed plant, showing its leaf count, how far it is behind its sowing-date reference, and a flagged leaf"></canvas>
           <div class="stage-labels" id="grow-labels"></div>
           <p class="stage-tag mono">Agri-JEPA</p>
-          <p class="stage-hint">Solid is observed, translucent is predicted</p>
+          <p class="stage-hint">Translucent is where it should be by now</p>
           <p class="stage-fallback">Interactive plant model needs WebGL</p>
         </div>
 
@@ -251,9 +251,12 @@
       <h3 class="project-title">Agri-JEPA</h3>
       <p class="lede">
         A joint-embedding predictive architecture for plant growth. It forecasts
-        future latent states from multi-view time-lapse images instead of
-        reconstructing pixels, so the model spends its capacity on how a plant
-        develops rather than on leaf texture it will never need.
+        future latent states instead of reconstructing pixels, so the model
+        spends its capacity on how a plant develops rather than on leaf texture
+        it will never need. The target is a grower with a phone rather than a
+        camera rig. One photo of one plant, and back come a leaf count with an
+        error bar, how far behind its sowing-date reference it has fallen, and
+        anything on it that looks wrong.
       </p>
     </header>
 
