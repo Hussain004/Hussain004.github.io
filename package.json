@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "node test_mission.mjs"
+    "test": "node test_mission.mjs && node test_grow.mjs && node test_flip.mjs"
   },
   "devDependencies": {
     "vite": "^8.0.12"
