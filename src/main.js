@@ -206,11 +206,10 @@ if (cropStage) {
 /* --------------------------------------------------------------------------
    Stage affordance
    -------------------------------------------------------------------------- */
-const wingFace = $('#wing-stage')
-wingFace?.addEventListener('pointerdown', () => {
-  wingFace.classList.add('is-touched', 'is-grabbing')
+$$('.stage-face').forEach((face) => {
+  face.addEventListener('pointerdown', () => face.classList.add('is-touched', 'is-grabbing'))
 })
-addEventListener('pointerup', () => wingFace?.classList.remove('is-grabbing'))
+addEventListener('pointerup', () => $$('.stage-face').forEach((f) => f.classList.remove('is-grabbing')))
 
 /* --------------------------------------------------------------------------
    Citation counts

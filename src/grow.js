@@ -25,6 +25,7 @@ import {
   Vector3,
   WebGLRenderer,
 } from 'three'
+import { createOrbit } from './orbit.js'
 
 /* What the grower is told. Held here so the readout and the geometry can
    never drift apart. */
@@ -187,6 +188,10 @@ export function createGrow(canvas, labelLayer) {
   }
   resize()
 
+  /* ---- interaction ---- */
+  const orbit = createOrbit(canvas, { parallaxYaw: 0.30, parallaxTilt: 0.12 })
+  let sway = 1                     // idle drift, retired once someone takes hold
+
   /* ---- the cycle ---- */
   const projected = new Vector3()
   let ghostEase = 0
@@ -240,7 +245,11 @@ export function createGrow(canvas, labelLayer) {
     const dt = Math.min((now - prev) / 1000, 0.05)
     prev = now
     t += dt
-    world.rotation.y = Math.sin(t * 0.12) * 0.16
+    // hand the scene over once it is being dragged, rather than fighting it
+    if (orbit.engaged) sway += (0 - sway) * Math.min(1, dt * 2)
+    orbit.update(dt)
+    world.rotation.y = Math.sin(t * 0.12) * 0.16 * sway + orbit.yaw
+    world.rotation.x = orbit.tilt
     apply(t)
     renderer.render(scene, camera)
   }
@@ -252,7 +261,8 @@ export function createGrow(canvas, labelLayer) {
     renderOnce() {
       t = STEPS[3].until - 0.2          // the complete report
       ghostEase = 1
-      world.rotation.y = 0
+      orbit.reset()
+      world.rotation.set(0, 0, 0)
       for (let i = 0; i < 90; i++) apply(t)
       renderer.render(scene, camera)
       apply(t)
@@ -273,6 +283,7 @@ export function createGrow(canvas, labelLayer) {
     dispose() {
       running = false
       cancelAnimationFrame(raf)
+      orbit.dispose()
       scene.traverse((o) => {
         if (o.geometry) o.geometry.dispose()
         if (o.material) [].concat(o.material).forEach((m) => m.dispose())
