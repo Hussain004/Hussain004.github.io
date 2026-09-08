@@ -118,19 +118,26 @@
         <div class="stage-face stage-front" id="wing-stage">
           <canvas id="wing-canvas" role="img" aria-label="Interactive model of a floor plan being explored and classified by a small fleet of robots"></canvas>
           <div class="stage-labels" id="wing-labels"></div>
-          <p class="stage-tag mono">Hive-Nav</p>
-          <p class="stage-hint">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><use href="#i-drag"/></svg>
-            Drag to orbit, click a room
-          </p>
+          <div class="stage-meta">
+            <p class="stage-tag mono">Hive-Nav</p>
+            <p class="stage-hint">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><use href="#i-drag"/></svg>
+              Drag to orbit, click a room
+            </p>
+          </div>
           <p class="stage-fallback">Interactive floor model needs WebGL</p>
         </div>
 
         <div class="stage-face stage-back" id="grow-stage" inert>
           <canvas id="grow-canvas" role="img" aria-label="One photographed plant, showing its leaf count, how far it is behind its sowing-date reference, and a flagged leaf"></canvas>
           <div class="stage-labels" id="grow-labels"></div>
-          <p class="stage-tag mono">Agri-JEPA</p>
-          <p class="stage-hint">Translucent is where it should be by now</p>
+          <div class="stage-meta">
+            <p class="stage-tag mono">Agri-JEPA</p>
+            <p class="stage-hint">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><use href="#i-drag"/></svg>
+              Drag to orbit. Translucent is where it should be by now
+            </p>
+          </div>
           <p class="stage-fallback">Interactive plant model needs WebGL</p>
         </div>
 

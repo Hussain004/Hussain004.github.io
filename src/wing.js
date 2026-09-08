@@ -29,6 +29,7 @@ import {
 } from 'three'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
+import { createOrbit } from './orbit.js'
 
 import {
   createMission,
@@ -225,56 +226,10 @@ export function createWing(canvas, labelLayer, opts = {}) {
   /* ---- interaction ---- */
   const ray = new Raycaster()
   const ndc = new Vector2()
-  let yaw = 0, yawTarget = 0, tilt = 0, tiltTarget = 0
-  let dragging = false, lastX = 0, lastY = 0, moved = 0
 
-  function pointerNdc(e, rect) {
+  function aim(e, rect) {
     ndc.x = ((e.clientX - rect.left) / rect.width) * 2 - 1
     ndc.y = -((e.clientY - rect.top) / rect.height) * 2 + 1
-  }
-
-  function onDown(e) {
-    dragging = true
-    moved = 0
-    lastX = e.clientX
-    lastY = e.clientY
-    canvas.setPointerCapture?.(e.pointerId)
-  }
-
-  function onMove(e) {
-    const rect = canvas.getBoundingClientRect()
-    if (dragging) {
-      const dx = e.clientX - lastX
-      const dy = e.clientY - lastY
-      moved += Math.abs(dx) + Math.abs(dy)
-      yawTarget += dx * 0.006
-      tiltTarget = clamp(tiltTarget + dy * 0.003, -0.25, 0.3)
-      lastX = e.clientX
-      lastY = e.clientY
-      return
-    }
-    // idle parallax, a fraction of the drag range so it never fights the user
-    yawTarget = ((e.clientX - rect.left) / rect.width - 0.5) * 0.42
-    tiltTarget = ((e.clientY - rect.top) / rect.height - 0.5) * 0.18
-    pointerNdc(e, rect)
-    hover()
-  }
-
-  function onUp(e) {
-    if (dragging && moved < 6) {
-      pointerNdc(e, canvas.getBoundingClientRect())
-      const hit = pick()
-      if (hit) onPick(hit.userData.room.section)
-    }
-    dragging = false
-    canvas.releasePointerCapture?.(e.pointerId)
-  }
-
-  function onLeave() {
-    dragging = false
-    yawTarget = 0
-    tiltTarget = 0
-    canvas.style.cursor = ''
   }
 
   function pick() {
@@ -282,14 +237,18 @@ export function createWing(canvas, labelLayer, opts = {}) {
     return ray.intersectObjects(roomMeshes, false)[0]?.object || null
   }
 
-  function hover() {
-    canvas.style.cursor = pick() ? 'pointer' : ''
-  }
-
-  canvas.addEventListener('pointerdown', onDown)
-  canvas.addEventListener('pointermove', onMove)
-  canvas.addEventListener('pointerup', onUp)
-  canvas.addEventListener('pointerleave', onLeave)
+  const orbit = createOrbit(canvas, {
+    onTap: (e, rect) => {
+      aim(e, rect)
+      const hit = pick()
+      if (hit) onPick(hit.userData.room.section)
+    },
+    onHover: (e, rect) => {
+      if (!e) { canvas.style.cursor = ''; return }
+      aim(e, rect)
+      canvas.style.cursor = pick() ? 'pointer' : ''
+    },
+  })
 
   /* ---- sizing ---- */
   function resize() {
@@ -372,10 +331,9 @@ export function createWing(canvas, labelLayer, opts = {}) {
     prev = now
     elapsed += dt
 
-    yaw += (yawTarget - yaw) * Math.min(1, dt * 4)
-    tilt += (tiltTarget - tilt) * Math.min(1, dt * 4)
-    world.rotation.y = yaw
-    world.rotation.x = tilt
+    orbit.update(dt)
+    world.rotation.y = orbit.yaw
+    world.rotation.x = orbit.tilt
 
     step(dt, elapsed)
     renderer.render(scene, camera)
@@ -395,6 +353,7 @@ export function createWing(canvas, labelLayer, opts = {}) {
   }
 
   function renderOnce() {
+    orbit.reset()
     world.rotation.set(0, 0, 0)
     mission.complete()
     for (let i = 0; i < rooms.length; i++) {
@@ -432,10 +391,7 @@ export function createWing(canvas, labelLayer, opts = {}) {
 
   function dispose() {
     stop()
-    canvas.removeEventListener('pointerdown', onDown)
-    canvas.removeEventListener('pointermove', onMove)
-    canvas.removeEventListener('pointerup', onUp)
-    canvas.removeEventListener('pointerleave', onLeave)
+    orbit.dispose()
     scene.traverse((o) => {
       if (o.geometry) o.geometry.dispose()
       if (o.material) [].concat(o.material).forEach((m) => m.dispose())
@@ -455,7 +411,6 @@ function box(w, h, d, x, y, z) {
   return g
 }
 
-function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v }
 
 function blobTexture() {
   const c = document.createElement('canvas')
