@@ -49,6 +49,9 @@
     <g id="i-award"><circle cx="12" cy="8" r="6"/><path d="M8.2 13.5 7 22l5-3 5 3-1.2-8.5"/></g>
     <g id="i-drag"><path d="M5 9l-3 3 3 3M19 9l3 3-3 3M9 5l3-3 3 3M9 19l3 3 3-3"/></g>
     <g id="i-quote"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.76-2-2-2H4c-1.25 0-2 .75-2 1.97V11c0 1.25.75 2 2 2 1 0 1.5.5 1.5 1.73 0 1.33-1 2.27-2.5 2.27"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.76-2-2-2h-4c-1.25 0-2 .75-2 1.97V11c0 1.25.75 2 2 2h.5c0 1.23-.5 1.73-1.5 1.73-1.5 0-2.5.94-2.5 2.27"/></g>
+    <g id="i-layers"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></g>
+    <g id="i-leaf"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6"/></g>
+    <g id="i-forecast"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></g>
     <g id="i-book"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></g>
   </defs>
 </svg>
@@ -125,7 +128,16 @@
   <div class="wrap">
     <header class="section-head reveal">
       <p class="eyebrow mono"><b>01</b> Current research</p>
-      <h2>Hive-Nav</h2>
+      <h2>Two systems that have to act on what they see.</h2>
+      <p class="lede">
+        One drives a fleet of robots through a building nobody handed it a map
+        of. The other predicts how a plant will grow from the way it looks today.
+      </p>
+    </header>
+
+    <article class="project">
+    <header class="project-head reveal">
+      <h3 class="project-title">Hive-Nav</h3>
       <p class="lede">
         Multi-robot open-vocabulary semantic navigation. A fleet finds and
         classifies rooms given nothing but a natural language description,
@@ -211,6 +223,108 @@
         </div>
       </aside>
     </div>
+    </article>
+
+    <article class="project">
+    <header class="project-head reveal">
+      <h3 class="project-title">Agri-JEPA</h3>
+      <p class="lede">
+        A joint-embedding predictive architecture for plant growth. It forecasts
+        future latent states from multi-view time-lapse images instead of
+        reconstructing pixels, so the model spends its capacity on how a plant
+        develops rather than on leaf texture it will never need.
+      </p>
+    </header>
+
+    <div class="feature">
+      <div class="feature-body reveal">
+        <div class="tag-row">
+          <span class="tag is-accent">In progress</span>
+          <span class="tag">JEPA</span>
+          <span class="tag">World models</span>
+          <span class="tag">Self-supervised</span>
+          <span class="tag">Phenotyping</span>
+        </div>
+
+        <p>
+          The latent splits in two. A small trait subspace is supervised directly
+          by plant age and leaf count. The remainder is a residual that a temporal
+          predictor learns to roll forward. That split is the load-bearing part of
+          the design rather than one ablation among several. Removing the trait
+          gradient collapses the latent to a near-constant vector whatever encoder
+          family sits underneath, so every later extension is organised around
+          supplying that anchor wherever real ground truth exists.
+        </p>
+
+        <p>
+          <strong>Multiple views buy real dynamics.</strong> On the GroMo25 radish
+          benchmark, four camera views cut prediction MSE by 39 percent against a
+          single view, with plant-clustered bootstrap intervals that do not
+          overlap. Multi-step rollouts hold an R squared above 0.93 out to a ten
+          day horizon. A leave-one-plant-out protocol on Komatsuna reproduces the
+          result on a different species, camera rig, and lab.
+        </p>
+
+        <p>
+          <strong>Leaving the lab is where it gets difficult.</strong> Adapting a
+          pretrained backbone far enough to learn plant dynamics erases the
+          features that let it transfer to real field imagery, and a low-rank
+          adaptation sweep makes that trade worse rather than better. Masked-patch
+          self-supervision on unlabelled field imagery moves the frontier instead,
+          recovering field transfer at unchanged dynamics quality. Pooling five
+          heterogeneous real sources under one trait-anchored encoder then reaches
+          genuine dynamics prediction on greenhouse soil boxes and transfers at
+          parity to open-field UAV plots.
+        </p>
+
+        <p>
+          I report the negative results next to the positive ones. Several
+          pre-registered checks came back null, including a domain-randomisation
+          bridge that helped static plants and hurt dynamic ones, and they are
+          written up as such rather than quietly dropped.
+        </p>
+
+        <dl class="stats reveal" data-delay="1">
+          <div class="stat"><dt>Prediction</dt><dd>0.938<small>R squared, four views</small></dd></div>
+          <div class="stat"><dt>Rollout horizon</dt><dd>10 days<small>R squared above 0.93</small></dd></div>
+          <div class="stat"><dt>Out of domain</dt><dd>45 runs<small>leave one plant out</small></dd></div>
+          <div class="stat"><dt>Pooled sources</dt><dd>5<small>lab to open field</small></dd></div>
+        </dl>
+      </div>
+
+      <aside class="arch reveal" data-delay="2">
+        <h4>How the latent is built</h4>
+
+        <div class="arch-node">
+          <span class="arch-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-layers"/></svg></span>
+          <span>
+            <b>Multi-view encoder</b>
+            <span>Four camera views of the same plant are encoded and pooled into a single latent state.</span>
+          </span>
+        </div>
+
+        <div class="arch-link"></div>
+
+        <div class="arch-node">
+          <span class="arch-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-leaf"/></svg></span>
+          <span>
+            <b>Trait subspace</b>
+            <span>Age and leaf count supervise a small slice of that latent directly. Remove this and the latent collapses.</span>
+          </span>
+        </div>
+
+        <div class="arch-link"></div>
+
+        <div class="arch-node">
+          <span class="arch-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-forecast"/></svg></span>
+          <span>
+            <b>Temporal predictor</b>
+            <span>Forecasts the residual forward in time, and is rolled out multiple steps to reach a ten day horizon.</span>
+          </span>
+        </div>
+      </aside>
+    </div>
+    </article>
   </div>
 </section>
 

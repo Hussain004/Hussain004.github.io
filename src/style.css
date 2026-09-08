@@ -567,8 +567,23 @@ p { text-wrap: pretty; }
 }
 
 /* --------------------------------------------------------------------------
-   9. Research feature (Hive-Nav)
+   9. Research features
    -------------------------------------------------------------------------- */
+/* Each research project is its own block. The rule between them does the
+   separating, so neither needs a card around it. */
+.project + .project {
+  margin-top: clamp(3.5rem, 7vw, 6rem);
+  padding-top: clamp(3.5rem, 7vw, 6rem);
+  border-top: 1px solid var(--rule);
+}
+.project-head { margin-bottom: clamp(2rem, 4vw, 3rem); }
+.project-title {
+  font-size: clamp(1.85rem, 1.25rem + 2.4vw, 3.1rem);
+  font-weight: 700;
+  letter-spacing: -.03em;
+  margin-bottom: 1rem;
+}
+
 .feature {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
