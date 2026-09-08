@@ -787,14 +787,18 @@ p { text-wrap: pretty; }
   color: color-mix(in oklab, var(--sprout) 80%, var(--ink));
   font-weight: 600;
 }
+/* Outlined, against the filled green PUBLISHED chip beside it. One is a
+   status and the other is a metric, so they differ in shape rather than
+   only in hue, which also survives colour vision deficiency. */
 .pub-citations {
   display: inline-flex;
   align-items: center;
   gap: .35rem;
   padding: .22rem .6rem;
   border-radius: 999px;
-  background: var(--sprout-soft);
-  color: var(--sprout-ink);
+  background: transparent;
+  border: 1px solid color-mix(in oklab, var(--peri) 42%, transparent);
+  color: var(--peri);
   font-weight: 600;
 }
 .pub-citations svg { width: 12px; height: 12px; }
