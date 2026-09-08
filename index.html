@@ -49,6 +49,7 @@
     <g id="i-award"><circle cx="12" cy="8" r="6"/><path d="M8.2 13.5 7 22l5-3 5 3-1.2-8.5"/></g>
     <g id="i-drag"><path d="M5 9l-3 3 3 3M19 9l3 3-3 3M9 5l3-3 3 3M9 19l3 3 3-3"/></g>
     <g id="i-quote"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.76-2-2-2H4c-1.25 0-2 .75-2 1.97V11c0 1.25.75 2 2 2 1 0 1.5.5 1.5 1.73 0 1.33-1 2.27-2.5 2.27"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.76-2-2-2h-4c-1.25 0-2 .75-2 1.97V11c0 1.25.75 2 2 2h.5c0 1.23-.5 1.73-1.5 1.73-1.5 0-2.5.94-2.5 2.27"/></g>
+    <g id="i-flip"><path d="M3 12a9 9 0 0 1 9-9 9 9 0 0 1 7.5 4"/><path d="M21 12a9 9 0 0 1-9 9 9 9 0 0 1-7.5-4"/><polyline points="19 2 19.5 7 14.5 7.5"/><polyline points="5 22 4.5 17 9.5 16.5"/></g>
     <g id="i-layers"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></g>
     <g id="i-leaf"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6"/></g>
     <g id="i-forecast"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></g>
@@ -93,10 +94,10 @@
       </h1>
 
       <p class="lede">
-        I work on perception for robots that have to operate without being told
-        what they will find. My current project sends a fleet of ground robots
-        into a university wing and asks them to locate rooms described only in
-        natural language.
+        I work on perception for machines that have to act on what they see.
+        One project sends a fleet of ground robots into a building nobody gave
+        them a map of. Another learns to predict how a plant will grow, and how
+        many leaves it will have, from the way it looks today.
       </p>
 
       <div class="hero-actions">
@@ -111,14 +112,34 @@
       </div>
     </div>
 
-    <div class="stage" id="wing-stage">
-      <canvas id="wing-canvas" role="img" aria-label="Interactive model of a floor plan being explored and classified by a small fleet of robots"></canvas>
-      <div class="stage-labels" id="wing-labels"></div>
-      <p class="stage-hint">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><use href="#i-drag"/></svg>
-        Drag to orbit, click a room
-      </p>
-      <p class="stage-fallback">Interactive floor model needs WebGL</p>
+    <div class="stage" id="stage">
+      <div class="stage-inner" id="stage-inner">
+
+        <div class="stage-face stage-front" id="wing-stage">
+          <canvas id="wing-canvas" role="img" aria-label="Interactive model of a floor plan being explored and classified by a small fleet of robots"></canvas>
+          <div class="stage-labels" id="wing-labels"></div>
+          <p class="stage-tag mono">Hive-Nav</p>
+          <p class="stage-hint">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><use href="#i-drag"/></svg>
+            Drag to orbit, click a room
+          </p>
+          <p class="stage-fallback">Interactive floor model needs WebGL</p>
+        </div>
+
+        <div class="stage-face stage-back" id="grow-stage" inert>
+          <canvas id="grow-canvas" role="img" aria-label="Model of a plant grown from four camera views, then predicted forward past the last observed day"></canvas>
+          <div class="stage-labels" id="grow-labels"></div>
+          <p class="stage-tag mono">Agri-JEPA</p>
+          <p class="stage-hint">Solid is observed, translucent is predicted</p>
+          <p class="stage-fallback">Interactive plant model needs WebGL</p>
+        </div>
+
+      </div>
+
+      <button class="stage-flip" id="stage-flip" type="button" aria-label="Show the Agri-JEPA demo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-flip"/></svg>
+        <span class="stage-flip-label">Agri-JEPA</span>
+      </button>
     </div>
   </div>
 </section>

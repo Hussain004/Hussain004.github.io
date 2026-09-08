@@ -1,4 +1,5 @@
 import './style.css'
+import { createFlipClock, TICK_MS } from './flipclock.js'
 
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 const $ = (sel, root = document) => root.querySelector(sel)
@@ -70,74 +71,146 @@ $$('.reveal').forEach((el) => revealer.observe(el))
 
 /* --------------------------------------------------------------------------
    3D scenes
-   Both are lazy imported, so three.js never blocks first paint, and both
-   are paused whenever they are off screen or the tab is hidden.
+   Every scene is lazy imported, so three.js never blocks first paint, and
+   nothing renders while it is off screen, on the hidden face of the card, or
+   in a background tab.
    -------------------------------------------------------------------------- */
-function mountScene({ host, canvas, load, init }) {
-  if (!canvas) return
+function lazyScene({ host, canvas, labels, load, init }) {
   let scene = null
-  let visible = false
+  let failed = false
 
-  const sync = () => {
-    if (!scene) return
-    if (visible && !document.hidden && !reduced) scene.start()
-    else scene.stop()
-  }
-
-  const io = new IntersectionObserver(async (entries) => {
-    visible = entries[0].isIntersecting
-    if (visible && !scene) {
-      io.unobserve(canvas)
+  return {
+    host,
+    async ensure() {
+      if (scene || failed) return scene
       try {
         const mod = await load()
-        scene = init(mod, canvas)
+        scene = init(mod, canvas, labels)
       } catch (err) {
-        host?.classList.add('no-webgl')
-        return
+        scene = null
       }
-      if (!scene) { host?.classList.add('no-webgl'); return }
-      if (import.meta.env.DEV && host) host.__scene = scene   // dev handle for stepping frames by hand
+      if (!scene) { failed = true; host?.classList.add('no-webgl'); return null }
 
       themeListeners.add(() => scene.refreshTheme())
       new ResizeObserver(() => {
         scene.resize()
         if (reduced) scene.renderOnce()
       }).observe(canvas)
-
-      if (reduced) { scene.renderOnce(); return }
-      io.observe(canvas)
-    }
-    sync()
-  }, { rootMargin: '200px' })
-
-  io.observe(canvas)
-  document.addEventListener('visibilitychange', sync)
+      if (reduced) scene.renderOnce()
+      if (import.meta.env.DEV && host) host.__scene = scene   // dev handle for stepping frames by hand
+      return scene
+    },
+    start() { if (scene && !reduced) scene.start() },
+    stop() { if (scene) scene.stop() },
+  }
 }
 
-mountScene({
-  host: $('#wing-stage'),
-  canvas: $('#wing-canvas'),
-  load: () => import('./wing.js'),
-  init: (mod, canvas) => mod.createWing(canvas, $('#wing-labels'), {
-    onPick: (section) => $(section)?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' }),
-  }),
-})
+/* --- the hero card, two demos on two faces ------------------------------- */
+const stage = $('#stage')
+const flipBtn = $('#stage-flip')
+const flipLabel = $('.stage-flip-label')
 
-mountScene({
-  host: $('#crop-stage'),
-  canvas: $('#crop-canvas'),
-  load: () => import('./crop.js'),
-  init: (mod, canvas) => mod.createCrop(canvas),
-})
+const NAMES = ['Hive-Nav', 'Agri-JEPA']
+const faces = [
+  lazyScene({
+    host: $('#wing-stage'), canvas: $('#wing-canvas'), labels: $('#wing-labels'),
+    load: () => import('./wing.js'),
+    init: (mod, canvas, labels) => mod.createWing(canvas, labels, {
+      onPick: (section) => $(section)?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' }),
+    }),
+  }),
+  lazyScene({
+    host: $('#grow-stage'), canvas: $('#grow-canvas'), labels: $('#grow-labels'),
+    load: () => import('./grow.js'),
+    init: (mod, canvas, labels) => mod.createGrow(canvas, labels),
+  }),
+]
+
+let active = 0
+let hovering = false
+let onScreen = false
+const clock = createFlipClock()
+
+function syncFaces() {
+  faces.forEach((face, i) => {
+    const live = i === active && onScreen && !document.hidden
+    // the hidden face is inert, so its room buttons leave the tab order
+    face.host?.toggleAttribute('inert', i !== active)
+    if (live) face.ensure().then(() => { if (i === active) face.start() })
+    else face.stop()
+  })
+}
+
+function flip() {
+  active = active === 0 ? 1 : 0
+  clock.reset()
+  stage?.classList.toggle('is-flipped', active === 1)
+  const next = NAMES[active === 0 ? 1 : 0]
+  if (flipLabel) flipLabel.textContent = next
+  flipBtn?.setAttribute('aria-label', `Show the ${next} demo`)
+  faces[active].ensure()          // warm it while the card is still turning
+  syncFaces()
+}
+
+flipBtn?.addEventListener('click', flip)
+
+if (stage) {
+  // Hovering holds the current face. So does keyboard focus inside it.
+  const hold = () => { hovering = true }
+  const release = () => { hovering = false }
+  stage.addEventListener('pointerenter', hold)
+  stage.addEventListener('pointerleave', release)
+  stage.addEventListener('focusin', hold)
+  stage.addEventListener('focusout', release)
+
+  new IntersectionObserver((entries) => {
+    onScreen = entries[0].isIntersecting
+    syncFaces()
+  }, { rootMargin: '200px' }).observe(stage)
+
+  document.addEventListener('visibilitychange', syncFaces)
+
+  if (!reduced) {
+    setInterval(() => {
+      const due = clock.tick(TICK_MS, {
+        active: onScreen && !document.hidden,
+        hovering,
+      })
+      stage.style.setProperty('--flip-progress', clock.progress.toFixed(3))
+      stage.classList.toggle('is-held', hovering)
+      if (due) flip()
+    }, TICK_MS)
+  }
+}
+
+/* --- the crop survey beside the publication ------------------------------ */
+const cropStage = $('#crop-stage')
+if (cropStage) {
+  const crop = lazyScene({
+    host: cropStage, canvas: $('#crop-canvas'), labels: null,
+    load: () => import('./crop.js'),
+    init: (mod, canvas) => mod.createCrop(canvas),
+  })
+  let cropVisible = false
+  const cropSync = () => {
+    if (cropVisible && !document.hidden) crop.ensure().then(() => crop.start())
+    else crop.stop()
+  }
+  new IntersectionObserver((entries) => {
+    cropVisible = entries[0].isIntersecting
+    cropSync()
+  }, { rootMargin: '200px' }).observe($('#crop-canvas'))
+  document.addEventListener('visibilitychange', cropSync)
+}
 
 /* --------------------------------------------------------------------------
    Stage affordance
    -------------------------------------------------------------------------- */
-const stage = $('#wing-stage')
-stage?.addEventListener('pointerdown', () => {
-  stage.classList.add('is-touched', 'is-grabbing')
+const wingFace = $('#wing-stage')
+wingFace?.addEventListener('pointerdown', () => {
+  wingFace.classList.add('is-touched', 'is-grabbing')
 })
-addEventListener('pointerup', () => stage?.classList.remove('is-grabbing'))
+addEventListener('pointerup', () => wingFace?.classList.remove('is-grabbing'))
 
 /* --------------------------------------------------------------------------
    Citation counts
