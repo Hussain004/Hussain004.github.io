@@ -1,66 +1,69 @@
 /* ==========================================================================
-   The plot. A single plant is watched from four views for a fortnight, then
-   the cameras stop and the model keeps going on its own. Everything solid is
-   what was observed. Everything translucent is predicted, rolled forward in
-   the latent and read back out as a shape and a leaf count.
+   One plant, one phone photo, three answers.
 
-   That split is the whole point of Agri-JEPA, so it is the only thing this
-   scene tries to say.
+   This is the field direction, not the rig. A grower photographs a single
+   plant in the ground and gets back what they can act on: how many leaves
+   it has and how sure the model is, how far behind its sowing-date
+   reference it has fallen, and whether anything on it looks wrong.
+
+   The translucent growth is deliberately NOT "the future". It is where this
+   plant should already be by now. The gap between solid and translucent is
+   the decision. Absolute age from a single photo is never claimed, which is
+   why the readout is a gap against a known sowing date.
    ========================================================================== */
 import {
-  BoxGeometry,
   Color,
   CylinderGeometry,
   DirectionalLight,
-  DoubleSide,
   Group,
   HemisphereLight,
   Mesh,
-  MeshBasicMaterial,
   MeshLambertMaterial,
   OrthographicCamera,
-  RingGeometry,
   Scene,
   SphereGeometry,
   Vector3,
   WebGLRenderer,
 } from 'three'
-import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
 
-const OBSERVE_S = 8.0        // seconds spent watching
-const PREDICT_S = 6.5        // seconds spent dreaming forward
-const HOLD_S = 2.6           // seconds on the finished plant before resetting
-const CYCLE_S = OBSERVE_S + PREDICT_S + HOLD_S
-
-const DAY_AT_HORIZON = 14    // last observed day
-const DAY_AT_END = 24        // last predicted day
-const MAX_LEAVES = 13
-const GOLDEN = Math.PI * (3 - Math.sqrt(5))   // phyllotaxis, so the spiral reads as a plant
-
-export const leavesByDay = (day) => Math.min(MAX_LEAVES, Math.floor(day / 1.85))
-export const LEAVES_AT_HORIZON = leavesByDay(DAY_AT_HORIZON)
-export const TIMING = { OBSERVE_S, PREDICT_S, HOLD_S, CYCLE_S, DAY_AT_HORIZON, DAY_AT_END, MAX_LEAVES }
-
-/* Where the cycle is at time t. Kept pure so the observed/predicted split can
-   be checked without a GPU. Nothing predicted may appear while observing. */
-export function phaseAt(t) {
-  const phase = ((t % CYCLE_S) + CYCLE_S) % CYCLE_S
-  const observing = phase < OBSERVE_S
-  let day
-  if (observing) day = (phase / OBSERVE_S) * DAY_AT_HORIZON
-  else if (phase < OBSERVE_S + PREDICT_S) {
-    day = DAY_AT_HORIZON + ((phase - OBSERVE_S) / PREDICT_S) * (DAY_AT_END - DAY_AT_HORIZON)
-  } else day = DAY_AT_END
-  return { observing, day, leaves: leavesByDay(day) }
+/* What the grower is told. Held here so the readout and the geometry can
+   never drift apart. */
+export const REPORT = {
+  daysSinceSowing: 30,
+  leaves: 7,
+  leafError: 1,
+  expectedLeaves: 11,
+  daysBehind: 8,
+  stressLeaf: 3,            // which leaf carries the flag
+  stressLabel: 'yellowing, 1 leaf',
 }
 
-export function createGrow(canvas, labelLayer, opts = {}) {
+const MAX_LEAVES = REPORT.expectedLeaves
+const GOLDEN = Math.PI * (3 - Math.sqrt(5))
+
+/* The cycle, as cumulative seconds. Each step adds one line to the report. */
+export const STEPS = [
+  { name: 'capture', until: 2.4 },   // frame the plant
+  { name: 'count',   until: 5.4 },   // leaf count, with its error bar
+  { name: 'gap',     until: 9.4 },   // the reference it should have matched
+  { name: 'stress',  until: 12.6 },  // the flagged leaf
+  { name: 'hold',    until: 15.4 },
+]
+export const CYCLE_S = STEPS[STEPS.length - 1].until
+
+/* How far through the cycle, and how many report lines are showing. */
+export function phaseAt(t) {
+  const phase = ((t % CYCLE_S) + CYCLE_S) % CYCLE_S
+  let index = STEPS.findIndex((s) => phase < s.until)
+  if (index < 0) index = STEPS.length - 1
+  return { phase, index, name: STEPS[index].name, lines: Math.min(index, 3) }
+}
+
+export function createGrow(canvas, labelLayer) {
   let renderer
   try {
     renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'low-power' })
-  } catch (err) {
-    return null
-  }
+  } catch (err) { return null }
   if (!renderer.getContext()) return null
   renderer.setClearAlpha(0)
 
@@ -69,99 +72,103 @@ export function createGrow(canvas, labelLayer, opts = {}) {
   scene.add(world)
 
   const camera = new OrthographicCamera(-1, 1, 1, -1, 0.1, 60)
-  camera.position.set(5.4, 4.3, 6.2)
-  camera.lookAt(0, 1.15, 0)
+  camera.position.set(4.6, 3.4, 6.0)
+  camera.lookAt(0, 1.05, 0)
 
   const p = readPalette()
   const hemi = new HemisphereLight(p.sky, p.ground, 2.2)
-  const key = new DirectionalLight(0xffffff, 1.35)
-  key.position.set(4, 8, 5)
-  scene.add(hemi, key)
+  scene.add(hemi, dir(4, 8, 5))
 
   const mats = {
     soil: new MeshLambertMaterial({ color: p.soil }),
-    solid: new MeshLambertMaterial({ color: p.stem, flatShading: true }),
+    stem: new MeshLambertMaterial({ color: p.stem, flatShading: true }),
     leaf: new MeshLambertMaterial({ color: p.leaf, flatShading: true }),
-    // the predicted half, translucent and faintly lit from within
+    stress: new MeshLambertMaterial({ color: p.stress, flatShading: true }),
+    neighbour: new MeshLambertMaterial({ color: p.neighbour, flatShading: true }),
+    // where the plant should already be, had it kept up
     ghost: new MeshLambertMaterial({
-      color: p.dream, emissive: new Color(p.dream).multiplyScalar(0.35),
-      transparent: true, opacity: 0.44, flatShading: true, depthWrite: false,
+      color: p.gap, emissive: new Color(p.gap).multiplyScalar(0.3),
+      transparent: true, opacity: 0.4, flatShading: true, depthWrite: false,
     }),
-    rig: new MeshLambertMaterial({ color: p.rig }),
-    lens: new MeshLambertMaterial({ color: p.lens }),
   }
 
-  /* ---- soil ---- */
-  const soil = new Mesh(new CylinderGeometry(1.5, 1.62, 0.36, 22), mats.soil)
-  soil.position.y = -0.18
-  world.add(soil)
+  /* ---- ground. Wide and flat, with neighbours cropped by the frame, so it
+     reads as a row in a field rather than a pot on a bench. ---- */
+  const ground = new Mesh(new CylinderGeometry(4.6, 4.8, 0.4, 26), mats.soil)
+  ground.position.y = -0.2
+  world.add(ground)
 
-  /* ---- stem, split at the observation horizon ----
-     The lower half is what the cameras saw. The upper half only ever exists
-     as a prediction, so it is built from the ghost material. */
-  const stemGeo = new CylinderGeometry(0.05, 0.085, 1, 6)
-  stemGeo.translate(0, 0.5, 0)                    // grow upward from the base
-  const stemSeen = new Mesh(stemGeo, mats.solid)
-  const stemDreamt = new Mesh(stemGeo, mats.ghost)
-  world.add(stemSeen, stemDreamt)
-
-  /* ---- leaves ---- */
   const leafGeo = new SphereGeometry(1, 7, 5)
   leafGeo.scale(0.40, 0.055, 0.21)
-  leafGeo.translate(0.34, 0, 0)                   // offset so the group pivots at the stem
+  leafGeo.translate(0.34, 0, 0)
+  const stemGeo = new CylinderGeometry(0.05, 0.085, 1, 6)
+  stemGeo.translate(0, 0.5, 0)
+
+  // two neighbours, mostly out of frame, to imply the row
+  for (const [nx, nz, ns] of [[-2.5, -0.7, 0.75], [2.6, -1.1, 0.62]]) {
+    const n = new Group()
+    n.position.set(nx, 0, nz)
+    n.scale.setScalar(ns)
+    const st = new Mesh(stemGeo, mats.neighbour)
+    st.scale.y = 1.5
+    n.add(st)
+    for (let i = 0; i < 6; i++) {
+      const m = new Mesh(leafGeo, mats.neighbour)
+      m.rotation.z = 0.3
+      const g = new Group()
+      g.rotation.y = i * GOLDEN
+      g.position.y = 0.3 + i * 0.19
+      g.add(m)
+      n.add(g)
+    }
+    world.add(n)
+  }
+
+  /* ---- the photographed plant ---- */
+  const heightFor = (leaves) => 0.55 + leaves * 0.155
+  const H_ACTUAL = heightFor(REPORT.leaves)
+  const H_EXPECTED = heightFor(REPORT.expectedLeaves)
+
+  const stemSolid = new Mesh(stemGeo, mats.stem)
+  stemSolid.scale.y = H_ACTUAL
+  world.add(stemSolid)
+
+  // only the shortfall is drawn as a ghost, so the gap is the visible thing
+  const stemGap = new Mesh(stemGeo, mats.ghost)
+  stemGap.position.y = H_ACTUAL
+  stemGap.scale.y = H_EXPECTED - H_ACTUAL
+  world.add(stemGap)
 
   const leaves = []
   for (let i = 0; i < MAX_LEAVES; i++) {
-    const dreamt = i >= LEAVES_AT_HORIZON
+    const missing = i >= REPORT.leaves
+    const flagged = !missing && i === REPORT.stressLeaf
     const g = new Group()
-    const m = new Mesh(leafGeo, dreamt ? mats.ghost : mats.leaf)
-    m.rotation.z = 0.30                            // lift the tip
+    const m = new Mesh(leafGeo, missing ? mats.ghost : (flagged ? mats.stress : mats.leaf))
+    m.rotation.z = 0.30
     g.add(m)
     g.rotation.y = i * GOLDEN
-    g.scale.setScalar(0.0001)
+    g.position.y = 0.30 + i * 0.155
+    g.scale.setScalar(missing ? 0.0001 : 1)
     world.add(g)
-    leaves.push({ group: g, dreamt })
+    leaves.push({ group: g, mesh: m, missing, flagged })
   }
 
-  /* ---- the four cameras ---- */
-  const rigs = []
-  for (let i = 0; i < 4; i++) {
-    const a = i * Math.PI / 2 + Math.PI / 4
-    const g = new Group()
-    g.position.set(Math.cos(a) * 2.15, 0, Math.sin(a) * 2.15)
-    g.rotation.y = -a + Math.PI / 2
+  /* ---- the report ---- */
+  const panel = document.createElement('div')
+  panel.className = 'grow-report'
+  panel.innerHTML = `
+    <p class="grow-since">day ${REPORT.daysSinceSowing} since sowing</p>
+    <div class="grow-row" data-row="0"><span>leaf count</span><b>${REPORT.leaves} <i>&plusmn; ${REPORT.leafError}</i></b></div>
+    <div class="grow-row is-gap" data-row="1"><span>development</span><b>${REPORT.daysBehind} days behind</b></div>
+    <div class="grow-row is-stress" data-row="2"><span>stress</span><b>${REPORT.stressLabel}</b></div>`
+  labelLayer.appendChild(panel)
+  const rows = [...panel.querySelectorAll('.grow-row')]
 
-    const post = new Mesh(new CylinderGeometry(0.028, 0.035, 1.5, 6), mats.rig)
-    post.position.y = 0.75
-    const head = new Mesh(new RoundedBoxGeometry(0.3, 0.22, 0.2, 2, 0.05), mats.rig)
-    head.position.y = 1.6
-    const lens = new Mesh(new CylinderGeometry(0.055, 0.055, 0.06, 10), mats.lens)
-    lens.rotation.x = Math.PI / 2
-    lens.position.set(0, 1.6, -0.12)
-    g.add(post, head, lens)
-
-    // the sight line, brightened when this camera takes its turn
-    const beam = new Mesh(
-      new RingGeometry(0.1, 2.0, 3, 1, 0, 0.30),
-      new MeshBasicMaterial({ color: p.leaf, transparent: true, opacity: 0, side: DoubleSide, depthWrite: false })
-    )
-    beam.rotation.x = -Math.PI / 2
-    beam.rotation.z = Math.PI - 0.15
-    beam.position.y = 1.58
-    g.add(beam)
-
-    world.add(g)
-    rigs.push({ group: g, head, beam })
-  }
-
-  /* ---- readouts ---- */
-  const trait = document.createElement('div')
-  trait.className = 'grow-trait'
-  labelLayer.appendChild(trait)
-
-  const state = document.createElement('div')
-  state.className = 'grow-state'
-  labelLayer.appendChild(state)
+  const frame = document.createElement('div')
+  frame.className = 'grow-frame'
+  frame.innerHTML = '<i></i><i></i><i></i><i></i>'
+  labelLayer.appendChild(frame)
 
   /* ---- sizing ---- */
   function resize() {
@@ -169,7 +176,7 @@ export function createGrow(canvas, labelLayer, opts = {}) {
     const h = canvas.clientHeight || 1
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, w < 700 ? 1.6 : 2))
     renderer.setSize(w, h, false)
-    const span = 3.5
+    const span = 3.1
     const aspect = w / h
     const halfH = aspect > 1 ? span / aspect : span
     camera.left = -halfH * aspect
@@ -182,54 +189,40 @@ export function createGrow(canvas, labelLayer, opts = {}) {
 
   /* ---- the cycle ---- */
   const projected = new Vector3()
+  let ghostEase = 0
 
   function apply(t) {
-    const phase = ((t % CYCLE_S) + CYCLE_S) % CYCLE_S
-    const { observing, day } = phaseAt(t)
+    const { index, lines, phase } = phaseAt(t)
+    const showGap = index >= 2
+    const showStress = index >= 3
 
-    const heightAt = (d) => 0.5 + (d / DAY_AT_END) * 1.75
-    const h = heightAt(day)
-    const hSeen = Math.min(h, heightAt(DAY_AT_HORIZON))
-
-    stemSeen.scale.y = hSeen
-    stemDreamt.scale.y = Math.max(h - hSeen, 0.0001)
-    stemDreamt.position.y = hSeen
-    stemDreamt.visible = !observing
-
-    const grown = leavesByDay(day)
-    for (let i = 0; i < leaves.length; i++) {
-      const L = leaves[i]
-      const want = i < grown ? 1 : 0
+    // the shortfall fades in only once the comparison is being made
+    const wantGhost = showGap ? 1 : 0
+    for (const L of leaves) {
+      if (!L.missing) continue
       const s = L.group.scale.x
-      const next = s + (want - s) * 0.09          // eased in, so leaves unfurl
-      L.group.scale.setScalar(Math.max(next, 0.0001))
-      // ride up the stem, and sway a little
-      L.group.position.y = 0.28 + (i / MAX_LEAVES) * (h * 0.82)
-      L.group.rotation.y = i * GOLDEN + Math.sin(t * 0.7 + i) * 0.04
+      L.group.scale.setScalar(Math.max(s + (wantGhost - s) * 0.06, 0.0001))
+    }
+    ghostEase += (wantGhost - ghostEase) * 0.06
+    stemGap.scale.y = Math.max((H_EXPECTED - H_ACTUAL) * ghostEase, 0.0001)
+
+    // the flagged leaf pulses once it is called out
+    const flag = leaves[REPORT.stressLeaf]
+    if (flag) {
+      const pulse = showStress ? 1 + Math.sin(t * 5) * 0.13 : 1
+      flag.group.scale.setScalar(pulse)
+      flag.mesh.material = showStress ? mats.stress : mats.leaf
     }
 
-    // cameras take turns while observing, and go quiet once prediction starts
-    const turn = Math.floor(phase * 2.2) % 4
-    for (let i = 0; i < rigs.length; i++) {
-      const active = observing && i === turn
-      const m = rigs[i].beam.material
-      m.opacity += ((active ? 0.30 : 0) - m.opacity) * 0.14
-      const lift = observing ? 1 : 0.55
-      rigs[i].head.scale.setScalar(rigs[i].head.scale.x + ((active ? 1.18 : lift) - rigs[i].head.scale.x) * 0.14)
-    }
+    for (let i = 0; i < rows.length; i++) rows[i].classList.toggle('is-on', i < lines)
+    // the frame snaps in on capture and stays for the rest of the cycle
+    frame.classList.toggle('is-on', phase > 0.35)
 
-    // readouts
-    const d = Math.round(day)
-    trait.textContent = `day ${d} · ${grown} ${grown === 1 ? 'leaf' : 'leaves'}`
-    trait.classList.toggle('is-dreamt', !observing)
-    state.textContent = observing ? 'observing' : 'predicting'
-    state.classList.toggle('is-dreamt', !observing)
-
-    projected.set(0, h + 0.75, 0)
+    projected.set(0, H_EXPECTED * 0.55, 0)
     world.localToWorld(projected)
     projected.project(camera)
-    trait.style.left = `${(projected.x * 0.5 + 0.5) * canvas.clientWidth}px`
-    trait.style.top = `${(-projected.y * 0.5 + 0.5) * canvas.clientHeight}px`
+    frame.style.left = `${(projected.x * 0.5 + 0.5) * canvas.clientWidth}px`
+    frame.style.top = `${(-projected.y * 0.5 + 0.5) * canvas.clientHeight}px`
   }
 
   let raf = 0
@@ -237,50 +230,46 @@ export function createGrow(canvas, labelLayer, opts = {}) {
   let prev = 0
   let t = 0
 
-  // paint day zero straight away, so the readout is never briefly empty
-  // while waiting on the first animation frame
   apply(0)
   renderer.render(scene, camera)
   apply(0)
 
-  function frame() {
-    raf = requestAnimationFrame(frame)
+  function loop() {
+    raf = requestAnimationFrame(loop)
     const now = performance.now()
     const dt = Math.min((now - prev) / 1000, 0.05)
     prev = now
     t += dt
-    world.rotation.y = Math.sin(t * 0.13) * 0.22
+    world.rotation.y = Math.sin(t * 0.12) * 0.16
     apply(t)
     renderer.render(scene, camera)
   }
 
-  function refreshTheme() {
-    const q = readPalette()
-    hemi.color.set(q.sky); hemi.groundColor.set(q.ground)
-    mats.soil.color.set(q.soil)
-    mats.solid.color.set(q.stem)
-    mats.leaf.color.set(q.leaf)
-    mats.ghost.color.set(q.dream)
-    mats.ghost.emissive.set(new Color(q.dream).multiplyScalar(0.35))
-    mats.rig.color.set(q.rig)
-    mats.lens.color.set(q.lens)
-    for (const r of rigs) r.beam.material.color.set(q.leaf)
-    if (!running) { apply(t); renderer.render(scene, camera) }
-  }
-
   return {
-    start() { if (!running) { running = true; prev = performance.now(); frame() } },
+    start() { if (!running) { running = true; prev = performance.now(); loop() } },
     stop() { running = false; cancelAnimationFrame(raf) },
     resize,
     renderOnce() {
-      // the finished plant, half observed and half predicted
-      t = OBSERVE_S + PREDICT_S
+      t = STEPS[3].until - 0.2          // the complete report
+      ghostEase = 1
       world.rotation.y = 0
-      for (let i = 0; i < 80; i++) apply(t)   // let the eased leaf scales settle
+      for (let i = 0; i < 90; i++) apply(t)
       renderer.render(scene, camera)
-      apply(t)                                 // reposition the label on current matrices
+      apply(t)
     },
-    refreshTheme,
+    refreshTheme() {
+      const q = readPalette()
+      hemi.color.set(q.sky)
+      hemi.groundColor.set(q.ground)
+      mats.soil.color.set(q.soil)
+      mats.stem.color.set(q.stem)
+      mats.leaf.color.set(q.leaf)
+      mats.stress.color.set(q.stress)
+      mats.neighbour.color.set(q.neighbour)
+      mats.ghost.color.set(q.gap)
+      mats.ghost.emissive.set(new Color(q.gap).multiplyScalar(0.3))
+      if (!running) { apply(t); renderer.render(scene, camera) }
+    },
     dispose() {
       running = false
       cancelAnimationFrame(raf)
@@ -289,10 +278,16 @@ export function createGrow(canvas, labelLayer, opts = {}) {
         if (o.material) [].concat(o.material).forEach((m) => m.dispose())
       })
       renderer.dispose()
-      trait.remove()
-      state.remove()
+      panel.remove()
+      frame.remove()
     },
   }
+}
+
+function dir(x, y, z) {
+  const l = new DirectionalLight(0xffffff, 1.35)
+  l.position.set(x, y, z)
+  return l
 }
 
 function readPalette() {
@@ -305,8 +300,8 @@ function readPalette() {
     soil: v('--model-soil', '#c9b79a'),
     stem: v('--sprout', '#27774c'),
     leaf: v('--sprout', '#27774c'),
-    dream: v('--peri', '#5563d8'),
-    rig: dark ? v('--rule-strong', '#45402f') : v('--ink-3', '#6f695c'),
-    lens: v('--ink', '#191712'),
+    stress: v('--amber', '#d97b1f'),
+    gap: v('--peri', '#5563d8'),
+    neighbour: dark ? v('--model-slab', '#453d2c') : v('--rule-strong', '#cec5ae'),
   }
 }

@@ -26,8 +26,10 @@
   --sprout-soft:  #d8ecdf;
   --sprout-ink:   #1d5c3a;
   --amber:        #d97b1f;
+  --amber-ink:    #8a4a08;
   --amber-soft:   #fbe6cd;
   --peri:         #5563d8;
+  --peri-ink:     #3c4cd2;
   --peri-soft:    #dcdefb;
   --clay:         #d4576f;
   --clay-soft:    #fadfe4;
@@ -89,8 +91,10 @@
   --sprout-soft:  #1c3a28;
   --sprout-ink:   #5cc182;
   --amber:        #f0a350;
+  --amber-ink:    #f0a350;
   --amber-soft:   #3d2a13;
   --peri:         #8b95f0;
+  --peri-ink:     #8b95f0;
   --peri-soft:    #23264a;
   --clay:         #ef8298;
   --clay-soft:    #3d1f26;
@@ -635,33 +639,83 @@ p { text-wrap: pretty; }
   .stage { order: -1; aspect-ratio: 1 / .72; }
 }
 
-/* Agri-JEPA readouts. The trait chip tracks the top of the plant, the state
-   chip is parked. Both turn periwinkle once the scene stops observing and
-   starts predicting. */
-.grow-trait,
-.grow-state {
+/* Agri-JEPA report. What a grower would actually be handed back from one
+   photo: a count with its error bar, how far behind the sowing-date
+   reference the plant is, and anything flagged on it. Lines arrive in turn. */
+.grow-report {
   position: absolute;
-  padding: .28rem .62rem;
+  left: 1rem;
+  bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  max-width: calc(100% - 8rem);
+}
+.grow-since {
+  font-family: var(--mono);
+  font-size: .6rem;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: .1rem;
+}
+.grow-row {
+  display: flex;
+  align-items: baseline;
+  gap: .5rem;
+  padding: .3rem .65rem;
   border-radius: 999px;
   background: color-mix(in oklab, var(--surface) 90%, transparent);
   border: 1px solid var(--rule);
   box-shadow: var(--lift-1);
   font-family: var(--mono);
-  font-size: .66rem;
-  font-weight: 600;
+  font-size: .64rem;
   letter-spacing: .04em;
   text-transform: uppercase;
   white-space: nowrap;
-  color: var(--text-2);
-  transition: color .45s var(--ease), border-color .45s var(--ease), background-color .45s var(--ease);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .45s var(--ease), transform .45s var(--ease);
 }
-.grow-trait { transform: translate(-50%, -50%); }
-.grow-state { left: 1rem; bottom: 2.9rem; }
-.grow-trait.is-dreamt,
-.grow-state.is-dreamt {
-  color: var(--peri);
+.grow-row.is-on { opacity: 1; transform: none; }
+.grow-row span { color: var(--text-3); }
+.grow-row b { color: var(--text); font-weight: 600; }
+.grow-row i { font-style: normal; color: var(--text-3); }
+.grow-row.is-gap.is-on {
   border-color: color-mix(in oklab, var(--peri) 45%, transparent);
   background: color-mix(in oklab, var(--peri) 12%, var(--surface));
+}
+.grow-row.is-gap b { color: var(--peri-ink); }
+.grow-row.is-stress.is-on {
+  border-color: color-mix(in oklab, var(--amber) 50%, transparent);
+  background: color-mix(in oklab, var(--amber) 13%, var(--surface));
+}
+.grow-row.is-stress b { color: var(--amber-ink, var(--amber)); }
+
+/* The crop a phone photo would have been taken with. */
+.grow-frame {
+  position: absolute;
+  width: 42%;
+  aspect-ratio: 3 / 4;
+  transform: translate(-50%, -50%) scale(.94);
+  opacity: 0;
+  transition: opacity .5s var(--ease), transform .5s var(--ease);
+}
+.grow-frame.is-on { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.grow-frame i {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border: 2px solid color-mix(in oklab, var(--text-3) 65%, transparent);
+}
+.grow-frame i:nth-child(1) { top: 0; left: 0; border-right: 0; border-bottom: 0; border-radius: 4px 0 0 0; }
+.grow-frame i:nth-child(2) { top: 0; right: 0; border-left: 0; border-bottom: 0; border-radius: 0 4px 0 0; }
+.grow-frame i:nth-child(3) { bottom: 0; left: 0; border-right: 0; border-top: 0; border-radius: 0 0 0 4px; }
+.grow-frame i:nth-child(4) { bottom: 0; right: 0; border-left: 0; border-top: 0; border-radius: 0 0 4px 0; }
+
+@media (max-width: 560px) {
+  .grow-report { max-width: calc(100% - 5rem); }
+  .grow-row { font-size: .58rem; padding: .26rem .55rem; }
 }
 
 /* --------------------------------------------------------------------------
