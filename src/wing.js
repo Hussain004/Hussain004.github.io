@@ -216,7 +216,8 @@ export function createWing(canvas, labelLayer, opts = {}) {
     el.className = 'room-label'
     el.type = 'button'
     el.style.pointerEvents = 'auto'
-    el.textContent = room.key
+    // The label names the section a click lands on, not the room fiction.
+    el.textContent = room.hint
     el.setAttribute('aria-label', `Go to ${room.hint}`)
     el.addEventListener('click', () => onPick(room.section))
     labelLayer.appendChild(el)
