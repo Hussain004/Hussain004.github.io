@@ -13,6 +13,8 @@ const themeListeners = new Set()
 function applyTheme(name) {
   document.documentElement.dataset.theme = name
   try { localStorage.setItem('theme', name) } catch {}
+  const meta = $('#theme-color-meta')
+  if (meta) meta.content = name === 'dark' ? '#14130e' : '#f7f4ed'
   themeListeners.forEach((fn) => fn(name))
 }
 

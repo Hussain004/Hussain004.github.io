@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Room not found, Hussain Habib</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root { --paper: #f7f4ed; --ink: #191712; --ink-3: #6f695c; --sprout: #1d5c3a; }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #14130e; --ink: #f3efe4; --ink-3: #a49d8b; --sprout: #5cc182; }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 1.25rem; text-align: center;
+    padding: 2rem; background: var(--paper); color: var(--ink);
+    font-family: 'Instrument Sans', system-ui, sans-serif;
+  }
+  svg.mark { width: 72px; height: 72px; }
+  h1 {
+    font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+    font-size: clamp(1.5rem, 4vw, 2.1rem); font-weight: 700; margin: 0;
+  }
+  p { max-width: 34ch; color: var(--ink-3); margin: 0; line-height: 1.5; }
+  a {
+    color: var(--sprout); font-weight: 600; text-decoration: none;
+    border-bottom: 1px solid currentColor; padding-bottom: .1em;
+  }
+  a:hover { opacity: .8; }
+</style>
+</head>
+<body>
+  <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+    <rect width="32" height="32" rx="7" fill="#f7f4ed"/>
+    <path d="M13 9V6" stroke="#191712" stroke-width="2.2" stroke-linecap="round"/>
+    <circle cx="13" cy="4.6" r="2.2" fill="#d97b1f"/>
+    <rect x="5" y="9" width="22" height="16" rx="5.5" fill="#191712"/>
+    <circle cx="11.5" cy="17" r="2.4" fill="#5cc182"/>
+    <circle cx="20.5" cy="14.6" r="2.4" fill="#5cc182"/>
+  </svg>
+  <h1>This room is not on the floor plan.</h1>
+  <p>The page you followed does not exist, or moved when the site was last rebuilt.</p>
+  <a href="/">Back to the floor plan</a>
+</body>
+</html>

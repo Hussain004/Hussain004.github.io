@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://hussain004.github.io/sitemap.xml

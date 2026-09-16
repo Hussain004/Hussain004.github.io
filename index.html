@@ -15,10 +15,30 @@
   <meta name="twitter:card" content="summary_large_image" />
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="theme-color" id="theme-color-meta" content="#f7f4ed" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Hussain Habib",
+    "url": "https://hussain004.github.io/",
+    "image": "https://hussain004.github.io/avatar.webp",
+    "email": "mailto:hussain04habib@gmail.com",
+    "jobTitle": "Undergraduate Researcher",
+    "description": "Undergraduate researcher working on perception for robots in unstructured environments, multi-robot semantic navigation, and UAV crop phenotyping.",
+    "sameAs": [
+      "https://github.com/Hussain004",
+      "https://www.linkedin.com/in/hussain-habib/",
+      "https://x.com/Hussain2004004"
+    ],
+    "knowsAbout": ["Robot Perception", "Computer Vision", "Multi-Robot Navigation", "UAV Crop Phenotyping"]
+  }
+  </script>
 
   <script>
     // set before first paint so the theme never flashes
@@ -26,6 +46,7 @@
       var t = localStorage.getItem('theme')
         || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
       document.documentElement.dataset.theme = t
+      document.querySelector('#theme-color-meta').content = t === 'dark' ? '#14130e' : '#f7f4ed'
     } catch (e) { document.documentElement.dataset.theme = 'light' }
   </script>
 </head>
