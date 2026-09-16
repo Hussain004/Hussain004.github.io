@@ -308,6 +308,13 @@ p { text-wrap: pretty; }
 .nav-menu a:hover { color: var(--text); background: var(--paper-sunk); }
 .nav-menu a[aria-current='true'] { color: var(--text); background: var(--accent-soft); }
 
+/* A file, not a section, so it gets a ring instead of the scroll-spy fill. */
+.nav-cv {
+  border: 1px solid var(--rule-strong);
+  color: var(--text) !important;
+}
+.nav-cv:hover { background: var(--accent-soft) !important; border-color: var(--accent); }
+
 .nav-right { display: flex; align-items: center; gap: .5rem; }
 
 .icon-btn {
