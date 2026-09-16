@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://hussain004.github.io/sitemap.xml
+Sitemap: https://hussain04.vercel.app/sitemap.xml
