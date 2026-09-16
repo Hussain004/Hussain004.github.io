@@ -251,6 +251,23 @@ $$('.pub-citations').forEach(async (el) => {
 })
 
 /* --------------------------------------------------------------------------
+   Copy BibTeX
+   -------------------------------------------------------------------------- */
+const bibtexBtn = $('#bibtex-btn')
+bibtexBtn?.addEventListener('click', async () => {
+  const label = $('#bibtex-label')
+  const text = $('#bibtex-source')?.textContent.trim()
+  if (!text) return
+  try {
+    await navigator.clipboard.writeText(text)
+    label.textContent = 'Copied'
+  } catch {
+    label.textContent = 'Select and copy manually'
+  }
+  setTimeout(() => { label.textContent = 'Copy BibTeX' }, 1800)
+})
+
+/* --------------------------------------------------------------------------
    Footer year
    -------------------------------------------------------------------------- */
 const year = $('#year')
