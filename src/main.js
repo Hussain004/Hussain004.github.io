@@ -256,7 +256,9 @@ $$('.pub-citations').forEach(async (el) => {
 const bibtexBtn = $('#bibtex-btn')
 bibtexBtn?.addEventListener('click', async () => {
   const label = $('#bibtex-label')
-  const text = $('#bibtex-source')?.textContent.trim()
+  // A <template>'s children live in .content, a separate fragment, so the
+  // element's own textContent is always empty.
+  const text = $('#bibtex-source')?.content.textContent.trim()
   if (!text) return
   try {
     await navigator.clipboard.writeText(text)
