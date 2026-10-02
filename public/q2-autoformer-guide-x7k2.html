@@ -103,6 +103,19 @@ tr.final td{background:var(--accent-soft);font-weight:500}
 .copy{position:absolute;top:8px;right:8px;font:500 12px var(--font-body);background:var(--surface);color:var(--ink);border:1px solid var(--rule);border-radius:5px;padding:4px 9px;cursor:pointer}
 .copy:hover{border-color:var(--accent)}
 
+/* modification cards and status chips */
+.mod{background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:16px 18px;margin:0 0 14px}
+.mod h3{margin:0;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline;font-size:1.05rem}
+.chip{font:500 11px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:4px 8px;border-radius:999px;border:1px solid;white-space:nowrap}
+.chip.ok{color:var(--accent);background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 35%,transparent)}
+.chip.open{color:var(--warn);background:var(--warn-bg);border-color:var(--warn-rule)}
+.mod dl{display:grid;grid-template-columns:minmax(0,104px) minmax(0,1fr);gap:8px 16px;margin:12px 0 0;font-size:15px}
+.mod dt{font:500 11.5px/1.9 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.mod dd{margin:0}
+@media (max-width:560px){.mod dl{grid-template-columns:minmax(0,1fr);gap:2px}.mod dt{margin-top:8px}}
+td.pos{color:var(--accent);font-weight:500}
+p.cap{font-size:14px;color:var(--muted);margin:-8px 0 20px;max-width:68ch}
+
 /* fact sheet */
 dl.facts{display:grid;grid-template-columns:minmax(0,170px) minmax(0,1fr);margin:0;background:var(--surface);border:1px solid var(--rule);border-radius:8px}
 dl.facts dt,dl.facts dd{margin:0;padding:11px 16px;border-bottom:1px solid var(--rule)}
@@ -136,7 +149,7 @@ footer{max-width:1180px;margin:0 auto;font-size:13px;color:var(--muted)}
   <div>
     <p class="eyebrow">AI651 · Assignment 1 · Task 2 · Leaderboard</p>
     <h1>Now-casting with an Autoformer</h1>
-    <p class="lede">How the model works, why each design choice was made, and the measurements behind it. Every claim here was checked on a validation protocol frozen before the architecture work (section 7). Where something is a hypothesis or rests on noisy evidence, it says so where it appears. The earlier AI report was not used as evidence.</p>
+    <p class="lede">How the model works, why each design choice was made, and the measurements behind it. Every claim here was checked on a validation protocol frozen before the architecture work (section 9). Where something is a hypothesis or rests on noisy evidence, it says so where it appears. The earlier AI report was not used as evidence.</p>
   </div>
   <button class="themebtn" id="themebtn" type="button" aria-label="Change colour theme">Theme: system</button>
 </header>
@@ -150,12 +163,14 @@ footer{max-width:1180px;margin:0 auto;font-size:13px;color:var(--muted)}
       <li><a href="#s1"><span class="n">1</span>Not a forecasting problem</a></li>
       <li><a href="#s2"><span class="n">2</span>Autoformer in three ideas</a></li>
       <li><a href="#s3"><span class="n">3</span>Data to channels</a></li>
-      <li><a href="#s4"><span class="n">4</span>The model, step by step</a></li>
-      <li><a href="#s5"><span class="n">5</span>Training</a></li>
-      <li><a href="#s6"><span class="n">6</span>Results</a></li>
-      <li><a href="#s7"><span class="n">7</span>Validation protocol</a></li>
-      <li><a href="#s8"><span class="n">8</span>What failed</a></li>
-      <li><a href="#s9"><span class="n">9</span>Reproduce</a></li>
+      <li><a href="#s4"><span class="n">4</span>How the features were examined</a></li>
+      <li><a href="#s5"><span class="n">5</span>The model, step by step</a></li>
+      <li><a href="#s6"><span class="n">6</span>Changes to the Autoformer</a></li>
+      <li><a href="#s7"><span class="n">7</span>Training</a></li>
+      <li><a href="#s8"><span class="n">8</span>Results</a></li>
+      <li><a href="#s9"><span class="n">9</span>Validation protocol</a></li>
+      <li><a href="#s10"><span class="n">10</span>What failed</a></li>
+      <li><a href="#s11"><span class="n">11</span>Reproduce</a></li>
     </ol>
   </details>
 </nav>
@@ -193,7 +208,7 @@ footer{max-width:1180px;margin:0 auto;font-size:13px;color:var(--muted)}
   <ul>
     <li>Cross-correlation shows y<sub>t</sub> is most related to covariates at t−1 through t−6, and the relation fades for leads beyond about +12. So y behaves like <b>an integral of recent conditions</b>, which is what a sequence model should learn.</li>
   </ul>
-  <p>This is the TA's "state estimation" or now-casting point. His other hint, where the optional data should go, is answered in section 4.</p>
+  <p>This is the TA's "state estimation" or now-casting point. His other hint, where the optional data should go, is answered in section 5.</p>
 </section>
 
 <!-- ============ 2 ============ -->
@@ -239,7 +254,78 @@ footer{max-width:1180px;margin:0 auto;font-size:13px;color:var(--muted)}
 
 <!-- ============ 4 ============ -->
 <section id="s4">
-  <h2><span class="sn">4</span>The model, step by step</h2>
+  <h2><span class="sn">4</span>How the external features were examined</h2>
+  <p>The manual asks which of the ten variables carry signal and which portions of the file are worth feeding to the model. The honest account has two parts. While building the model I did <b>not</b> search over columns. All ten stayed in, and I narrowed the <i>representation</i>: what to derive from them, which stretch of time to feed, and where in the network to put them. After the model was built I ran a column-by-column diagnostic to answer the per-column question directly. It is labelled as after the fact, and it did not change the model.</p>
+
+  <h3>What I did, in order</h3>
+  <ol>
+    <li><b>Read the types.</b> A to F are continuous, and E and F are integer counts. G to J are four 0/1 indicators, and in all 43,824 rows exactly one of them is set. E is non-zero in 0.8% of hours and F in 4.1%.</li>
+    <li><b>Screened pairwise correlations</b> of log(1 + y) with each covariate at lags from −48 to +48 (table below). The strongest relations are with D and with the direction indicators, and they peak when the covariate is measured one to six hours <i>before</i> y. They shrink towards zero for leads of 24 to 48 hours. So y is related to the recent past of the covariates, which is why the task is estimating the current state.</li>
+    <li><b>Looked inside D.</b> Its increments are positive, it resets to a small value, and every reset coincides with a change in the direction indicators. I replaced it with two derived channels, the per-step rate and the steps since the last reset (section 3). Ablation: without them the 3-seed ensemble scores 62.9 instead of 58.6.</li>
+    <li><b>Tried time representations on fast models</b> (ridge, then an MLP) before building any Autoformer. Pointwise ridge scored 85. Trailing windows of the recent covariates brought it to 69.6, leading windows added about 0.5 and y about 0.7. An MLP on the same window features reached 59 to 61, so nonlinearity matters as well. This is why the Autoformer receives trailing windows of 3 to 168 hours.</li>
+    <li><b>Decided where the file enters</b> by ablation: decoder only, encoder only, or both (section 5).</li>
+    <li><b>Checked hour-of-day marks</b> built from the integer index (index modulo 24). They were neutral, so they are not in the base model. They are in 3 of the 12 ensemble members for diversity.</li>
+  </ol>
+
+  <h3>The correlation screen</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Column</th><th class="num">Strongest correlation with log(1 + y)</th><th class="num">At lag k</th></tr></thead>
+    <tbody>
+      <tr><td>A</td><td class="num">+0.31</td><td class="num">0 and +1</td></tr>
+      <tr><td>B</td><td class="num">+0.11</td><td class="num">+12</td></tr>
+      <tr><td>C</td><td class="num">−0.17</td><td class="num">+6</td></tr>
+      <tr><td>D (log of the cumulated value)</td><td class="num">−0.40</td><td class="num">−1</td></tr>
+      <tr><td>E</td><td class="num">not screened</td><td class="num">non-zero in 0.8% of hours</td></tr>
+      <tr><td>F (log)</td><td class="num">+0.08</td><td class="num">+24</td></tr>
+      <tr><td>G</td><td class="num">−0.07</td><td class="num">−3</td></tr>
+      <tr><td>H</td><td class="num">−0.43</td><td class="num">−6</td></tr>
+      <tr><td>I</td><td class="num">+0.31</td><td class="num">−6</td></tr>
+      <tr><td>J</td><td class="num">+0.20</td><td class="num">−3</td></tr>
+    </tbody>
+  </table></div>
+  <p class="cap">Lag k pairs y at time t with the covariate at time t + k, so a negative k means the covariate was measured earlier than y.</p>
+  <div class="note"><b class="t">Why correlation alone would have misled me</b><p>Column B never correlates above 0.11 with anything, and a model given only B scores about 92, which is no better than guessing the average. Yet removing B from the full model costs 1.0 RMSE (MLP) to 2.2 (ridge). A column can matter only in combination with others, so I did not discard columns on a pairwise screen.</p></div>
+
+  <h3>The column-by-column diagnostic (after the fact)</h3>
+  <p>The same 5-fold leave-one-year-out protocol, with trailing-window features like the Autoformer's. Two fast models stand in for the Autoformer: ridge (deterministic) and a small MLP (mean of 3 seeds, seed spread 0.05 to 0.5). "Drop" removes a column group and its windows from the full set. "Only" keeps just that group. A constant guess at the average scores about 91, the standard deviation of y, so a model near 91 has learned nothing.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Column group</th><th class="num">Drop: ridge change</th><th class="num">Drop: MLP change</th><th class="num">Only: ridge</th><th class="num">Only: MLP</th></tr></thead>
+    <tbody>
+      <tr><td><b>All channels</b> (reference RMSE)</td><td class="num">69.58</td><td class="num">60.55</td><td class="num">n/a</td><td class="num">n/a</td></tr>
+      <tr><td>A</td><td class="num">+1.10</td><td class="num pos">+4.07</td><td class="num">87.9</td><td class="num">69.9</td></tr>
+      <tr><td>B</td><td class="num">+2.16</td><td class="num">+1.04</td><td class="num">92.4</td><td class="num">88.3</td></tr>
+      <tr><td>C</td><td class="num">+0.94</td><td class="num">+0.03</td><td class="num">90.6</td><td class="num">85.4</td></tr>
+      <tr><td>D (logw, logD, logspell)</td><td class="num pos">+5.85</td><td class="num pos">+2.43</td><td class="num">75.8</td><td class="num">74.3</td></tr>
+      <tr><td>E</td><td class="num">+0.02</td><td class="num">+0.34</td><td class="num">91.8</td><td class="num">91.8</td></tr>
+      <tr><td>F</td><td class="num">+0.75</td><td class="num">+0.94</td><td class="num">91.1</td><td class="num">90.9</td></tr>
+      <tr><td>G to J (direction)</td><td class="num">+1.16</td><td class="num pos">+2.80</td><td class="num">83.6</td><td class="num">84.7</td></tr>
+      <tr><td>Derived part of D only (logw, logspell)</td><td class="num pos">+4.47</td><td class="num pos">+2.26</td><td class="num">n/a</td><td class="num">n/a</td></tr>
+    </tbody>
+  </table></div>
+  <p class="cap">Pooled RMSE over the five held-out years. The "Drop" columns show the increase over the all-channel reference (bigger means the group mattered more). Highlighted cells are changes of 2 or more.</p>
+
+  <h3>What this says about each variable</h3>
+  <ul>
+    <li><b>D (the cumulated column) is the most informative group</b> in both models, and its derived parts carry most of that. Removing only the derived rate and spell length costs 4.5 (ridge) and 2.3 (MLP), consistent with the raw-channel ablation on the Autoformer.</li>
+    <li><b>A is the strongest column for the nonlinear model.</b> Alone it reaches 69.9, and dropping it costs 4.1. Ridge sees much less of it (+1.1), which suggests A acts through interactions.</li>
+    <li><b>The direction indicators G to J</b> matter (+2.8 for the MLP). Alone they reach 84, better than a flat guess but far from the full set.</li>
+    <li><b>B and F</b> add about 1 each, and only in combination with other columns.</li>
+    <li><b>C</b> is ambiguous: +0.9 for ridge but +0.03 for the MLP. Treat it as weak.</li>
+    <li><b>E carries essentially nothing.</b> Dropping it changes ridge by 0.02 and the MLP by 0.34, within noise. It is non-zero in under 1% of hours.</li>
+  </ul>
+  <p>My guess is that B matters through its relation to A, since the pair behaves like a gap between two measurements, as in a humidity measure. I did not test that.</p>
+
+  <h3>What I did not do</h3>
+  <ul>
+    <li>I did not run a leave-one-column-out search inside the Autoformer itself. The diagnostic uses ridge and an MLP, and a difference of about 1 RMSE or less is within their noise.</li>
+    <li>I did not remove E or C from the final model. The diagnostic suggests dropping E would cost nothing, but I never retrained the Autoformer without it.</li>
+    <li>I did not tune the window lengths. The set {3, 6, 12, 24, 48, 96, 168} was chosen in advance from the time scales in the cross-correlation. E and logD are not windowed (E is almost always zero, and the rate derived from D already carries its history). Neither choice was tested.</li>
+  </ul>
+</section>
+
+<!-- ============ 5 ============ -->
+<section id="s5">
+  <h2><span class="sn">5</span>The model, step by step</h2>
   <p>Shapes: B is the batch, L = 336 the context, LB = 48 the label, H = 168 the horizon, d = 32 for configuration A, and C is about 82 covariate channels. The code is in <code>af.py</code>.</p>
 
   <figure class="fig">
@@ -317,7 +403,7 @@ footer{max-width:1180px;margin:0 auto;font-size:13px;color:var(--muted)}
       <rect x="573" y="220" width="317" height="26" rx="3" style="fill:var(--surface);stroke:var(--ink)"/>
       <text class="small" x="731" y="238" text-anchor="middle">covariates, 48 label + 168 horizon</text>
     </svg></div>
-    <figcaption>Drawn to scale along the time axis (504 steps). This is also the test-mimicking rule used in validation (section 7). A covariate window ending at time t never needs anything later than t.</figcaption>
+    <figcaption>Drawn to scale along the time axis (504 steps). This is also the test-mimicking rule used in validation (section 9). A covariate window ending at time t never needs anything later than t.</figcaption>
   </figure>
 
   <h3>Components</h3>
@@ -353,9 +439,133 @@ footer{max-width:1180px;margin:0 auto;font-size:13px;color:var(--muted)}
   <p><code>ŷ = expm1(z·sd + mu)</code> is non-negative and multiplicative. It is trained with <b>MSE in physical units</b>, masked on interpolated rows, because that is the ranked quantity. The exp link beat a linear output on the final configuration with 3 seeds each: <b>61.6 against 69.7</b> per seed, and 58.6 against 65.6 for the ensembles.</p>
 </section>
 
-<!-- ============ 5 ============ -->
-<section id="s5">
-  <h2><span class="sn">5</span>Training</h2>
+<!-- ============ 6 ============ -->
+<section id="s6">
+  <h2><span class="sn">6</span>What I changed from the reference Autoformer</h2>
+  <p>The reference is Wu et al. (AAAI 2021) and its public code. What I say about it comes from my memory of that code, and I have not re-checked it line by line, so verify before quoting any of it. Each change has a status chip. <span class="chip ok">Measured</span> next to a change means a comparison exists. <span class="chip open">Not ablated</span> means the reason is reasoning only, and no measurement shows it helps.</p>
+
+  <article class="mod">
+    <h3>Covariates, not the target, are the network's input<span class="chip ok">Compared on seeds</span></h3>
+    <dl>
+      <dt>Reference</dt><dd>The encoder embeds the target series plus calendar marks. The decoder embeds the last 48 target values (the label) followed by zeros for the horizon.</dd>
+      <dt>This model</dt><dd>Both embed covariate channels only. y never enters an embedding.</dd>
+      <dt>Why</dt><dd>With y in the encoder a network of this size memorises: training RMSE about 45, held-out about 70. What matters over 168 steps is in the covariates, so the network gets those and nothing that identifies a particular training window.</dd>
+      <dt>Evidence</dt><dd>Runs with y scored 70.7, 75.2 and 78.0 (mostly single seeds) against a y-free 6-seed mean of 64.5. That memorisation is the cause is my explanation. I did not test it directly.</dd>
+    </dl>
+  </article>
+
+  <article class="mod">
+    <h3>Covariates enter the decoder across the horizon<span class="chip ok">Ablated</span></h3>
+    <dl>
+      <dt>Reference</dt><dd>For the horizon the decoder input is zeros plus calendar marks. Measured variables are never given for the future.</dd>
+      <dt>This model</dt><dd>The decoder embeds all covariate channels over 48 label steps and 168 horizon steps, and the encoder embeds them too.</dd>
+      <dt>Why</dt><dd>The optional file covers the hidden week, so the future values are known and are the signal. Only the decoder spans the horizon.</dd>
+      <dt>Evidence</dt><dd>5-fold: no covariates 88.4, encoder only 93.1, decoder only 63.9, both 61.6. Fold 4 alone: 88.4, 90.1, 59.8, 59.0.</dd>
+    </dl>
+  </article>
+
+  <article class="mod">
+    <h3>A learned bridge replaces the repeated-mean trend start<span class="chip ok">Tested, small effect</span></h3>
+    <dl>
+      <dt>Reference</dt><dd>The trend stream starts as the mean of the encoder input repeated over the horizon, plus the decomposed label trend over the label span.</dd>
+      <dt>This model</dt><dd>The trend stream starts at zero and receives a bridge: the sum over j of g<sub>j</sub>[h] times the mean of the last w<sub>j</sub> values of y, with w in {1, 3, 12, 48}. The gain g is learned per horizon step, starts at 0, and is scaled by 10 internally so the optimiser can move it in time.</dd>
+      <dt>Why</dt><dd>Repeating a mean over 168 steps hard-codes persistence, and the mean-removed seasonal path cannot cancel it. My first version of this idea (a short y label in the decoder) trained to RMSE about 80 and was abandoned. The bridge starts exactly y-free and lets the data decide how far recent y reaches. With four scalars as input it cannot memorise a window.</dd>
+      <dt>Evidence</dt><dd>A 6-seed mean of 63.1 against 64.5 without, a gain of about 1.4 ± 1.0 that is not significant. The gain appears at long horizons (h above 48: 59.7 against 63.0). In the first hours persistence (RMSE 19.6 at h = 0) still beats the model (about 68). An explicit blend gate and position channels were tried and rejected (section 10).</dd>
+    </dl>
+  </article>
+
+  <article class="mod">
+    <h3>Cross-correlation on a shared, absolute timeline<span class="chip open">Not ablated</span></h3>
+    <dl>
+      <dt>Reference</dt><dd>Queries, keys and values are padded or truncated at the end to a common length, so position 0 lines up with position 0.</dd>
+      <dt>This model</dt><dd>Encoder times [o−L, o) and decoder times [o−LB, o+H) are placed on one timeline of length L+H, zero-padded, and the correlation is divided by the number of overlapping steps.</dd>
+      <dt>Why</dt><dd>A lag of τ should mean τ real hours between a decoder position and an encoder position. Here the encoder spans 336 steps and the decoder 216, so aligning position 0 would make the same τ mean different real offsets.</dd>
+      <dt>Evidence</dt><dd>Reasoning only. I have no measurement showing it improves RMSE.</dd>
+    </dl>
+  </article>
+
+  <article class="mod">
+    <h3>Delay aggregation as an FFT convolution<span class="chip ok">Equivalence tested</span></h3>
+    <dl>
+      <dt>Reference</dt><dd>A loop over K rolled copies of the values (a gather for each delay).</dd>
+      <dt>This model</dt><dd>The K softmax weights are scattered into a kernel ω of length T, and the output is irfft(rfft(V) · rfft(ω)).</dd>
+      <dt>Why</dt><dd>The result is identical, but the gather version materialised B × K × d × T numbers and ran out of GPU memory when several runs shared the card. The convolution needs B × d × T.</dd>
+      <dt>Evidence</dt><dd>A self-test against a brute-force O(T²) computation matches to 1e-4. No accuracy change was expected, and none was measured.</dd>
+    </dl>
+  </article>
+
+  <article class="mod">
+    <h3>Per-example delays that look backwards, with a learned temperature<span class="chip open">Not ablated</span></h3>
+    <dl>
+      <dt>Reference</dt><dd>In training the delays are chosen from the correlation averaged over the batch and shared by every example. At inference they are chosen per example. Values are shifted by −τ, so the output at t reads v<sub>t+τ</sub>. The softmax over the top-K scores has no temperature.</dd>
+      <dt>This model</dt><dd>Delays are chosen per example in training and inference. The output is z<sub>t</sub> = sum of w<sub>j</sub> v<sub>t−τj</sub>, so it reads earlier steps, as in the manual's Equation 6. The softmax divides by a learned temperature.</dd>
+      <dt>Why</dt><dd>Training and test follow one rule, and each window picks its own lags. Information flows from earlier hours to later ones, which matches a state that depends on earlier conditions. The temperature lets the model decide how sharply to favour the best delays.</dd>
+      <dt>Evidence</dt><dd>The self-test checks the direction convention. None of the three choices was ablated.</dd>
+    </dl>
+  </article>
+
+  <article class="mod">
+    <h3>Replicate-padded convolution embedding, no calendar embedding<span class="chip open">Not ablated</span></h3>
+    <dl>
+      <dt>Reference</dt><dd>A convolution of width 3 with circular padding, plus a fixed positional embedding and a learned calendar embedding.</dd>
+      <dt>This model</dt><dd>A convolution of width 3 with replicate padding and no positional or calendar embedding. Config T adds hour-of-day as sine and cosine channels computed from the index modulo 24.</dd>
+      <dt>Why</dt><dd>Circular padding lets the last hours of a window bleed into the first. There are no timestamps, only an integer index, and hour-of-day can be recovered from it because the 24-step cycle is visible in the covariates.</dd>
+      <dt>Evidence</dt><dd>The padding mode was not ablated. Hour-of-day was neutral: per-seed mean 62.7 against 61.6, ensemble 58.8 against 58.6. It stays out of the base model and is in 3 of the 12 members for diversity.</dd>
+    </dl>
+  </article>
+
+  <article class="mod">
+    <h3>Log-scale output with an exp link, trained on physical MSE<span class="chip ok">Ablated</span></h3>
+    <dl>
+      <dt>Reference</dt><dd>A linear output on the standardised target, with MSE in that space.</dd>
+      <dt>This model</dt><dd>The network outputs z on the standardised log(1 + y) scale, the forecast is expm1(z × sd + mu), and the loss is MSE in physical units, masked on interpolated rows.</dd>
+      <dt>Why</dt><dd>y is non-negative and heavy-tailed. The log scale makes covariate effects multiplicative and keeps forecasts at or above zero. A loss in physical units is exactly the ranked RMSE, so large values get the weight the leaderboard gives them.</dd>
+      <dt>Evidence</dt><dd>With 3 seeds each on the final configuration: 61.6 against 69.7 per seed, and 58.6 against 65.6 for the ensembles.</dd>
+    </dl>
+  </article>
+
+  <article class="mod">
+    <h3>Zero-initialised output head<span class="chip open">Not ablated</span></h3>
+    <dl>
+      <dt>Reference</dt><dd>Default initialisation.</dd>
+      <dt>This model</dt><dd>The output weights and bias start at zero, so the model begins by predicting expm1(mu), the typical level.</dd>
+      <dt>Why</dt><dd>Training starts near a sensible answer and does not spend epochs learning the output scale.</dd>
+      <dt>Evidence</dt><dd>Reasoning only.</dd>
+    </dl>
+  </article>
+
+  <article class="mod">
+    <h3>A small network<span class="chip ok">Compared</span></h3>
+    <dl>
+      <dt>Reference</dt><dd>The published settings, as I remember them, use width 512 with 2 encoder layers and a wide feed-forward layer.</dd>
+      <dt>This model</dt><dd>Width 32, 4 heads, 1 encoder layer, 1 decoder layer, feed-forward width 64, dropout 0.1. About 38,000 parameters per member.</dd>
+      <dt>Why</dt><dd>There are only about 260 independent weeks. Training RMSE of 35 to 45 against held-out 63 shows overfitting even at this size. Parameters are almost free in the score (α is about 1e-9) but not in generalisation.</dd>
+      <dt>Evidence</dt><dd>Width 64 with 2 encoder layers: 63.4 against 61.6 per seed, ensemble 59.6 against 58.6 (3 seeds each). Width 16: 63.3 (one seed). The larger one is config B in the ensemble, for diversity.</dd>
+    </dl>
+  </article>
+
+  <article class="mod">
+    <h3>Minor simplifications<span class="chip open">Not ablated</span></h3>
+    <dl>
+      <dt>Reference</dt><dd>The trend is projected with a convolution, and the feed-forward block uses 1 × 1 convolutions with a wider hidden layer.</dd>
+      <dt>This model</dt><dd>The trend is projected with a linear layer from d to 1. The feed-forward block is linear, GELU, dropout, linear, with hidden width 2d.</dd>
+      <dt>Why</dt><dd>Fewer parameters and simpler code for the same job.</dd>
+      <dt>Evidence</dt><dd>Not tested separately.</dd>
+    </dl>
+  </article>
+
+  <h3>What stays as in the paper</h3>
+  <ul>
+    <li>Progressive series decomposition after every sub-layer, with a centred moving average of kernel 25 and edge replication.</li>
+    <li>The accumulated trend stream in the decoder, and the seasonal normalisation (LayerNorm followed by removing the mean over time).</li>
+    <li>Auto-correlation by FFT with the top K = ⌊3 ln T⌋ delays, followed by a softmax.</li>
+    <li>The encoder-decoder shape with a label length of 48.</li>
+  </ul>
+</section>
+
+<!-- ============ 7 ============ -->
+<section id="s7">
+  <h2><span class="sn">7</span>Training</h2>
   <p>AdamW with learning rate 1e-3 on a one-cycle schedule, weight decay 1e-4, batch 128, dropout 0.1, gradient clipping at 1, and 30 epochs on windows at stride 4. An "epoch" is one pass over that window set. In stride-1 terms 30 is about 7.5 epochs. I declare 30, the larger number.</p>
   <p>The final ensemble has four configurations:</p>
   <ul>
@@ -367,9 +577,9 @@ footer{max-width:1180px;margin:0 auto;font-size:13px;color:var(--muted)}
   <p>Each has 3 seeds, so 12 members. Mixing configurations helps: 6 seeds of one configuration reach 58.7, 12 members across four configurations reach <b>57.0</b>, and all 18 bridge-based models reach 57.4. An early 6-member subset reached 56.9, but I chose it after seeing results, so I do not use it.</p>
 </section>
 
-<!-- ============ 6 ============ -->
-<section id="s6">
-  <h2><span class="sn">6</span>Results</h2>
+<!-- ============ 8 ============ -->
+<section id="s8">
+  <h2><span class="sn">8</span>Results</h2>
 
   <figure class="fig">
     <div class="scroll"><svg id="ablate" role="img" aria-label="Grouped bars of RMSE for the final design and six ablations, single-seed mean and 3-seed ensemble" style="--minw:640px"></svg></div>
@@ -402,21 +612,21 @@ footer{max-width:1180px;margin:0 auto;font-size:13px;color:var(--muted)}
   <div class="caveat"><b class="t">Not an untouched holdout</b><p>Fold 4 was also used for model selection.</p></div>
 </section>
 
-<!-- ============ 7 ============ -->
-<section id="s7">
-  <h2><span class="sn">7</span>Validation protocol</h2>
+<!-- ============ 9 ============ -->
+<section id="s9">
+  <h2><span class="sn">9</span>Validation protocol</h2>
   <p>Frozen before the architecture work.</p>
   <ul>
     <li><b>Leave-one-year-out</b>, five folds. Training windows must avoid the held-out cycle plus or minus 96 steps, <i>including their contexts</i>. This is asserted in <code>af_cv.run</code>.</li>
-    <li><b>Test-mimicking.</b> For an origin o, y is visible only in [o−L, o) and covariates in [o−L, o+H). Trailing windows end at t, so nothing beyond the horizon is used (see the timeline in section 4).</li>
+    <li><b>Test-mimicking.</b> For an origin o, y is visible only in [o−L, o) and covariates in [o−L, o+H). Trailing windows end at t, so nothing beyond the horizon is used (see the timeline in section 5).</li>
     <li>The standardisation of y is fitted on the training targets of each fold. Scoring uses non-overlapping 168-blocks.</li>
     <li>The hidden block is the final block of the last year. Fold 4, which trains on years 1 to 4 and tests year 5, is its direct analogue.</li>
   </ul>
 </section>
 
-<!-- ============ 8 ============ -->
-<section id="s8">
-  <h2><span class="sn">8</span>Things that failed or were bugs</h2>
+<!-- ============ 10 ============ -->
+<section id="s10">
+  <h2><span class="sn">10</span>Things that failed or were bugs</h2>
   <ul>
     <li>The first y-free experiments scored about 100 because of <b>my own bug</b>. It zeroed the whole accumulated trend whenever y was off (<code>tr * 0</code>). With no trend branch, the mean-removed seasonal path cannot output a level. It is fixed, with a regression test, and every y-free number from before the fix was discarded.</li>
     <li>Position-in-horizon channels hurt (64.8). A learned blend-with-persistence gate fixed the first hours (RMSE at h = 0 fell from 71 to 25) but cost more elsewhere. The ensemble scored 59.6 to 59.7 against 58.6, so it is not used.</li>
@@ -424,9 +634,9 @@ footer{max-width:1180px;margin:0 auto;font-size:13px;color:var(--muted)}
   </ul>
 </section>
 
-<!-- ============ 9 ============ -->
-<section id="s9">
-  <h2><span class="sn">9</span>Reproduce</h2>
+<!-- ============ 11 ============ -->
+<section id="s11">
+  <h2><span class="sn">11</span>Reproduce</h2>
   <div class="codeblock">
     <button class="copy" type="button" data-target="repro">Copy</button>
 <pre id="repro"><code>cd Q2_v2   # needs the Data/ folder path in common.py
