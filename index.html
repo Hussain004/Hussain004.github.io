@@ -336,12 +336,13 @@
         </p>
 
         <p>
-          I report the negative results next to the positive ones. The model
-          learns no zero-shot dynamics prior across crops, conditioning on
-          management actions adds nothing measurable, and several forecasting
-          wins shrank once they were compared against a clock baseline instead
-          of persistence. They are written up as such rather than quietly
-          dropped.
+          Not everything worked, and I would rather say so here. The model does
+          not learn a dynamics prior that transfers to a new crop without
+          retraining. Conditioning on management actions did not help in any way
+          I could measure. Several forecasting gains that looked good against
+          persistence mostly disappeared once I compared against a simple clock
+          baseline. Anyone building on this work should know where the model
+          stops being useful.
         </p>
 
         <dl class="stats reveal" data-delay="1">
