@@ -27,7 +27,7 @@ export const ROOM_DEFS = [
    which is what dynamic allocation looks like from above. Robots deploy
    together from the near end of the corridor. */
 export const ROUTES = [[0, 4], [1, 5], [2, 3]]
-export const STARTS = [-9.0, -7.6, -6.2]
+export const STARTS = [-9.0, -7.25, -5.5]
 
 export const SPEED = 3.4           // units per second
 export const TURN = 7.0            // radians per second
