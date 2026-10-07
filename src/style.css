@@ -655,9 +655,9 @@ p { text-wrap: pretty; }
   .stage { order: -1; aspect-ratio: 1 / .72; }
 }
 
-/* Agri-JEPA report. What a grower would actually be handed back from one
-   photo: a count with its error bar, how far behind the sowing-date
-   reference the plant is, and anything flagged on it. Lines arrive in turn. */
+/* Agri-JEPA report. What a grower is handed back from one UAV pass: how
+   far ahead the forecast runs, the harvest waves it implies, and any plant
+   the next pass caught off its forecast. Lines arrive in turn. */
 .grow-report {
   position: absolute;
   left: 1rem;
@@ -708,11 +708,11 @@ p { text-wrap: pretty; }
 }
 .grow-row.is-stress b { color: var(--amber-ink, var(--amber)); }
 
-/* The crop a phone photo would have been taken with. */
+/* Brackets the plant that came in off its forecast. */
 .grow-frame {
   position: absolute;
-  width: 42%;
-  aspect-ratio: 3 / 4;
+  width: 16%;
+  aspect-ratio: 1;
   transform: translate(-50%, -50%) scale(.94);
   opacity: 0;
   transition: opacity .5s var(--ease), transform .5s var(--ease);
@@ -722,7 +722,7 @@ p { text-wrap: pretty; }
   position: absolute;
   width: 15px;
   height: 15px;
-  border: 2px solid color-mix(in oklab, var(--text-3) 65%, transparent);
+  border: 2px solid color-mix(in oklab, var(--amber) 80%, transparent);
 }
 .grow-frame i:nth-child(1) { top: 0; left: 0; border-right: 0; border-bottom: 0; border-radius: 4px 0 0 0; }
 .grow-frame i:nth-child(2) { top: 0; right: 0; border-left: 0; border-bottom: 0; border-radius: 0 4px 0 0; }

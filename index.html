@@ -123,7 +123,7 @@
       </p>
 
       <div class="hero-actions">
-        <a class="btn btn-primary" href="#research">
+        <a class="btn btn-primary" href="/hive-nav.pdf" target="_blank" rel="noopener noreferrer">
           Read the research
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><use href="#i-arrow"/></svg>
         </a>
@@ -151,16 +151,16 @@
         </div>
 
         <div class="stage-face stage-back" id="grow-stage" inert>
-          <canvas id="grow-canvas" role="img" aria-label="One photographed plant, showing its leaf count, how far it is behind its sowing-date reference, and a flagged leaf"></canvas>
+          <canvas id="grow-canvas" role="img" aria-label="A field plot seen from a UAV pass, with each plant forecast three weeks ahead, grouped into harvest waves, and one plant flagged when the next pass falls short of its forecast"></canvas>
           <div class="stage-labels" id="grow-labels"></div>
           <div class="stage-meta">
             <p class="stage-tag mono">Agri-JEPA</p>
             <p class="stage-hint">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><use href="#i-drag"/></svg>
-              Drag to orbit. Translucent is where it should be by now
+              Drag to orbit. Translucent domes are forecasts
             </p>
           </div>
-          <p class="stage-fallback">Interactive plant model needs WebGL</p>
+          <p class="stage-fallback">Interactive plot model needs WebGL</p>
         </div>
 
       </div>
@@ -239,6 +239,13 @@
           <div class="stat"><dt>Navigation</dt><dd>Nav2<small> AMCL</small></dd></div>
           <div class="stat"><dt>Sensing</dt><dd>RPLiDAR<small> A2M12</small></dd></div>
         </dl>
+
+        <div class="pub-actions reveal" data-delay="2">
+          <a class="btn btn-primary" href="/hive-nav.pdf" target="_blank" rel="noopener noreferrer">
+            Read the paper
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><use href="#i-arrow"/></svg>
+          </a>
+        </div>
       </div>
 
       <aside class="arch reveal" data-delay="2">
@@ -279,13 +286,12 @@
     <header class="project-head reveal">
       <h3 class="project-title">Agri-JEPA</h3>
       <p class="lede">
-        A joint-embedding predictive architecture for plant growth. It forecasts
-        future latent states instead of reconstructing pixels, so the model
-        spends its capacity on how a plant develops rather than on leaf texture
-        it will never need. The target is a grower with a phone rather than a
-        camera rig. One photo of one plant, and back come a leaf count with an
-        error bar, how far behind its sowing-date reference it has fallen, and
-        anything on it that looks wrong.
+        A latent world model of crop growth that has to learn from very little
+        data. It forecasts future latent states instead of pixels, and it is
+        trained on a pool of lab and field sources rather than one clean
+        benchmark. The question has moved from the growth chamber to the field.
+        Which measurements a grower or breeder can actually take are worth
+        anchoring the model to, and what the model can tell them in return.
       </p>
     </header>
 
@@ -295,53 +301,54 @@
           <span class="tag is-accent">In progress</span>
           <span class="tag">JEPA</span>
           <span class="tag">World models</span>
-          <span class="tag">Self-supervised</span>
-          <span class="tag">Phenotyping</span>
+          <span class="tag">Field phenotyping</span>
+          <span class="tag">Small data</span>
         </div>
 
         <p>
-          The latent splits in two. A small trait subspace is supervised directly
-          by plant age and leaf count. The remainder is a residual that a temporal
-          predictor learns to roll forward. That split is the load-bearing part of
-          the design rather than one ablation among several. Removing the trait
-          gradient collapses the latent to a near-constant vector whatever encoder
-          family sits underneath, so every later extension is organised around
-          supplying that anchor wherever real ground truth exists.
+          A small slice of the latent is supervised by a physiological anchor,
+          such as leaf count, plant height, or leaf chlorophyll. The rest is a
+          residual that a predictor carries forward in time. In a controlled
+          comparison against SIGReg, both the anchor and the regulariser prevent
+          collapse. The anchor is better on the traits it supervises, reaching an
+          age error of 1.69 days against 1.91 to 2.46, and it needs no weight to
+          tune.
         </p>
 
         <p>
-          <strong>Multiple views buy real dynamics.</strong> On the GroMo25 radish
-          benchmark, four camera views cut prediction MSE by 39 percent against a
-          single view, with plant-clustered bootstrap intervals that do not
-          overlap. Multi-step rollouts hold an R squared above 0.93 out to a ten
-          day horizon. A leave-one-plant-out protocol on Komatsuna reproduces the
-          result on a different species, camera rig, and lab.
+          <strong>Which anchors help in the field.</strong> Chlorophyll readings
+          on greenhouse soil boxes cut prediction error relative to persistence
+          from 0.44 to 0.25 in three of three seeds, and plant height on wheat
+          plots raises held-out R squared from 0.570 to 0.665. A calendar anchor,
+          days after planting, gives no reliable benefit across seasons. Six
+          heterogeneous sources train under one encoder once each source's loss
+          is normalised by its own persistence error. Pooling then matches solo
+          accuracy and cuts seed-to-seed spread by about three times.
         </p>
 
         <p>
-          <strong>Leaving the lab is where it gets difficult.</strong> Adapting a
-          pretrained backbone far enough to learn plant dynamics erases the
-          features that let it transfer to real field imagery, and a low-rank
-          adaptation sweep makes that trade worse rather than better. Masked-patch
-          self-supervision on unlabelled field imagery moves the frontier instead,
-          recovering field transfer at unchanged dynamics quality. Pooling five
-          heterogeneous real sources under one trait-anchored encoder then reaches
-          genuine dynamics prediction on greenhouse soil boxes and transfers at
-          parity to open-field UAV plots.
+          <strong>What it gives back.</strong> With no labels at all, clustering
+          trajectory features recovers four wheat varieties across 20 field
+          subplots with an adjusted Rand index of 0.89, where colour statistics,
+          ImageNet features, and an untrained encoder reach 0.37 to 0.43. On the
+          lab benchmark, four camera views lower held-out prediction error by 40
+          percent in 15 of 15 matched runs, and the gain peaks at four views.
         </p>
 
         <p>
-          I report the negative results next to the positive ones. Several
-          pre-registered checks came back null, including a domain-randomisation
-          bridge that helped static plants and hurt dynamic ones, and they are
-          written up as such rather than quietly dropped.
+          I report the negative results next to the positive ones. The model
+          learns no zero-shot dynamics prior across crops, conditioning on
+          management actions adds nothing measurable, and several forecasting
+          wins shrank once they were compared against a clock baseline instead
+          of persistence. They are written up as such rather than quietly
+          dropped.
         </p>
 
         <dl class="stats reveal" data-delay="1">
-          <div class="stat"><dt>Prediction</dt><dd>0.938<small>R squared, four views</small></dd></div>
-          <div class="stat"><dt>Rollout horizon</dt><dd>10 days<small>R squared above 0.93</small></dd></div>
-          <div class="stat"><dt>Out of domain</dt><dd>45 runs<small>leave one plant out</small></dd></div>
-          <div class="stat"><dt>Pooled sources</dt><dd>5<small>lab to open field</small></dd></div>
+          <div class="stat"><dt>Field anchor</dt><dd>0.44 to 0.25<small>error vs persistence</small></dd></div>
+          <div class="stat"><dt>Varieties, no labels</dt><dd>0.89<small>adjusted Rand index</small></dd></div>
+          <div class="stat"><dt>Pooled sources</dt><dd>6<small>3x tighter seed spread</small></dd></div>
+          <div class="stat"><dt>Four views</dt><dd>40%<small>lower prediction error</small></dd></div>
         </dl>
       </div>
 
@@ -351,8 +358,8 @@
         <div class="arch-node">
           <span class="arch-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-layers"/></svg></span>
           <span>
-            <b>Multi-view encoder</b>
-            <span>Four camera views of the same plant are encoded and pooled into a single latent state.</span>
+            <b>Shared encoder</b>
+            <span>Lab and field sources, from rotating stages to UAV plots, are encoded into one latent space. Each source's loss is scaled by its own persistence error.</span>
           </span>
         </div>
 
@@ -361,8 +368,8 @@
         <div class="arch-node">
           <span class="arch-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-leaf"/></svg></span>
           <span>
-            <b>Trait subspace</b>
-            <span>Age and leaf count supervise a small slice of that latent directly. Remove this and the latent collapses.</span>
+            <b>Physiological anchor</b>
+            <span>Whatever a source actually measures, leaf count, height, or chlorophyll, supervises a small slice of the latent. Physiological anchors help, calendar ones do not.</span>
           </span>
         </div>
 
@@ -371,8 +378,8 @@
         <div class="arch-node">
           <span class="arch-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-forecast"/></svg></span>
           <span>
-            <b>Temporal predictor</b>
-            <span>Forecasts the residual forward in time, and is rolled out multiple steps to reach a ten day horizon.</span>
+            <b>Direct predictor</b>
+            <span>Forecasts straight to the requested horizon. Direct prediction holds R squared 0.938 at ten days, where step-by-step rollout drifts.</span>
           </span>
         </div>
       </aside>
