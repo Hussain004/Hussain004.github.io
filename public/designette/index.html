@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
-<meta name="description" content="Interactive 10 kHz digital biquad filter bench: knobs for input frequency, cutoff, Q and duty cycle, with scope, filter response and harmonics.">
+<meta name="description" content="Interactive 10 kHz digital Butterworth filter bench: knobs for input frequency, cutoff, order, Q and duty cycle, with scope, filter response and harmonics.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <title>Designette Digital Filter</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -48,7 +48,7 @@ h2 .note { text-transform: none; letter-spacing: 0; font-weight: 400; }
 .key.in { --c: var(--sig-in); } .key.out { --c: var(--sig-out); } .key.resp { --c: var(--sig-resp); }
 
 .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
-.knobs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.knobs { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
 .cell { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; }
 .knob { width: 96px; height: 96px; cursor: ns-resize; touch-action: none; border-radius: 50%; outline: none; }
 .knob:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
@@ -57,6 +57,9 @@ h2 .note { text-transform: none; letter-spacing: 0; font-weight: 400; }
 .knob .cap { fill: var(--knob); stroke: var(--knob-edge); stroke-width: 1.5; }
 .knob .ptr { stroke: var(--ink); stroke-width: 3.5; stroke-linecap: round; }
 .cell label { font-weight: 500; text-align: center; }
+.hint { color: var(--muted); font-size: 12px; text-align: center; }
+.hint:empty { display: none; }
+.cell.off .knob { opacity: 0.4; }
 .num { display: flex; align-items: baseline; gap: 4px; }
 .num input { width: 6.4em; text-align: right; font: 500 15px var(--font-num); color: var(--ink); background: transparent; border: 0; border-bottom: 1px solid var(--line); padding: 2px 2px; border-radius: 0; -moz-appearance: textfield; }
 .num input::-webkit-outer-spin-button, .num input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
@@ -99,7 +102,7 @@ pre { margin: 0; font: 400 13px/1.5 var(--font-num); overflow-x: auto; white-spa
 <div class="wrap">
   <header>
     <div class="top"><h1>Designette digital filter</h1><button id="theme" class="switch" type="button" role="switch" aria-checked="false"><span>Dark mode</span><span class="tr" aria-hidden="true"></span></button></div>
-    <p class="sub">Square wave into a 12-bit ADC at 10 kHz, a Butterworth-style biquad (Tustin), then the 8-bit DAC. Same maths as <code>designette.c</code>. Drag a knob up or down, scroll over it, use the arrow keys, or type a value. Double-click a knob to reset it.</p>
+    <p class="sub">Square wave into a 12-bit ADC at 10 kHz, a Butterworth filter of adjustable order (Tustin biquads), then the 8-bit DAC. Same maths as <code>designette.c</code>. Drag a knob up or down, scroll over it, use the arrow keys, or type a value. Double-click a knob to reset it.</p>
     <p id="check" hidden>Self-check failed. See the browser console.</p>
   </header>
 
@@ -125,7 +128,7 @@ pre { margin: 0; font: 400 13px/1.5 var(--font-num); overflow-x: auto; white-spa
 
   <div class="pair">
     <section>
-      <h2>Filter response <span class="note">gain in dB, log frequency</span> <span class="key resp">biquad</span> <span class="key out">input harmonics</span></h2>
+      <h2>Filter response <span class="note">gain in dB, log frequency</span> <span class="key resp">filter</span> <span class="key out">input harmonics</span></h2>
       <canvas id="resp" class="screen" role="img" aria-label="Gain of the digital filter against frequency with the input harmonics marked"></canvas>
     </section>
     <section>
@@ -136,13 +139,13 @@ pre { margin: 0; font: 400 13px/1.5 var(--font-num); overflow-x: auto; white-spa
 
   <section class="panel coef" aria-label="Coefficients">
     <div>
-      <h2>Coefficients <span class="note">paste into <code>designette_100Hz.c</code></span></h2>
+      <h2>Coefficients <span class="note" id="coef-note">paste into <code>designette_100Hz.c</code></span></h2>
       <pre id="coef"></pre>
     </div>
     <button id="copy" type="button">Copy</button>
   </section>
 
-  <p class="foot">Tustin without prewarping, like the firmware, so the real cutoff sits a little below the knob value from about 1 kHz upward. Harmonic levels are counted up to 5 kHz (Nyquist). The scope trace comes from the sampled simulation, so it also shows aliasing and the 8-bit DAC steps. Harmonic numbers with no bar are zero, for example the even ones at 50% duty.</p>
+  <p class="foot">Tustin without prewarping, like the firmware, so the real cutoff sits a little below the knob value from about 1 kHz upward. Harmonic levels are counted up to 5 kHz (Nyquist). The scope trace comes from the sampled simulation, so it also shows aliasing and the 8-bit DAC steps. Harmonic numbers with no bar are zero, for example the even ones at 50% duty. The order knob builds a Butterworth filter from second-order sections, plus one first-order section when the order is odd, all at the cutoff. Q scales every section: 0.707 keeps it a pure Butterworth, and it does nothing at order 1.</p>
 </div>
 
 <script id="dsp">
@@ -154,27 +157,51 @@ function coeffs(fc, Q) {                        // Tustin of wn^2/(s^2 + (wn/Q)s
   return { b0, b1: 2 * b0, b2: b0, a1: (2 * wn * wn - 2 * K * K) / D, a2: (K * K - K * wn / Q + wn * wn) / D };
 }
 
-function freqResp(co, f) {                      // exact digital response at f
-  const w = 2 * Math.PI * f / FS, c1 = Math.cos(w), s1 = -Math.sin(w), c2 = Math.cos(2 * w), s2 = -Math.sin(2 * w);
-  const nr = co.b0 + co.b1 * c1 + co.b2 * c2, ni = co.b1 * s1 + co.b2 * s2;
-  const dr = 1 + co.a1 * c1 + co.a2 * c2, di = co.a1 * s1 + co.a2 * s2;
-  let ph = Math.atan2(ni, nr) - Math.atan2(di, dr);
-  ph = Math.atan2(Math.sin(ph), Math.cos(ph));
-  return { mag: Math.hypot(nr, ni) / Math.hypot(dr, di), ph };
+function firstOrder(fc) {                       // Tustin of wc/(s + wc); b2 = a2 = 0 so it has the same shape as a biquad
+  const wc = 2 * Math.PI * fc, K = 2 * FS;
+  return { b0: wc / (K + wc), b1: wc / (K + wc), b2: 0, a1: (wc - K) / (K + wc), a2: 0 };
 }
 
-function simulate(f0, D, co) {                  // ADC (0 or 4095) -> difference equation -> DAC code, as the ISR does
-  const kStart = Math.ceil(0.9 * f0), tStart = kStart / f0;          // start on a rising edge after 0.9 s of warm-up
+function design(fc, Q, N) {                     // order-N Butterworth as sections that run one after another
+  const secs = [], scale = Q / Math.SQRT1_2;    // Q scales every section's Q: 0.707 = pure Butterworth
+  for (let k = 1; k <= Math.floor(N / 2); k++) {
+    const q = scale / (2 * Math.sin((2 * k - 1) * Math.PI / (2 * N)));
+    secs.push(Object.assign(coeffs(fc, q), { q, fc }));
+  }
+  if (N % 2) secs.push(Object.assign(firstOrder(fc), { q: 0, fc }));
+  return secs;
+}
+
+function freqResp(secs, f) {                    // exact digital response at f: gains multiply, phases add
+  const w = 2 * Math.PI * f / FS, c1 = Math.cos(w), s1 = -Math.sin(w), c2 = Math.cos(2 * w), s2 = -Math.sin(2 * w);
+  let mag = 1, ph = 0;
+  for (const co of secs) {
+    const nr = co.b0 + co.b1 * c1 + co.b2 * c2, ni = co.b1 * s1 + co.b2 * s2;
+    const dr = 1 + co.a1 * c1 + co.a2 * c2, di = co.a1 * s1 + co.a2 * s2;
+    mag *= Math.hypot(nr, ni) / Math.hypot(dr, di);
+    ph += Math.atan2(ni, nr) - Math.atan2(di, dr);
+  }
+  return { mag, ph };
+}
+
+function simulate(f0, D, secs) {                // ADC (0 or 4095) -> difference equations in a row -> DAC code, as the ISR does
+  let tau = 0;                                                       // slowest decay, so warm-up is long enough for any order and Q
+  for (const s of secs) { const wn = 2 * Math.PI * s.fc; tau = Math.max(tau, s.q ? 2 * s.q / wn : 1 / wn); }
+  const warm = Math.min(5, Math.max(0.9, 12 * tau));
+  const kStart = Math.ceil(warm * f0), tStart = kStart / f0;         // start on a rising edge after the warm-up
   const n0 = Math.ceil(tStart * FS - 1e-9);
   const W = Math.min(0.2, Math.max(4 / f0, 0.002)), nShow = Math.round(W * FS);
-  let x1 = D * 4095, x2 = x1, y1 = x1, y2 = x1, clip = 0;           // start at the DC level so warm-up is short
+  const dc = D * 4095, mem = secs.map(() => ({ x1: dc, x2: dc, y1: dc, y2: dc }));   // start at the DC level (every section has gain 1)
+  let clip = 0;
   const codes = new Array(nShow);
   for (let n = 0; n < n0 + nShow; n++) {
-    const x0 = (((n * f0 / FS) % 1) < D) ? 4095 : 0;
-    const y0 = co.b0 * x0 + co.b1 * x1 + co.b2 * x2 - co.a1 * y1 - co.a2 * y2;
-    x2 = x1; x1 = x0; y2 = y1; y1 = y0;
+    let v = (((n * f0 / FS) % 1) < D) ? 4095 : 0;
+    for (let i = 0; i < secs.length; i++) {
+      const s = secs[i], z = mem[i], y = s.b0 * v + s.b1 * z.x1 + s.b2 * z.x2 - s.a1 * z.y1 - s.a2 * z.y2;
+      z.x2 = z.x1; z.x1 = v; z.y2 = z.y1; z.y1 = y; v = y;
+    }
     if (n >= n0) {
-      const c = Math.floor(y0 / 16), k = c < 0 ? 0 : c > 255 ? 255 : c;
+      const c = Math.floor(v / 16), k = c < 0 ? 0 : c > 255 ? 255 : c;
       if (k !== c) clip++;
       codes[n - n0] = k;
     }
@@ -182,10 +209,10 @@ function simulate(f0, D, co) {                  // ADC (0 or 4095) -> difference
   return { codes, W, dt0: n0 / FS - tStart, clipPct: 100 * clip / nShow };
 }
 
-function harmonics(f0, D, co) {                 // rectangle-wave harmonics below Nyquist, before and after the filter
+function harmonics(f0, D, secs) {               // rectangle-wave harmonics below Nyquist, before and after the filter
   const out = [];
   for (let k = 1; k * f0 < NYQ; k++) {
-    const inA = 2 * VHI / (Math.PI * k) * Math.abs(Math.sin(Math.PI * k * D)), g = freqResp(co, k * f0).mag;
+    const inA = 2 * VHI / (Math.PI * k) * Math.abs(Math.sin(Math.PI * k * D)), g = freqResp(secs, k * f0).mag;
     out.push({ k, f: k * f0, inA, g, outA: inA * g });
   }
   return out;
@@ -194,13 +221,16 @@ const thdPct = h => 100 * Math.hypot(0, ...h.slice(1).map(x => x.outA)) / h[0].o
 
 function selfTest() {                           // runs on load; any failure shows a banner
   const bad = [], chk = (c, m) => { if (!c) bad.push(m); };
-  const c = coeffs(100, Math.SQRT1_2);          // constants from designette_100Hz.c
-  chk(Math.abs(c.b0 - 0.0009440841) < 2e-9 && Math.abs(c.b1 - 0.0018881682) < 2e-9 &&
-      Math.abs(c.a1 + 1.9112262303) < 2e-9 && Math.abs(c.a2 - 0.9150025668) < 2e-9, "coefficients differ from designette_100Hz.c");
-  for (const [fc, q] of [[20, 5], [100, 0.7], [3000, 0.2]]) {
-    const k = coeffs(fc, q);
-    chk(Math.abs((k.b0 + k.b1 + k.b2) / (1 + k.a1 + k.a2) - 1) < 1e-9, "DC gain is not 1");
+  const c = design(100, Math.SQRT1_2, 2), c0 = c[0];   // constants from designette_100Hz.c
+  chk(c.length === 1 && Math.abs(c0.b0 - 0.0009440841) < 2e-9 && Math.abs(c0.b1 - 0.0018881682) < 2e-9 &&
+      Math.abs(c0.a1 + 1.9112262303) < 2e-9 && Math.abs(c0.a2 - 0.9150025668) < 2e-9, "coefficients differ from designette_100Hz.c");
+  chk(Math.abs(design(100, 1.7, 2)[0].q - 1.7) < 1e-12, "order 2 section Q should equal the knob Q");
+  for (const [fc, q, n] of [[20, 5, 2], [100, 0.7, 1], [3000, 0.2, 8], [500, 1, 5]]) {
+    const secs = design(fc, q, n);
+    chk(Math.abs(freqResp(secs, 1e-3).mag - 1) < 1e-6, "DC gain is not 1 at order " + n);
+    chk(secs.every(k => Math.abs(k.a2) < 1 && Math.abs(k.a1) < 1 + k.a2), "unstable section at order " + n);
   }
+  for (let n = 1; n <= 8; n++) chk(Math.abs(freqResp(design(300, Math.SQRT1_2, n), 300).mag - Math.SQRT1_2) < 0.02, "Butterworth gain at fc should be -3 dB, order " + n);
   const s = simulate(100, 0.5, c), pp = (Math.max(...s.codes) - Math.min(...s.codes)) / 256 * VHI;
   chk(pp > 2.8 && pp < 3.2 && s.clipPct === 0, "100 Hz / 100 Hz case should swing about 3 V with no clipping");
   chk(Math.abs(thdPct(harmonics(100, 0.5, c)) - THD_100) < 0.5, "THD at 100 Hz / 100 Hz");
@@ -216,6 +246,7 @@ const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const KNOBS = [
   { id: "f0",   label: "Input frequency",  unit: "Hz", min: 20,  max: 3000, log: true,  def: 100,          dec: 1 },
   { id: "fc",   label: "Cutoff frequency", unit: "Hz", min: 20,  max: 3000, log: true,  def: 100,          dec: 1 },
+  { id: "n",    label: "Filter order",     unit: "",   min: 1,   max: 8,    log: false, def: 2,            dec: 0, int: true },
   { id: "q",    label: "Quality factor Q", unit: "",   min: 0.2, max: 5,    log: true,  def: Math.SQRT1_2, dec: 3 },
   { id: "duty", label: "Duty cycle",       unit: "%",  min: 5,   max: 95,   log: false, def: 50,           dec: 1 },
 ];
@@ -230,14 +261,15 @@ function makeKnob(c) {
   cell.innerHTML = `<svg class="knob" viewBox="0 0 100 100" role="slider" tabindex="0" aria-label="${c.label}" aria-valuemin="${c.min}" aria-valuemax="${c.max}">
       <path class="trk" d="${arc(42, A0, A0 + SWEEP)}"/><path class="val"/><circle class="cap" cx="50" cy="50" r="30"/><line class="ptr"/></svg>
     <label for="n-${c.id}">${c.label}</label>
-    <div class="num"><input id="n-${c.id}" type="number" step="any" min="${c.min}" max="${c.max}" inputmode="decimal"><span class="unit">${c.unit}</span></div>`;
+    <div class="num"><input id="n-${c.id}" type="number" step="${c.int ? 1 : "any"}" min="${c.min}" max="${c.max}" inputmode="decimal"><span class="unit">${c.unit}</span></div>
+    <small class="hint" id="hint-${c.id}"></small>`;
   document.getElementById("knobs").appendChild(cell);
   const svg = cell.querySelector("svg"), val = svg.querySelector(".val"), ptr = svg.querySelector(".ptr"), inp = cell.querySelector("input");
   const toNorm = v => c.log ? Math.log(v / c.min) / Math.log(c.max / c.min) : (v - c.min) / (c.max - c.min);
   const fromNorm = n => c.log ? c.min * Math.pow(c.max / c.min, n) : c.min + n * (c.max - c.min);
 
   function set(v) {
-    v = clamp(v, c.min, c.max); st[c.id] = v;
+    v = clamp(c.int ? Math.round(v) : v, c.min, c.max); st[c.id] = v;
     const n = toNorm(v), deg = A0 + SWEEP * n, [x0, y0] = pt(8, deg), [x1, y1] = pt(25, deg);
     val.setAttribute("d", n > 0.001 ? arc(42, A0, deg) : "");
     ptr.setAttribute("x1", x0); ptr.setAttribute("y1", y0); ptr.setAttribute("x2", x1); ptr.setAttribute("y2", y1);
@@ -246,14 +278,15 @@ function makeKnob(c) {
     schedule();
   }
   const nudge = (dn) => set(fromNorm(clamp(toNorm(st[c.id]) + dn, 0, 1)));
+  const unit = fine => c.int ? 1 / (c.max - c.min) : (fine ? 0.002 : 0.01);      // one notch: a whole step for the order knob
   let drag = null;
   svg.addEventListener("pointerdown", e => { svg.setPointerCapture(e.pointerId); svg.focus(); drag = { y: e.clientY, n: toNorm(st[c.id]) }; e.preventDefault(); });
   svg.addEventListener("pointermove", e => { if (drag) set(fromNorm(clamp(drag.n + (drag.y - e.clientY) / (e.shiftKey ? 700 : 220), 0, 1))); });
   ["pointerup", "pointercancel"].forEach(t => svg.addEventListener(t, () => { drag = null; }));
-  svg.addEventListener("wheel", e => { e.preventDefault(); nudge((e.deltaY < 0 ? 1 : -1) * (e.shiftKey ? 0.002 : 0.01)); }, { passive: false });
+  svg.addEventListener("wheel", e => { e.preventDefault(); nudge((e.deltaY < 0 ? 1 : -1) * unit(e.shiftKey)); }, { passive: false });
   svg.addEventListener("dblclick", () => set(c.def));
   svg.addEventListener("keydown", e => {
-    const s = e.shiftKey ? 0.002 : 0.01, m = { ArrowUp: s, ArrowRight: s, ArrowDown: -s, ArrowLeft: -s, PageUp: 0.1, PageDown: -0.1 }[e.key];
+    const s = unit(e.shiftKey), m = { ArrowUp: s, ArrowRight: s, ArrowDown: -s, ArrowLeft: -s, PageUp: 0.1, PageDown: -0.1 }[e.key];
     if (m !== undefined) { e.preventDefault(); nudge(m); }
     else if (e.key === "Home") { e.preventDefault(); set(c.min); }
     else if (e.key === "End") { e.preventDefault(); set(c.max); }
@@ -303,7 +336,7 @@ function drawScope(S, f0, D) {
   c.stroke(); c.restore();
 }
 
-function drawResp(co, f0, fc, H) {
+function drawResp(secs, f0, fc, H) {
   const { c, w, h } = setup(document.getElementById("resp"));
   const a = { x: 40, y: 10, w: w - 52, h: h - 36 }, FMIN = 10, DBMIN = -60, DBMAX = 16;
   const X = f => a.x + a.w * Math.log(f / FMIN) / Math.log(NYQ / FMIN), Y = db => a.y + a.h * (1 - (clamp(db, DBMIN, DBMAX) - DBMIN) / (DBMAX - DBMIN));
@@ -313,7 +346,7 @@ function drawResp(co, f0, fc, H) {
   c.setLineDash([4, 4]); c.strokeStyle = css("--screen-ink"); c.beginPath(); c.moveTo(X(fc), a.y); c.lineTo(X(fc), a.y + a.h); c.stroke(); c.setLineDash([]);
   c.strokeStyle = css("--sig-resp"); c.lineWidth = 2; c.beginPath();
   for (let i = 0; i <= 400; i++) {
-    const f = FMIN * Math.pow(NYQ / FMIN, i / 400), y = Y(20 * Math.log10(freqResp(co, f).mag));
+    const f = FMIN * Math.pow(NYQ / FMIN, i / 400), y = Y(20 * Math.log10(freqResp(secs, f).mag));
     if (i) c.lineTo(X(f), y); else c.moveTo(X(f), y);
   }
   c.stroke();
@@ -349,9 +382,11 @@ let pending = false;
 function schedule() { if (!pending) { pending = true; requestAnimationFrame(() => { pending = false; render(); }); } }
 let lastCoef = "";
 function render() {
-  const f0 = st.f0, D = st.duty / 100, co = coeffs(st.fc, st.q);
-  const S = simulate(f0, D, co), H = harmonics(f0, D, co), r = freqResp(co, f0);
-  drawScope(S, f0, D); drawResp(co, f0, st.fc, H); drawBars(H);
+  const f0 = st.f0, D = st.duty / 100, secs = design(st.fc, st.q, st.n);
+  const S = simulate(f0, D, secs), H = harmonics(f0, D, secs), r = freqResp(secs, f0);
+  drawScope(S, f0, D); drawResp(secs, f0, st.fc, H); drawBars(H);
+  document.getElementById("hint-q").textContent = st.n === 1 ? "no effect at order 1" : "0.707 = Butterworth";
+  document.getElementById("n-q").closest(".cell").classList.toggle("off", st.n === 1);
   const set = (id, html) => { document.getElementById(id).innerHTML = html; };
   set("s-a1", (H[0].outA).toFixed(2) + " <small>V pk</small>");
   set("s-g", (20 * Math.log10(r.mag)).toFixed(1) + " <small>dB</small>");
@@ -359,7 +394,16 @@ function render() {
   set("s-thd", H.length > 1 ? Math.min(thdPct(H), 999).toFixed(1) + " <small>%</small>" : "- <small>(1 harmonic)</small>");
   set("s-clip", S.clipPct.toFixed(0) + " <small>% of samples</small>");
   const p = (v, d = 10) => v.toFixed(d) + "f";
-  lastCoef = `#define B0    ${p(co.b0)}\n#define B1    ${p(co.b1)}\n#define B2    ${p(co.b2)}\n#define A1   (${p(co.a1)})\n#define A2    ${p(co.a2)}`;
+  const note = document.getElementById("coef-note");
+  if (st.n === 2) {                             // the same constants as designette_100Hz.c
+    const co = secs[0];
+    lastCoef = `#define B0    ${p(co.b0)}\n#define B1    ${p(co.b1)}\n#define B2    ${p(co.b2)}\n#define A1   (${p(co.a1)})\n#define A2    ${p(co.a2)}`;
+    note.innerHTML = "paste into <code>designette_100Hz.c</code>";
+  } else {
+    const rows = secs.map(s => `  { ${[s.b0, s.b1, s.b2, s.a1, s.a2].map(v => p(v)).join(", ")} },  /* ${s.q ? "Q = " + s.q.toFixed(3) : "first order"} */`);
+    lastCoef = `/* order ${st.n}: ${secs.length} section${secs.length > 1 ? "s" : ""} run one after another, each { b0, b1, b2, a1, a2 } */\nstatic const float SOS[${secs.length}][5] = {\n${rows.join("\n")}\n};`;
+    note.textContent = "sections to run one after another, each with its own x[n-1], x[n-2], y[n-1], y[n-2]";
+  }
   document.getElementById("coef").textContent = lastCoef;
 }
 
