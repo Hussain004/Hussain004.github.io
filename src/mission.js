@@ -19,7 +19,7 @@ export const ROOM_DEFS = [
   { key: 'workshop', cx: 0,     side: -1, section: '#projects',     hint: 'Projects' },
   { key: 'archive',  cx: 6.15,  side: -1, section: '#publications', hint: 'Publications' },
   { key: 'studio',   cx: -6.15, side: 1,  section: '#about',        hint: 'About' },
-  { key: 'store',    cx: 0,     side: 1,  section: '#certificates', hint: 'Certificates' },
+  { key: 'store',    cx: 0,     side: 1,  section: '#experience',   hint: 'Experience' },
   { key: 'atrium',   cx: 6.15,  side: 1,  section: '#contact',      hint: 'Contact' },
 ]
 

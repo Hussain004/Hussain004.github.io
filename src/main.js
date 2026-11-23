@@ -1,5 +1,4 @@
 import './style.css'
-import { createFlipClock, TICK_MS } from './flipclock.js'
 
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 const $ = (sel, root = document) => root.querySelector(sel)
@@ -72,10 +71,10 @@ const revealer = new IntersectionObserver((entries, obs) => {
 $$('.reveal').forEach((el) => revealer.observe(el))
 
 /* --------------------------------------------------------------------------
-   3D scenes
+   Scenes
    Every scene is lazy imported, so three.js never blocks first paint, and
-   nothing renders while it is off screen, on the hidden face of the card, or
-   in a background tab.
+   nothing renders while it is off screen, in a closed window, or in a
+   background tab.
    -------------------------------------------------------------------------- */
 function lazyScene({ host, canvas, labels, load, init }) {
   let scene = null
@@ -107,82 +106,26 @@ function lazyScene({ host, canvas, labels, load, init }) {
   }
 }
 
-/* --- the hero card, two demos on two faces ------------------------------- */
+/* --- the hero, Hive-Nav restaged ----------------------------------------- */
 const stage = $('#stage')
-const flipBtn = $('#stage-flip')
-const flipLabel = $('.stage-flip-label')
-
-const NAMES = ['Hive-Nav', 'Agri-JEPA']
-const faces = [
-  lazyScene({
+if (stage) {
+  const wing = lazyScene({
     host: $('#wing-stage'), canvas: $('#wing-canvas'), labels: $('#wing-labels'),
     load: () => import('./wing.js'),
     init: (mod, canvas, labels) => mod.createWing(canvas, labels, {
       onPick: (section) => $(section)?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' }),
     }),
-  }),
-  lazyScene({
-    host: $('#grow-stage'), canvas: $('#grow-canvas'), labels: $('#grow-labels'),
-    load: () => import('./grow.js'),
-    init: (mod, canvas, labels) => mod.createGrow(canvas, labels),
-  }),
-]
-
-let active = 0
-let hovering = false
-let onScreen = false
-const clock = createFlipClock()
-
-function syncFaces() {
-  faces.forEach((face, i) => {
-    const live = i === active && onScreen && !document.hidden
-    // the hidden face is inert, so its room buttons leave the tab order
-    face.host?.toggleAttribute('inert', i !== active)
-    if (live) face.ensure().then(() => { if (i === active) face.start() })
-    else face.stop()
   })
-}
-
-function flip() {
-  active = active === 0 ? 1 : 0
-  clock.reset()
-  stage?.classList.toggle('is-flipped', active === 1)
-  const next = NAMES[active === 0 ? 1 : 0]
-  if (flipLabel) flipLabel.textContent = next
-  flipBtn?.setAttribute('aria-label', `Show the ${next} demo`)
-  faces[active].ensure()          // warm it while the card is still turning
-  syncFaces()
-}
-
-flipBtn?.addEventListener('click', flip)
-
-if (stage) {
-  // Hovering holds the current face. So does keyboard focus inside it.
-  const hold = () => { hovering = true }
-  const release = () => { hovering = false }
-  stage.addEventListener('pointerenter', hold)
-  stage.addEventListener('pointerleave', release)
-  stage.addEventListener('focusin', hold)
-  stage.addEventListener('focusout', release)
-
+  let onScreen = false
+  const sync = () => {
+    if (onScreen && !document.hidden) wing.ensure().then(() => { if (onScreen) wing.start() })
+    else wing.stop()
+  }
   new IntersectionObserver((entries) => {
     onScreen = entries[0].isIntersecting
-    syncFaces()
+    sync()
   }, { rootMargin: '200px' }).observe(stage)
-
-  document.addEventListener('visibilitychange', syncFaces)
-
-  if (!reduced) {
-    setInterval(() => {
-      const due = clock.tick(TICK_MS, {
-        active: onScreen && !document.hidden,
-        hovering,
-      })
-      stage.style.setProperty('--flip-progress', clock.progress.toFixed(3))
-      stage.classList.toggle('is-held', hovering)
-      if (due) flip()
-    }, TICK_MS)
-  }
+  document.addEventListener('visibilitychange', sync)
 }
 
 /* --- the crop survey beside the publication ------------------------------ */
@@ -212,6 +155,92 @@ $$('.stage-face').forEach((face) => {
   face.addEventListener('pointerdown', () => face.classList.add('is-touched', 'is-grabbing'))
 })
 addEventListener('pointerup', () => $$('.stage-face').forEach((f) => f.classList.remove('is-grabbing')))
+
+/* --------------------------------------------------------------------------
+   Research questions
+   Without script every panel shows. With it, the three cards become tabs.
+   -------------------------------------------------------------------------- */
+const qs = $('#qs')
+if (qs) {
+  const tabs = $$('.q-tab', qs)
+  const panels = $$('.q-panel', qs)
+  qs.classList.add('has-js')
+
+  const select = (i, focus = false) => {
+    tabs.forEach((tab, j) => {
+      tab.setAttribute('aria-selected', String(i === j))
+      tab.tabIndex = i === j ? 0 : -1
+    })
+    panels.forEach((panel, j) => { panel.hidden = i !== j })
+    if (focus) tabs[i].focus()
+  }
+
+  tabs.forEach((tab, i) => tab.addEventListener('click', () => select(i)))
+  qs.addEventListener('keydown', (e) => {
+    const i = tabs.indexOf(document.activeElement)
+    if (i < 0) return
+    const next = { ArrowRight: (i + 1) % tabs.length, ArrowLeft: (i + tabs.length - 1) % tabs.length, Home: 0, End: tabs.length - 1 }[e.key]
+    if (next === undefined) return
+    e.preventDefault()
+    select(next, true)
+  })
+  select(0)
+}
+
+/* --------------------------------------------------------------------------
+   Project windows
+   A native dialog gives focus trapping, Escape, and a backdrop for free. A
+   window that holds a demo starts it on open and stops it on close, so a
+   closed window costs nothing. The hash makes a window linkable.
+   -------------------------------------------------------------------------- */
+const demos = {
+  grow: lazyScene({
+    host: $('#grow-stage'), canvas: $('#grow-canvas'), labels: $('#grow-labels'),
+    load: () => import('./grow.js'),
+    init: (mod, canvas, labels) => mod.createGrow(canvas, labels),
+  }),
+  ball: lazyScene({
+    host: $('#ball-stage'), canvas: $('#ball-canvas'), labels: null,
+    load: () => import('./ballwall.js'),
+    init: (mod, canvas) => mod.createBallWall(canvas, { root: $('#ball-stage') }),
+  }),
+}
+
+function openWindow(id) {
+  const win = document.getElementById(id)
+  if (!win || win.tagName !== 'DIALOG' || win.open) return
+  win.showModal()
+  $('.win-inner', win).scrollTop = 0
+  history.replaceState(null, '', `#${id}`)
+  const demo = demos[win.dataset.demo]
+  if (demo) demo.ensure().then(() => { if (win.open) demo.start() })
+}
+
+$$('dialog.win').forEach((win) => {
+  win.addEventListener('close', () => {
+    demos[win.dataset.demo]?.stop()
+    if (location.hash === `#${win.id}`) history.replaceState(null, '', location.pathname + location.search)
+  })
+  // the dialog fills its own box, so a click that lands on it is a click on the backdrop
+  win.addEventListener('click', (e) => { if (e.target === win) win.close() })
+  $('[data-close]', win)?.addEventListener('click', () => win.close())
+})
+
+document.addEventListener('click', (e) => {
+  const opener = e.target.closest('[data-open]')
+  if (!opener) return
+  e.preventDefault()
+  openWindow(opener.dataset.open)
+})
+if (location.hash.startsWith('#w-')) openWindow(location.hash.slice(1))
+
+/* Before and after slider in the localization window */
+$$('.compare').forEach((box) => {
+  const range = $('.compare-range', box)
+  const set = () => box.style.setProperty('--pos', `${range.value}%`)
+  range.addEventListener('input', set)
+  set()
+})
 
 /* --------------------------------------------------------------------------
    Citation counts
