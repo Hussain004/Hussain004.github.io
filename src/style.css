@@ -895,33 +895,13 @@ p { text-wrap: pretty; }
   margin-bottom: 1rem;
 }
 
-.feature {
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
-  gap: clamp(2rem, 4vw, 3.5rem);
-  align-items: start;
-}
+.project > * + * { margin-top: clamp(1.75rem, 3.2vw, 2.6rem); }
+.project-head .tag-row { margin-top: 1.1rem; }
 
-.feature-body > * + * { margin-top: 1.2rem; }
-.feature-body p { color: var(--text-2); max-width: var(--measure); }
-.feature-body strong { color: var(--text); font-weight: 600; }
-
-.role {
-  padding-left: 1rem;
-  border-left: 2px solid var(--accent);
-}
-.finding {
-  font-family: var(--display);
-  font-size: clamp(1.05rem, .95rem + .45vw, 1.28rem);
-  line-height: 1.4;
-  letter-spacing: -.012em;
-  color: var(--text) !important;
-}
-
-/* Numbers that carry the claim */
+/* The numbers come first, so a skimmer meets the result before the story. */
 .stats {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1px;
   background: var(--rule);
   border: 1px solid var(--rule);
@@ -955,49 +935,104 @@ p { text-wrap: pretty; }
   margin-top: .25rem;
 }
 
-/* Architecture diagram card */
-.arch {
-  border: 1px solid var(--rule);
-  border-radius: var(--r-lg);
-  background: var(--surface);
-  box-shadow: var(--lift-2);
-  padding: 1.4rem;
-  position: sticky;
-  top: 6rem;
-}
-.arch h4 { margin-bottom: 1.1rem; }
-.arch-node {
-  display: flex;
-  gap: .85rem;
-  padding: .85rem;
-  border-radius: var(--r-sm);
-  background: var(--paper-sunk);
-  border: 1px solid transparent;
-  transition: border-color .3s, transform .3s var(--ease);
-}
-.arch-node:hover { border-color: var(--rule-strong); transform: translateX(3px); }
-.arch-badge {
-  flex: none;
-  width: 34px; height: 34px;
+/* Three short beats in place of three paragraphs */
+.beats {
   display: grid;
-  place-items: center;
-  border-radius: 9px;
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  color: var(--accent);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.75rem);
 }
-.arch-badge svg { width: 17px; height: 17px; }
-.arch-node b { display: block; font-size: .9rem; font-weight: 600; }
-.arch-node span { font-size: .8rem; color: var(--text-3); line-height: 1.45; }
-.arch-link {
-  height: 18px;
-  margin-left: 1.05rem;
-  border-left: 2px dotted var(--rule-strong);
+.beat { border-top: 2px solid var(--text); padding-top: 1rem; }
+.beat h4 {
+  font-family: var(--display);
+  font-size: clamp(1.1rem, 1rem + .4vw, 1.3rem);
+  font-weight: 650;
+  letter-spacing: -.02em;
+  line-height: 1.25;
+  margin-bottom: .6rem;
+}
+.beat p { color: var(--text-2); font-size: .95rem; line-height: 1.55; }
+
+/* The pipeline at a glance. Left to right on a wide screen, top to bottom on a phone. */
+.flow-title {
+  font-size: .68rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  font-weight: 500;
+  margin-bottom: .8rem;
+}
+.flow {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1.1rem;
+}
+.flow li {
+  position: relative;
+  padding: .85rem 1rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  font-size: .9rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.flow li:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  width: 1.1rem;
+  height: 1px;
+  background: var(--rule-strong);
+}
+.flow li:last-child { border-color: color-mix(in oklab, var(--accent) 55%, var(--rule)); }
+
+.role {
+  padding-left: 1rem;
+  border-left: 2px solid var(--accent);
+  color: var(--text-2);
+  max-width: var(--measure);
+}
+.role strong { color: var(--text); font-weight: 600; }
+.finding {
+  font-family: var(--display);
+  font-size: clamp(1.05rem, .95rem + .45vw, 1.28rem);
+  line-height: 1.4;
+  letter-spacing: -.012em;
+  color: var(--text);
+  max-width: var(--measure);
 }
 
+/* Method and hardware, for the reader who wants them */
+.project > .more { margin-top: 1.75rem; }
+.more dl { display: grid; gap: 1rem; margin-top: 1.1rem; }
+.more dl > div { display: grid; grid-template-columns: 8rem minmax(0, 1fr); gap: 1rem; }
+.more dt {
+  font-family: var(--mono);
+  font-size: .68rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  padding-top: .3rem;
+}
+.more dd { color: var(--text-2); font-size: .92rem; max-width: var(--measure); }
+
 @media (max-width: 900px) {
-  .feature { grid-template-columns: 1fr; }
-  .arch { position: static; }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .beats { grid-template-columns: 1fr; gap: 1.5rem; }
+  .flow { grid-template-columns: 1fr; gap: .7rem; }
+  .flow li { padding: .6rem .9rem; font-size: .86rem; }
+  .flow li:not(:last-child)::after {
+    top: 100%; left: 1.4rem;
+    width: 0; height: .7rem;
+    background: none;
+    border-left: 2px dotted var(--rule-strong);
+  }
+}
+@media (max-width: 640px) {
+  .more dl > div { grid-template-columns: 1fr; gap: .15rem; }
 }
 
 .pub-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.4rem; }

@@ -71,9 +71,6 @@
     <g id="i-sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g>
     <g id="i-moon"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></g>
     <g id="i-menu"><path d="M3 6h18M3 12h18M3 18h18"/></g>
-    <g id="i-server"><rect x="2" y="3" width="20" height="7" rx="2"/><rect x="2" y="14" width="20" height="7" rx="2"/><path d="M6 6.5h.01M6 17.5h.01"/></g>
-    <g id="i-share"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></g>
-    <g id="i-bot"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 8V4M9 14h.01M15 14h.01M2 13v3M22 13v3"/></g>
     <g id="i-award"><circle cx="12" cy="8" r="6"/><path d="M8.2 13.5 7 22l5-3 5 3-1.2-8.5"/></g>
     <g id="i-drag"><path d="M5 9l-3 3 3 3M19 9l3 3-3 3M9 5l3-3 3 3M9 19l3 3 3-3"/></g>
     <g id="i-quote"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.76-2-2-2H4c-1.25 0-2 .75-2 1.97V11c0 1.25.75 2 2 2 1 0 1.5.5 1.5 1.73 0 1.33-1 2.27-2.5 2.27"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.76-2-2-2h-4c-1.25 0-2 .75-2 1.97V11c0 1.25.75 2 2 2h.5c0 1.23-.5 1.73-1.5 1.73-1.5 0-2.5.94-2.5 2.27"/></g>
@@ -296,112 +293,80 @@
       <header class="project-head reveal">
         <h3 class="project-title">Hive-Nav</h3>
         <p class="lede">
-          Belief-guided multi-robot room classification and open-vocabulary
-          object search. A team of robots searches a building given only a
-          text query, and the vision-language model serves as a source of
-          evidence instead of a source of labels.
+          Belief-guided room classification and object search for a team of
+          robots. The vision-language model is a source of evidence, not of labels.
         </p>
+        <div class="tag-row">
+          <span class="tag is-accent">ICRA 2027, under review</span>
+          <span class="tag">ROS 2</span>
+          <span class="tag">Nav2</span>
+          <span class="tag">Vision-language models</span>
+          <span class="tag">Multi-robot</span>
+        </div>
       </header>
 
-      <div class="feature">
-        <div class="feature-body reveal">
-          <div class="tag-row">
-            <span class="tag is-accent">ICRA 2027, under review</span>
-            <span class="tag">ROS 2</span>
-            <span class="tag">Nav2</span>
-            <span class="tag">Vision-language models</span>
-            <span class="tag">Multi-robot</span>
-          </div>
+      <dl class="stats reveal">
+        <div class="stat"><dt>Room accuracy, 10 real trials</dt><dd>88.3% to 98.3%<small>one visit, then three robots</small></dd></div>
+        <div class="stat"><dt>Physical search trials</dt><dd>15 of 15<small>reached and approached the target</small></dd></div>
+        <div class="stat"><dt>Simulated makespan</dt><dd>19.6% lower<small>shared memory, three robots vs one</small></dd></div>
+        <div class="stat"><dt>VLM benchmark</dt><dd>11 models<small>Qwen3-VL-4B, 94.5% at 3.3 GB</small></dd></div>
+      </dl>
 
-          <p>
-            <strong>The failure that shaped it.</strong> Our six real rooms were
-            four labs and two offices full of the same benches, monitors, and
-            racks. YOLO-World returned no discriminative objects in four of
-            them. Asking a vision-language model for the room name was no
-            better, since it gave confident wrong labels and repeated them on
-            the next frame.
-          </p>
-
-          <p>
-            <strong>Phase 1 stops asking for a label.</strong> The model lists
-            what it sees. A hand-built evidence table maps object phrases to
-            signed scores per room class, and the scores accumulate across
-            frames and across robots with quality weighting into a shared
-            belief map. When robots disagree, a revisit protocol sends another
-            robot to look again. Phase 2 combines the belief map with a
-            room-type hint to assign candidate rooms to robots, which run
-            coverage search with an open-vocabulary detector.
-          </p>
-
-          <p>
-            <strong>The network was the real bottleneck.</strong> Three robots
-            streaming video to one GPU over campus Wi-Fi reached up to 20.8
-            percent packet loss. Before spending on infrastructure I measured loss and
-            latency for two weeks, then replaced streaming with compressed
-            frames sent on demand at the pose where each is needed. No new
-            hardware was required.
-          </p>
-
-          <p class="role">
-            <strong>My role.</strong> I led the Gazebo simulation, designed the
-            belief fusion and the disagreement-triggered revisit protocol,
-            handled networking for three robots sharing one GPU, and ran the
-            experiments with Umar Habib, who shares first authorship.
-          </p>
-
-          <dl class="stats reveal" data-delay="1">
-            <div class="stat"><dt>Room accuracy, 10 real trials</dt><dd>88.3% to 98.3%<small>one visit, then three robots</small></dd></div>
-            <div class="stat"><dt>Physical search trials</dt><dd>15 of 15<small>reached and approached the target</small></dd></div>
-            <div class="stat"><dt>Simulated makespan</dt><dd>19.6% lower<small>shared memory, three robots vs one</small></dd></div>
-            <div class="stat"><dt>VLM benchmark</dt><dd>11 models<small>Qwen3-VL-4B, 94.5% at 3.3 GB</small></dd></div>
-          </dl>
-
-          <p class="finding">
-            Shared memory matters more than team size. Without it, three robots
-            were only 0.9 percent faster despite doing 3.1 times more
-            room-discovery work.
-          </p>
-
-          <div class="pub-actions reveal" data-delay="2">
-            <a class="btn btn-primary" href="/hive-nav.pdf" target="_blank" rel="noopener noreferrer">
-              Read the manuscript
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><use href="#i-arrow"/></svg>
-            </a>
-          </div>
+      <div class="beats">
+        <div class="beat reveal">
+          <h4>Our six rooms held the same benches and racks.</h4>
+          <p>YOLO-World found no discriminative objects in four of them, and asking a vision-language model for the room name gave confident wrong labels.</p>
         </div>
-
-        <aside class="arch reveal" data-delay="2">
-          <h4>System layout</h4>
-
-          <div class="arch-node">
-            <span class="arch-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><use href="#i-server"/></svg></span>
-            <span>
-              <b>GPU workstation</b>
-              <span>Mission control, room allocation, vision-language model and detector inference, evidence table, belief fusion, metrics.</span>
-            </span>
-          </div>
-
-          <div class="arch-link"></div>
-
-          <div class="arch-node">
-            <span class="arch-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><use href="#i-share"/></svg></span>
-            <span>
-              <b>Domain bridge and on-demand frames</b>
-              <span>Each robot lives in its own ROS 2 domain. Compressed frames cross the bridge only when a pose needs them.</span>
-            </span>
-          </div>
-
-          <div class="arch-link"></div>
-
-          <div class="arch-node">
-            <span class="arch-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><use href="#i-bot"/></svg></span>
-            <span>
-              <b>Robot, one per unit</b>
-              <span>RoboMaster EP Core with a Raspberry Pi 5, RPLiDAR, laser odometry, and a Nav2 stack with a regulated pure pursuit controller.</span>
-            </span>
-          </div>
-        </aside>
+        <div class="beat reveal" data-delay="1">
+          <h4>So the model lists objects instead of naming rooms.</h4>
+          <p>A hand-built table turns each object into signed evidence for every room class.</p>
+        </div>
+        <div class="beat reveal" data-delay="2">
+          <h4>Then the network became the bottleneck.</h4>
+          <p>Streaming video from three robots lost up to 20.8 percent of packets. I replaced it with compressed frames sent on demand, with no new hardware.</p>
+        </div>
       </div>
+
+      <div class="flow-wrap reveal">
+        <h4 class="flow-title mono">How it runs</h4>
+        <ol class="flow">
+          <li>VLM lists objects</li>
+          <li>Signed evidence</li>
+          <li>Shared belief map</li>
+          <li>Revisit on conflict</li>
+          <li>Assign rooms, then search</li>
+        </ol>
+      </div>
+
+      <p class="finding reveal">
+        Shared memory matters more than team size. Without it, three robots
+        were only 0.9 percent faster despite doing 3.1 times more
+        room-discovery work.
+      </p>
+
+      <p class="role reveal">
+        <strong>Joint first author.</strong> I led the Gazebo simulation,
+        designed the belief fusion and revisit protocol, handled networking for
+        three robots on one GPU, and ran the experiments with Umar Habib.
+      </p>
+
+      <div class="pub-actions reveal">
+        <a class="btn btn-primary" href="/hive-nav.pdf" target="_blank" rel="noopener noreferrer">
+          Read the manuscript
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><use href="#i-arrow"/></svg>
+        </a>
+      </div>
+
+      <details class="certs-fold more">
+        <summary>Method and hardware details</summary>
+        <dl>
+          <div><dt>Evidence</dt><dd>The table is hand built and maps object phrases to signed scores per room class. Scores accumulate across frames and across robots, weighted by quality.</dd></div>
+          <div><dt>Disagreement</dt><dd>When robots disagree about a room, the revisit protocol sends another robot to look again.</dd></div>
+          <div><dt>Phase 2</dt><dd>The belief map and a room-type hint assign candidate rooms to robots, which run coverage search with an open-vocabulary detector.</dd></div>
+          <div><dt>Network</dt><dd>I measured loss and latency for two weeks before replacing streaming with compressed frames sent at the pose where each is needed.</dd></div>
+          <div><dt>Hardware</dt><dd>Each robot is a RoboMaster EP Core with a Raspberry Pi 5, RPLiDAR, laser odometry, and Nav2 with a regulated pure pursuit controller, in its own ROS 2 domain. A GPU workstation runs mission control, the vision-language model, the detector, and belief fusion.</dd></div>
+        </dl>
+      </details>
     </article>
   </div>
 </section>
