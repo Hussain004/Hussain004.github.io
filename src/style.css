@@ -412,28 +412,25 @@ p { text-wrap: pretty; }
 .stage     { grid-area: stage; }
 .hero-foot { grid-area: foot; }
 
+/* A dateline, the way a journal sets one: a short rule, then the line. No pill, no light. */
 .hero-status {
-  display: inline-flex;
-  align-items: center;
-  gap: .6rem;
-  padding: .42rem .9rem .42rem .7rem;
-  border-radius: 999px;
-  background: var(--surface);
-  border: 1px solid var(--rule);
+  display: flex;
+  align-items: flex-start;
+  gap: .8rem;
   color: var(--text-2);
   font-size: .72rem;
+  line-height: 1.5;
+  text-wrap: balance;
   margin-bottom: 1.5rem;
 }
-.pulse {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--accent);
-  animation: ping 2.4s ease-out infinite;
-}
-@keyframes ping {
-  0%   { box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 55%, transparent); }
-  70%  { box-shadow: 0 0 0 9px transparent; }
-  100% { box-shadow: 0 0 0 0 transparent; }
+.hero-status::before {
+  content: '';
+  flex: none;
+  width: 2.25rem;
+  height: 1px;
+  margin-top: .75em;
+  background: currentColor;
+  opacity: .6;
 }
 
 .hero h1 { margin-bottom: 1.25rem; }
