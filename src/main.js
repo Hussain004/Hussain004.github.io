@@ -246,28 +246,29 @@ $$('.compare').forEach((box) => {
    Citation counts
    Semantic Scholar first, Crossref as fallback. data-manual-count is a floor,
    because Google Scholar picks up citations before the open APIs do. The
-   badge stays hidden unless a count actually resolves.
+   badge stays hidden unless a count actually resolves. Requests are deferred
+   until the publication is near the viewport and each has a short deadline,
+   so a slow third party never holds up the page.
    -------------------------------------------------------------------------- */
 async function citationCount(doi) {
-  try {
-    const res = await fetch(`https://api.semanticscholar.org/graph/v1/paper/DOI:${doi}?fields=citationCount`)
-    if (res.ok) {
-      const data = await res.json()
-      if (typeof data?.citationCount === 'number') return data.citationCount
-    }
-  } catch {}
-  try {
-    const res = await fetch(`https://api.crossref.org/works/${doi}`)
-    if (res.ok) {
-      const data = await res.json()
-      const n = data?.message?.['is-referenced-by-count']
-      if (typeof n === 'number') return n
-    }
-  } catch {}
-  return null
+  const get = (url) => new Promise((resolve) => {
+    const controller = new AbortController()
+    const timer = setTimeout(() => controller.abort(), 4000)
+    fetch(url, { signal: controller.signal })
+      .then((res) => res.ok ? res.json() : null)
+      .then(resolve)
+      .catch(() => resolve(null))
+      .finally(() => clearTimeout(timer))
+  })
+
+  const paper = await get(`https://api.semanticscholar.org/graph/v1/paper/DOI:${doi}?fields=citationCount`)
+  if (typeof paper?.citationCount === 'number') return paper.citationCount
+  const crossref = await get(`https://api.crossref.org/works/${doi}`)
+  const n = crossref?.message?.['is-referenced-by-count']
+  return typeof n === 'number' ? n : null
 }
 
-$$('.pub-citations').forEach(async (el) => {
+async function resolveCitations(el) {
   const doi = el.dataset.doi
   if (!doi) return
   const manual = parseInt(el.dataset.manualCount || '0', 10)
@@ -277,7 +278,24 @@ $$('.pub-citations').forEach(async (el) => {
   el.querySelector('.citation-count').textContent =
     `${count} ${count === 1 ? 'citation' : 'citations'}`
   el.hidden = false
-})
+}
+
+const citationBadges = $$('.pub-citations')
+if (citationBadges.length && 'IntersectionObserver' in window) {
+  // The badge itself is display:none until a count resolves, so watch its
+  // visible parent instead.
+  const citationObserver = new IntersectionObserver((entries, obs) => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue
+      obs.unobserve(entry.target)
+      const badge = entry.target.querySelector('.pub-citations')
+      if (badge) resolveCitations(badge)
+    }
+  }, { rootMargin: '200px' })
+  citationBadges.forEach((el) => citationObserver.observe(el.parentElement))
+} else {
+  citationBadges.forEach(resolveCitations)
+}
 
 /* --------------------------------------------------------------------------
    Copy BibTeX
