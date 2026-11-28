@@ -288,12 +288,14 @@ p { text-wrap: pretty; }
   letter-spacing: -.02em;
   display: inline-flex;
   align-items: center;
+  gap: .45rem;
   padding: .45rem .9rem;
   border-radius: 999px;
   background: color-mix(in oklab, var(--surface) 82%, transparent);
   backdrop-filter: blur(14px);
   box-shadow: var(--lift-1);
 }
+.brand-mark { width: 18px; height: 18px; flex: none; }
 
 .nav-menu {
   display: flex;
