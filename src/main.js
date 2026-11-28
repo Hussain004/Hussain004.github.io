@@ -303,3 +303,39 @@ bibtexBtn?.addEventListener('click', async () => {
    -------------------------------------------------------------------------- */
 const year = $('#year')
 if (year) year.textContent = new Date().getFullYear()
+
+/* --------------------------------------------------------------------------
+   Copy the email address for people who cannot open a mail client
+   -------------------------------------------------------------------------- */
+const copyMail = $('[data-copy-mail]')
+if (copyMail) {
+  const label = $('span', copyMail)
+  let reset = 0
+  copyMail.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(copyMail.dataset.copyMail)
+      label.textContent = 'Copied'
+      copyMail.classList.add('is-copied')
+    } catch {
+      label.textContent = 'Select and copy manually'
+    }
+    clearTimeout(reset)
+    reset = setTimeout(() => {
+      label.textContent = 'Copy address'
+      copyMail.classList.remove('is-copied')
+    }, 1800)
+  })
+}
+
+/* --------------------------------------------------------------------------
+   Printing: open every fold so the PDF handout carries the full record, then
+   put the folds back the way the reader left them.
+   -------------------------------------------------------------------------- */
+let openFolds = []
+addEventListener('beforeprint', () => {
+  openFolds = $$('details').filter((d) => d.open)
+  $$('details').forEach((d) => { d.open = true })
+})
+addEventListener('afterprint', () => {
+  $$('details').forEach((d) => { d.open = openFolds.includes(d) })
+})

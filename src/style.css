@@ -1643,6 +1643,32 @@ dialog.win::backdrop {
 }
 .mailto:hover { background-size: 100% 2px; color: var(--accent); }
 
+/* A quiet alternative for anyone who cannot open a mail client. */
+.copy-mail {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  margin-top: 1.1rem;
+  padding: .5rem .9rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-2);
+  font-family: var(--mono);
+  font-size: .68rem;
+  font-weight: 500;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  transition: color .2s, border-color .2s, transform .25s var(--ease);
+}
+.copy-mail:hover { color: var(--text); border-color: var(--rule-strong); transform: translateY(-1px); }
+.copy-mail svg { width: 15px; height: 15px; }
+.copy-mail.is-copied {
+  color: var(--sprout-ink);
+  border-color: color-mix(in oklab, var(--sprout) 45%, transparent);
+  background: var(--sprout-soft);
+}
+
 .footer-bar {
   display: flex;
   flex-wrap: wrap;
@@ -1677,4 +1703,67 @@ code {
   border: 1px solid var(--rule);
   color: var(--text);
   white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   19. Print / PDF handout
+   For admissions readers who save the page. Everything interactive, decorative
+   or off-paper is dropped; every panel and folded detail is kept.
+   -------------------------------------------------------------------------- */
+@page { size: A4; margin: 16mm; }
+
+@media print {
+  :root {
+    color-scheme: light;
+    --paper: #fff; --paper-raised: #fff; --paper-sunk: #fff;
+    --rule: #c8c8c8; --rule-strong: #888;
+    --ink: #000; --ink-2: #222; --ink-3: #444;
+    --accent: #000; --accent-soft: #fff; --signal: transparent;
+    --sprout-ink: #000; --amber-ink: #000; --peri-ink: #000;
+    --lift-1: none; --lift-2: none; --lift-3: none;
+  }
+  html { scroll-behavior: auto; }
+  html:has(dialog[open]) { overflow: visible; }
+  body {
+    background: #fff;
+    color: #000;
+    font-size: 10.5pt;
+    line-height: 1.45;
+    transition: none;
+  }
+  .wrap { width: 100%; }
+  .skip, .nav, .hero-actions, .stage, .crop-stage, .hero::before, .hero::after,
+  .grow-report, .grow-frame, .stage-hint, .copy-mail, .footer .socials,
+  dialog.win, .compare, .ball-stage, .ball-controls, .ball-meter, .fig-cap {
+    display: none !important;
+  }
+  .hero { padding: 0 0 1rem; }
+  .section { padding: 1.25rem 0; }
+  .hero, .section, .footer { overflow: visible; }
+  .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .q-tabs { display: none !important; }
+  .q-panel[hidden] { display: block !important; }
+  .q-panel { animation: none; margin-top: 1rem; }
+  .q-panel + .q-panel { margin-top: 1rem; }
+  .card, .pub, .ev, .tl, .stat, .cert, .flow li, .earlier li, .details, details > div {
+    break-inside: avoid;
+    box-shadow: none;
+  }
+  h1, h2, h3, h4 { break-after: avoid-page; }
+  h1 { font-size: 26pt; }
+  h2 { font-size: 17pt; }
+  h3, .project-title { font-size: 13pt; }
+  .lede, .q-text, .finding { font-size: 11pt; color: #222; }
+  .footer { background: #fff; padding: 1.25rem 0 0; }
+  .mailto { font-size: 14pt; background-image: none; }
+  .mailto:hover { color: #000; }
+  a[href^='http']:not(.btn)::after {
+    content: ' (' attr(href) ')';
+    font-family: var(--mono);
+    font-size: 8pt;
+    color: #555;
+    font-weight: 400;
+  }
+  details > summary { color: #000; }
+  .eyebrow b { color: #000; }
 }
