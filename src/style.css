@@ -1,6 +1,8 @@
 /* ==========================================================================
    Hussain Habib portfolio design system
-   Base: warm paper. Accents: sprout, amber, periwinkle. Clay-shaded 3D.
+   "Field signal": bone paper and pine ink, with a citrus-lime signal accent,
+   rust for field notes, and iris for measured quantities. The 3D scenes borrow
+   the same ramp so the models and the page read as one instrument.
    The page reads like a preprint. Mono labels, numbered sections, hairline
    rules, and figures with captions.
    ========================================================================== */
@@ -12,29 +14,31 @@
   color-scheme: light;
 
   /* Paper */
-  --paper:        #f7f4ed;
-  --paper-raised: #fffdf7;
-  --paper-sunk:   #efe9dc;
-  --rule:         #e2dbca;
-  --rule-strong:  #cec5ae;
+  --paper:        #f5f2e8;
+  --paper-raised: #fcfaf3;
+  --paper-sunk:   #eae6d8;
+  --rule:         #dcd8c6;
+  --rule-strong:  #c3bea6;
 
   /* Ink */
-  --ink:          #191712;
-  --ink-2:        #565044;
-  --ink-3:        #6f695c;   /* AA on paper, was #8b8373 at 3.4:1 */
+  --ink:          #14231b;
+  --ink-2:        #3f4f44;
+  --ink-3:        #5d6b5e;   /* 5.0:1 on paper, 4.5:1 on sunk */
 
-  /* Accents */
-  --sprout:       #27774c;   /* AA as text on paper, was #2f8f5b at 3.7:1 */
-  --sprout-soft:  #d8ecdf;
-  --sprout-ink:   #1d5c3a;
-  --amber:        #d97b1f;
-  --amber-ink:    #8a4a08;
-  --amber-soft:   #fbe6cd;
-  --peri:         #5563d8;
-  --peri-ink:     #3c4cd2;
-  --peri-soft:    #dcdefb;
-  --clay:         #d4576f;
-  --clay-soft:    #fadfe4;
+  /* Accents: citrus-olive, rust, iris, clay.
+     --signal is a fill colour only; it is far too bright for text on paper. */
+  --sprout:       #456917;   /* 5.7:1 on paper */
+  --sprout-soft:  #e7f0d4;
+  --sprout-ink:   #3b5a12;
+  --signal:       #c6ec4a;
+  --amber:        #a8431e;   /* 4.6:1 on paper */
+  --amber-ink:    #8e3617;
+  --amber-soft:   #f6ded0;
+  --peri:         #4f46b8;   /* 6.5:1 on paper */
+  --peri-ink:     #423aa0;
+  --peri-soft:    #e3e1fa;
+  --clay:         #c3455e;
+  --clay-soft:    #f8dce2;
 
   /* Semantic */
   --bg:           var(--paper);
@@ -46,8 +50,8 @@
   --accent-soft:  var(--sprout-soft);
 
   /* Type */
-  --display: 'Bricolage Grotesque', 'Instrument Sans', system-ui, sans-serif;
-  --sans:    'Instrument Sans', system-ui, -apple-system, sans-serif;
+  --display: 'Google Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --sans:    'Google Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --mono:    'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
 
   /* Space + shape */
@@ -58,19 +62,19 @@
   --r-lg: 20px;
   --r-xl: 28px;
 
-  /* Elevation, tuned warm rather than grey */
-  --lift-1: 0 1px 2px rgba(60, 48, 24, .05), 0 2px 8px rgba(60, 48, 24, .04);
-  --lift-2: 0 2px 4px rgba(60, 48, 24, .06), 0 12px 28px rgba(60, 48, 24, .07);
-  --lift-3: 0 4px 8px rgba(60, 48, 24, .07), 0 24px 56px rgba(60, 48, 24, .1);
+  /* Elevation, tinted pine rather than grey */
+  --lift-1: 0 1px 2px rgba(20, 35, 27, .05), 0 2px 8px rgba(20, 35, 27, .04);
+  --lift-2: 0 2px 4px rgba(20, 35, 27, .06), 0 12px 28px rgba(20, 35, 27, .07);
+  --lift-3: 0 4px 8px rgba(20, 35, 27, .07), 0 24px 56px rgba(20, 35, 27, .1);
 
   /* The 3D model gets its own ramp. Borrowing UI tokens made the floor
      vanish into the background in dark mode. */
-  --model-slab:      #e3d9c2;
-  --model-wall:      #fffdf7;
-  --model-floor:     #ece5d5;
-  --model-corridor:  #ddd3bd;
-  --model-found:     #cfe7d8;
-  --model-soil:      #c9b79a;
+  --model-slab:      #e1dac5;
+  --model-wall:      #fcfaf3;
+  --model-floor:     #ede9da;
+  --model-corridor:  #d9d2bc;
+  --model-found:     #ddedc0;
+  --model-soil:      #cdbb9a;
 
   --ease: cubic-bezier(.22, 1, .36, 1);
   --ease-soft: cubic-bezier(.4, 0, .2, 1);
@@ -79,34 +83,35 @@
 [data-theme='dark'] {
   color-scheme: dark;
 
-  --paper:        #14130e;
-  --paper-raised: #1e1c15;
-  --paper-sunk:   #100f0b;
-  --rule:         #2f2b21;
-  --rule-strong:  #45402f;
+  --paper:        #101a15;
+  --paper-raised: #18271f;
+  --paper-sunk:   #0b120e;
+  --rule:         #2b3b31;
+  --rule-strong:  #455845;
 
-  --ink:          #f2ede1;
-  --ink-2:        #b3ab98;
-  --ink-3:        #8a8371;   /* AA on the raised dark surface */
+  --ink:          #eff3e6;
+  --ink-2:        #b7c4b7;
+  --ink-3:        #93a393;   /* 5.9:1 on the raised dark surface */
 
-  --sprout:       #5cc182;
-  --sprout-soft:  #1c3a28;
-  --sprout-ink:   #5cc182;
-  --amber:        #f0a350;
-  --amber-ink:    #f0a350;
-  --amber-soft:   #3d2a13;
-  --peri:         #8b95f0;
-  --peri-ink:     #8b95f0;
-  --peri-soft:    #23264a;
-  --clay:         #ef8298;
-  --clay-soft:    #3d1f26;
+  --sprout:       #b8e45e;
+  --sprout-soft:  #24351c;
+  --sprout-ink:   #c6ec4a;
+  --signal:       #c6ec4a;
+  --amber:        #f29466;
+  --amber-ink:    #f6b18a;
+  --amber-soft:   #3a241a;
+  --peri:         #a6a2ff;
+  --peri-ink:     #b4b0ff;
+  --peri-soft:    #252347;
+  --clay:         #f08aa0;
+  --clay-soft:    #3a1e26;
 
-  --model-slab:      #453d2c;
-  --model-wall:      #5d5440;
-  --model-floor:     #332d21;
-  --model-corridor:  #3d3729;
-  --model-found:     #2f5741;
-  --model-soil:      #4a4030;
+  --model-slab:      #2f3d31;
+  --model-wall:      #4a5a49;
+  --model-floor:     #1e2a21;
+  --model-corridor:  #27362b;
+  --model-found:     #3b5326;
+  --model-soil:      #403a2c;
 
   --lift-1: 0 1px 2px rgba(0, 0, 0, .3), 0 2px 8px rgba(0, 0, 0, .2);
   --lift-2: 0 2px 4px rgba(0, 0, 0, .35), 0 12px 28px rgba(0, 0, 0, .3);
@@ -166,11 +171,13 @@ ul, ol { padding: 0; }
 /* --------------------------------------------------------------------------
    3. Typography
    -------------------------------------------------------------------------- */
+/* Google Sans is a shade wider and rounder than the old display face, so the
+   tightened tracking is eased off to keep large sizes from colliding. */
 h1, h2, h3, h4 {
   font-family: var(--display);
   font-weight: 600;
-  line-height: 1.06;
-  letter-spacing: -.028em;
+  line-height: 1.1;
+  letter-spacing: -.02em;
   text-wrap: balance;
 }
 
@@ -309,7 +316,10 @@ p { text-wrap: pretty; }
   transition: color .2s, background-color .2s;
 }
 .nav-menu a:hover { color: var(--text); background: var(--paper-sunk); }
-.nav-menu a[aria-current='true'] { color: var(--text); background: var(--accent-soft); }
+.nav-menu a[aria-current='true'] {
+  color: var(--text);
+  background: color-mix(in oklab, var(--signal) 24%, var(--surface));
+}
 
 /* A file, not a section, so it gets a ring instead of the scroll-spy fill. */
 .nav-cv {
@@ -512,7 +522,7 @@ p { text-wrap: pretty; }
   font-family: var(--display);
   font-size: clamp(1.6rem, 1.2rem + 1.3vw, 2.4rem);
   font-weight: 700;
-  letter-spacing: -.035em;
+  letter-spacing: -.028em;
   line-height: 1.1;
   margin-top: .2rem;
 }
@@ -820,7 +830,7 @@ p { text-wrap: pretty; }
   line-height: 1.15;
 }
 .q-tab[aria-selected='true'] {
-  background: var(--accent-soft);
+  background: color-mix(in oklab, var(--signal) 26%, var(--surface));
   border-color: color-mix(in oklab, var(--accent) 45%, transparent);
 }
 
@@ -846,7 +856,7 @@ p { text-wrap: pretty; }
   font-size: clamp(1.1rem, .98rem + .75vw, 1.5rem);
   font-weight: 500;
   line-height: 1.32;
-  letter-spacing: -.018em;
+  letter-spacing: -.014em;
   max-width: 54ch;
   margin-bottom: 1.4rem;
 }
@@ -891,7 +901,7 @@ p { text-wrap: pretty; }
 .project-title {
   font-size: clamp(1.85rem, 1.25rem + 2.4vw, 3.1rem);
   font-weight: 700;
-  letter-spacing: -.03em;
+  letter-spacing: -.025em;
   margin-bottom: 1rem;
 }
 
@@ -921,7 +931,7 @@ p { text-wrap: pretty; }
   font-family: var(--display);
   font-size: clamp(1.05rem, .85rem + .6vw, 1.4rem);
   font-weight: 700;
-  letter-spacing: -.03em;
+  letter-spacing: -.025em;
   line-height: 1.15;
   color: var(--text);
 }
@@ -946,7 +956,7 @@ p { text-wrap: pretty; }
   font-family: var(--display);
   font-size: clamp(1.1rem, 1rem + .4vw, 1.3rem);
   font-weight: 650;
-  letter-spacing: -.02em;
+  letter-spacing: -.016em;
   line-height: 1.25;
   margin-bottom: .6rem;
 }
@@ -1186,7 +1196,7 @@ p { text-wrap: pretty; }
   font-family: var(--display);
   font-size: 1.3rem;
   font-weight: 600;
-  letter-spacing: -.02em;
+  letter-spacing: -.016em;
   line-height: 1.15;
   margin-bottom: .45rem;
 }
@@ -1242,7 +1252,7 @@ p { text-wrap: pretty; }
   font-family: var(--display);
   font-size: 1.05rem;
   font-weight: 600;
-  letter-spacing: -.015em;
+  letter-spacing: -.012em;
 }
 .earlier-body i { font-style: normal; font-size: .62rem; color: var(--text-3); }
 .earlier-body span { display: block; font-size: .88rem; color: var(--text-2); line-height: 1.5; margin-top: .15rem; max-width: 70ch; }
@@ -1273,7 +1283,7 @@ dialog.win {
 }
 dialog.win[open] { animation: win-in .4s var(--ease) both; }
 dialog.win::backdrop {
-  background: rgba(20, 19, 14, .55);
+  background: rgba(9, 18, 13, .66);
   backdrop-filter: blur(4px);
 }
 @keyframes win-in {
@@ -1349,7 +1359,7 @@ dialog.win::backdrop {
 }
 .fig-cap b { color: var(--text-2); font-weight: 600; }
 .win-fig { margin: 0 var(--pad) var(--pad); padding-top: 1.25rem; border-top: 1px solid var(--rule); }
-.win-fig img { width: 100%; border-radius: var(--r-md); border: 1px solid var(--rule); background: #fcfbf8; }
+.win-fig img { width: 100%; border-radius: var(--r-md); border: 1px solid var(--rule); background: var(--paper-raised); }
 
 /* Before and after slider. The repaired map is clipped to the right of the
    handle, and the whole figure is one range input, so touch, mouse, and
@@ -1360,7 +1370,7 @@ dialog.win::backdrop {
   border-radius: var(--r-md);
   overflow: hidden;
   border: 1px solid var(--rule);
-  background: #fff;
+  background: var(--paper-raised);
   user-select: none;
 }
 .compare img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
@@ -1401,7 +1411,7 @@ dialog.win::backdrop {
   top: .6rem;
   padding: .2rem .55rem;
   border-radius: 999px;
-  background: rgba(25, 23, 18, .82);
+  background: rgba(20, 35, 27, .88);
   color: #fff;
   font-size: .62rem;
   pointer-events: none;
@@ -1621,7 +1631,7 @@ dialog.win::backdrop {
   font-family: var(--display);
   font-size: clamp(1.2rem, .9rem + 2vw, 2.5rem);
   font-weight: 600;
-  letter-spacing: -.025em;
+  letter-spacing: -.02em;
   display: inline-block;
   padding-bottom: .15em;
   overflow-wrap: anywhere;

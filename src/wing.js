@@ -436,18 +436,18 @@ function readPalette() {
   }
   const dark = document.documentElement.dataset.theme === 'dark'
   return {
-    sky: v('--model-wall', '#fffdf7'),
-    ground: v('--model-slab', '#e3d9c2'),
-    slab: v('--model-slab', '#e3d9c2'),
-    wall: v('--model-wall', '#fffdf7'),
-    corridor: v('--model-corridor', '#ddd3bd'),
-    floor: v('--model-floor', '#ece5d5'),
-    floorFound: v('--model-found', '#cfe7d8'),
-    head: v(dark ? '--rule-strong' : '--ink-3', '#8b8373'),
-    lens: v('--ink', '#191712'),
-    wheel: v(dark ? '--rule' : '--ink-2', '#565044'),
-    '--amber': v('--amber', '#d97b1f'),
-    '--peri': v('--peri', '#5563d8'),
-    '--clay': v('--clay', '#d4576f'),
+    sky: v('--model-wall', '#fcfaf3'),
+    ground: v('--model-slab', '#e1dac5'),
+    slab: v('--model-slab', '#e1dac5'),
+    wall: v('--model-wall', '#fcfaf3'),
+    corridor: v('--model-corridor', '#d9d2bc'),
+    floor: v('--model-floor', '#ede9da'),
+    floorFound: v('--model-found', '#ddedc0'),
+    head: v(dark ? '--rule-strong' : '--ink-3', '#5d6b5e'),
+    lens: v('--ink', '#14231b'),
+    wheel: v(dark ? '--rule' : '--ink-2', '#3f4f44'),
+    '--amber': v('--amber', '#a8431e'),
+    '--peri': v('--peri', '#4f46b8'),
+    '--clay': v('--clay', '#c3455e'),
   }
 }

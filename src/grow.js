@@ -300,12 +300,12 @@ function readPalette() {
   const css = getComputedStyle(document.documentElement)
   const v = (n, f) => new Color(css.getPropertyValue(n).trim() || f)
   return {
-    sky: v('--model-wall', '#fffdf7'),
-    ground: v('--model-slab', '#e3d9c2'),
-    soil: v('--model-soil', '#c9b79a'),
-    curd: v('--model-wall', '#fffdf7'),
-    sprout: v('--sprout', '#27774c'),
-    amber: v('--amber', '#d97b1f'),
-    peri: v('--peri', '#5563d8'),
+    sky: v('--model-wall', '#fcfaf3'),
+    ground: v('--model-slab', '#e1dac5'),
+    soil: v('--model-soil', '#cdbb9a'),
+    curd: v('--model-wall', '#fcfaf3'),
+    sprout: v('--sprout', '#456917'),
+    amber: v('--amber', '#a8431e'),
+    peri: v('--peri', '#4f46b8'),
   }
 }

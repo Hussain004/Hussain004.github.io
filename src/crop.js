@@ -259,12 +259,12 @@ function readPalette() {
   const v = (n, f) => new Color(css.getPropertyValue(n).trim() || f)
   const dark = document.documentElement.dataset.theme === 'dark'
   return {
-    sky: v('--model-wall', '#fffdf7'),
-    ground: v('--model-slab', '#e3d9c2'),
-    soil: v('--model-soil', '#c9b79a'),
-    stem: v('--sprout', '#2f8f5b'),
-    grain: v('--amber', '#d97b1f'),
-    drone: v('--peri', '#5563d8'),
-    armour: dark ? v('--ink-2', '#b3ab98') : v('--ink', '#191712'),
+    sky: v('--model-wall', '#fcfaf3'),
+    ground: v('--model-slab', '#e1dac5'),
+    soil: v('--model-soil', '#cdbb9a'),
+    stem: v('--sprout', '#456917'),
+    grain: v('--amber', '#a8431e'),
+    drone: v('--peri', '#4f46b8'),
+    armour: dark ? v('--ink-2', '#b7c4b7') : v('--ink', '#14231b'),
   }
 }
